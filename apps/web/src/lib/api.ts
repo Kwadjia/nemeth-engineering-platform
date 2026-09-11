@@ -5,9 +5,16 @@
 import type { ProblemDetails, paths } from "@nemeth/domain-types";
 import createClient from "openapi-fetch";
 
+/** Prefix for URLs built by hand (downloads, multipart uploads). */
 export const API_BASE = "/api/v1";
 
-export const api = createClient<paths>({ baseUrl: API_BASE });
+/**
+ * The generated OpenAPI paths already include the /api/v1 prefix, so the typed client
+ * must be rooted at the origin. Rooting it at API_BASE doubles the prefix.
+ */
+export const CLIENT_BASE_URL = "";
+
+export const api = createClient<paths>({ baseUrl: CLIENT_BASE_URL });
 
 export class ApiError extends Error {
   readonly problem: ProblemDetails;
