@@ -12,6 +12,8 @@ from nemeth.core.auth import Actor, get_actor
 from nemeth.core.config import Settings, get_settings
 from nemeth.core.db import get_session
 from nemeth.modules.bom import service as bom
+from nemeth.modules.changes import service as changes
+from nemeth.modules.changes.schemas import ChangeSummary
 from nemeth.modules.components import service as components
 from nemeth.modules.components.schemas import ComponentSummary, RevisionSummary
 from nemeth.modules.documents import service as documents
@@ -21,6 +23,7 @@ from nemeth.modules.products import service as products
 from nemeth.modules.products.schemas import CaliberSummary, ProductSummary
 from nemeth.modules.prototypes import service as prototypes
 from nemeth.modules.prototypes.schemas import PrototypeSummary
+from nemeth.modules.suppliers import service as suppliers
 from nemeth.modules.testing import service as testing
 from nemeth.modules.testing.schemas import TestRunSummary, TimingSummary
 from nemeth.modules.watches import service as watches
@@ -70,6 +73,9 @@ class DashboardSummary(BaseModel):
     latest_timing_run: TestRunSummary | None
     watch_count: int
     attachments_by_kind: dict[str, int]
+    supplier_count: int
+    open_change_count: int
+    open_changes: list[ChangeSummary]
     watches: list[WatchSummary]
 
 
@@ -145,5 +151,8 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
         latest_timing_run=TestRunSummary.model_validate(latest_run) if latest_run else None,
         watch_count=watches.count(session),
         attachments_by_kind=documents.count_by_kind(session),
+        supplier_count=suppliers.count(session),
+        open_change_count=changes.open_count(session),
+        open_changes=[ChangeSummary.model_validate(c) for c in changes.recent_open(session)],
         watches=[WatchSummary.model_validate(w) for w in watch_items],
     )

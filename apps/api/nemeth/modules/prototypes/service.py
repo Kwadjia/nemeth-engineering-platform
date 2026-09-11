@@ -44,6 +44,7 @@ from nemeth.modules.prototypes.schemas import (
     PrototypeUpdate,
     UnitConfiguration,
 )
+from nemeth.modules.suppliers import service as suppliers
 from nemeth.modules.watches.models import Watch, WatchStatus
 from nemeth.modules.watches.schemas import WatchSummary
 
@@ -66,6 +67,7 @@ _INSTANCE_OPTS = (
     selectinload(PartInstance.revision).selectinload(ComponentRevision.component),
     selectinload(PartInstance.current_prototype),
     selectinload(PartInstance.current_watch),
+    selectinload(PartInstance.supplier),
 )
 _BUILD_OPTS = (
     selectinload(BuildRecord.prototype),
@@ -264,6 +266,7 @@ def create_part_instances(
             field="component_revision_id",
             revision=revision.display_identifier,
         )
+    suppliers.require_supplier(session, data.supplier_id)
     created: list[PartInstance] = []
     for _ in range(data.quantity):
         identifier = next_identifier(
@@ -278,6 +281,7 @@ def create_part_instances(
             material_lot=data.material_lot,
             heat_treatment_lot=data.heat_treatment_lot,
             supplier_note=data.supplier_note,
+            supplier_id=data.supplier_id,
             notes=data.notes,
             is_placeholder=data.is_placeholder,
         )
@@ -291,7 +295,10 @@ def create_part_instances(
 def update_part_instance(
     session: Session, actor: Actor, instance: PartInstance, data: PartInstanceUpdate
 ) -> PartInstance:
-    for field, value in data.model_dump(exclude_unset=True).items():
+    changes = data.model_dump(exclude_unset=True)
+    if changes.get("supplier_id") is not None:
+        suppliers.require_supplier(session, changes["supplier_id"])
+    for field, value in changes.items():
         setattr(instance, field, value)
     stamp_updated(instance, actor)
     session.flush()

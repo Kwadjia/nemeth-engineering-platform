@@ -1,7 +1,7 @@
 # NEMETH Engineering Platform — v0.1 Plan
 
 **Milestone:** NEMETH Engineering Platform v0.1
-**Status:** in progress
+**Status:** v0.1 scope complete (all twelve slices); v0.2 not yet planned
 **Owner:** Arthur Nemeth
 **Last updated:** 2026-09-11
 
@@ -46,7 +46,7 @@ is **Caliber N1**.
 | 9 | Measurements / test records (test-type registry, timegrapher summaries) | ✅ done |
 | 10 | Serialized watches, shared genealogy, dossier | ✅ done |
 | 11 | Documents / attachments (SHA-256, local storage backend) | ✅ done |
-| 12 | Suppliers, Engineering Changes (lightweight) | ⬜ next |
+| 12 | Suppliers, Engineering Changes (lightweight) | ✅ done |
 
 Out of scope for v0.1: MES, travelers, CAD integration, calculators, AI
 assistant, e-commerce, customer ownership, public provenance pages. Paths
@@ -187,6 +187,18 @@ flow, and [`decisions/`](decisions/) for the ADRs.
       Documents page across all records
 - [x] Tests: hashing and keys, duplicates, disallowed types, empty/unknown entity,
       update/list/delete, HTTP upload/download/policy
+
+### Domain — Suppliers and engineering changes (slice 12)
+- [x] `Supplier` (`SUP-NNN`): kind, capabilities, contact, active flag; default supplier on
+      a revision, actual supplier on a part instance
+- [x] `EngineeringChange` (`ECR-NNNN`): reason, description, impact; status DRAFT →
+      PROPOSED → APPROVED → IMPLEMENTED, REJECTED from any open state, send-back to DRAFT;
+      implementing requires a proposed revision; links freeze when closed
+- [x] Links: affected/proposed revisions, experiments, test runs (the evidence trail)
+- [x] REST: suppliers with revisions/parts; changes with link endpoints; changes by revision
+- [x] UI: Suppliers list/detail, Changes list/detail, supplier on revision editor and part
+      form, revision changes panel, dashboard open changes; planned-page placeholder retired
+- [x] Tests: register and links, change flow with evidence, rejection/send-back, API
 
 ### Seed & tests & docs
 - [x] `python -m nemeth seed` — idempotent N1 seed, marked as placeholder

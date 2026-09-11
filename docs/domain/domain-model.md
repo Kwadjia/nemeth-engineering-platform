@@ -16,11 +16,11 @@ path through the model.
 | Question | Path through the model |
 |---|---|
 | What exact revision of every component is inside N1-017? | Prototype/`Watch` → `BuildRecord` entries → installed `PartInstance` → `ComponentRevision` *(prototypes done; watches slice 10)*; design intent via `ProductModel` → root assembly → resolved BOM tree *(done)* |
-| Who manufactured the escape wheel? | `PartInstance.source` + `supplier_note` *(done)*; `Supplier` / `ManufacturingOrder` *(slice 12)*; design-level default via `ComponentRevision.supplier_note` |
+| Who manufactured the escape wheel? | `PartInstance.supplier` (actual) and `ComponentRevision.supplier` (intended) *(done)*; `ManufacturingOrder` *(future)* |
 | What material and heat treatment was used? | `ComponentRevision.material`, `.heat_treatment`, `.finish` *(done)*; actual `material_lot` / `heat_treatment_lot` on `PartInstance` *(done)* |
 | What CAD file generated the part? | `ComponentRevision` → `Attachment(kind=CAD)` with SHA-256 *(slice 11)* |
 | What inspection measurements were recorded? | `PartInstance` → `TestRun(type=DIMENSIONAL_INSPECTION)` → `Measurement` *(slice 9)* |
-| What experiments caused us to change from Rev B to Rev C? | `EngineeringChange.evidence` → `Experiment`; `EngineeringChange.affected_revision`, `.proposed_revision` *(slices 8, 12)* |
+| What experiments caused us to change from Rev B to Rev C? | `EngineeringChange` with B as `AFFECTED`, C as `PROPOSED`, linked experiments and test runs *(done)* |
 | What was the timing performance before and after? | `Experiment` → `TestRun` (before/after) → `Measurement` *(slices 8, 9)* |
 | What watches contain this revision? | `ComponentRevision` ← `PartInstance.current_prototype` *(prototypes done; watches slice 10)*; design-level via where-used *(done)* |
 | What parts failed inspection? | `TestRun.outcome = FAIL` → `Nonconformance` *(slices 9, 12)* |
@@ -332,12 +332,26 @@ attachment removes the file; attachments on frozen revisions are the
 engineering record and should be replaced by uploading the changed file
 rather than deleted.
 
-## Engineering change (planned, slice 12)
+## Suppliers (implemented)
 
-`EngineeringChange` — `ECR-0021`: title, reason, affected component
-revision(s), proposed revision(s), evidence (experiments, test runs),
-status (`DRAFT`, `PROPOSED`, `APPROVED`, `IMPLEMENTED`, `REJECTED`),
-approvals. Lightweight at first; the concept and the links are what matter.
+`Supplier` (`SUP-003`): name, kind (`MACHINE_SHOP`, `MATERIAL`, `PLATING`,
+`HEAT_TREATMENT`, `COMPONENTS`, `TOOLING`, `IN_HOUSE`, `OTHER`), capabilities,
+contact details, active flag. A `ComponentRevision.supplier_id` records the
+*intended* source of a design; a `PartInstance.supplier_id` records where a
+physical part *actually* came from. Both stay optional and coexist with the
+free-text supplier note.
+
+## Engineering changes (implemented)
+
+`EngineeringChange` (`ECR-0021`): title, reason, description, impact,
+requested by, approved by/on, implemented on, notes. Status `DRAFT` →
+`PROPOSED` → `APPROVED` → `IMPLEMENTED`; `REJECTED` from any open state;
+`PROPOSED` may be sent back to `DRAFT`. Implementing requires at least one
+*proposed* revision. Links: revisions with a role (`AFFECTED` = from,
+`PROPOSED` = to), experiments and test runs as evidence. Links are frozen
+once the change is implemented or rejected. "What experiments caused us to
+change from Rev B to Rev C" is the change that names B as affected and C as
+proposed, with its evidence.
 
 ## Audit and identity
 

@@ -14,6 +14,7 @@ from nemeth.modules.prototypes.models import (
     PartSource,
     PrototypeStatus,
 )
+from nemeth.modules.suppliers.schemas import SupplierSummary
 from nemeth.modules.watches.schemas import WatchSummary
 
 UnitKind = Literal["prototype", "watch"]
@@ -96,6 +97,7 @@ class PartInstanceRead(PartInstanceSummary, AuditFields):
     material_lot: str | None
     heat_treatment_lot: str | None
     supplier_note: str | None
+    supplier: SupplierSummary | None
     notes: str | None
     current_prototype: PrototypeSummary | None
     current_watch: WatchSummary | None
@@ -110,6 +112,7 @@ class PartInstanceCreate(BaseModel):
     material_lot: str | None = Field(default=None, max_length=120)
     heat_treatment_lot: str | None = Field(default=None, max_length=120)
     supplier_note: str | None = Field(default=None, max_length=300)
+    supplier_id: uuid.UUID | None = None
     notes: str | None = None
     is_placeholder: bool = False
 
@@ -121,6 +124,7 @@ class PartInstanceUpdate(BaseModel):
     material_lot: str | None = Field(default=None, max_length=120)
     heat_treatment_lot: str | None = Field(default=None, max_length=120)
     supplier_note: str | None = Field(default=None, max_length=300)
+    supplier_id: uuid.UUID | None = None
     notes: str | None = None
     is_placeholder: bool | None = None
 

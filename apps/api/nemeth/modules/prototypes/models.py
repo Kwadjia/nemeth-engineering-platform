@@ -24,6 +24,7 @@ from nemeth.modules.components.models import Component, ComponentRevision
 from nemeth.modules.products.models import Caliber, ProductModel
 
 if TYPE_CHECKING:
+    from nemeth.modules.suppliers.models import Supplier
     from nemeth.modules.watches.models import Watch
 
 
@@ -144,6 +145,9 @@ class PartInstance(UUIDPrimaryKeyMixin, AuditMixin, Base):
     material_lot: Mapped[str | None] = mapped_column(String(120))
     heat_treatment_lot: Mapped[str | None] = mapped_column(String(120))
     supplier_note: Mapped[str | None] = mapped_column(String(300))
+    supplier_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("suppliers.id", ondelete="RESTRICT"), index=True
+    )
     notes: Mapped[str | None] = mapped_column(Text)
     is_placeholder: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     current_prototype_id: Mapped[uuid.UUID | None] = mapped_column(
@@ -154,6 +158,7 @@ class PartInstance(UUIDPrimaryKeyMixin, AuditMixin, Base):
     )
 
     revision: Mapped[ComponentRevision] = relationship(foreign_keys=[component_revision_id])
+    supplier: Mapped[Supplier | None] = relationship(foreign_keys=[supplier_id])
     current_prototype: Mapped[Prototype | None] = relationship(
         back_populates="current_instances", foreign_keys=[current_prototype_id]
     )

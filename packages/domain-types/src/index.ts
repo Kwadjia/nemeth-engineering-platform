@@ -108,6 +108,37 @@ export const ATTACHMENT_KINDS: readonly AttachmentKind[] = [
   "OTHER",
 ] as const;
 
+export type SupplierKind = Schemas["SupplierKind"];
+export type SupplierSummary = Schemas["SupplierSummary"];
+export type SupplierRead = Schemas["SupplierRead"];
+export type SupplierCreate = Schemas["SupplierCreate"];
+export type SupplierUpdate = Schemas["SupplierUpdate"];
+export type ChangeStatus = Schemas["ChangeStatus"];
+export type ChangeRole = Schemas["ChangeRole"];
+export type ChangeSummary = Schemas["ChangeSummary"];
+export type ChangeRead = Schemas["ChangeRead"];
+export type ChangeCreate = Schemas["ChangeCreate"];
+export type ChangeUpdate = Schemas["ChangeUpdate"];
+
+export const SUPPLIER_KINDS: readonly SupplierKind[] = [
+  "MACHINE_SHOP",
+  "MATERIAL",
+  "PLATING",
+  "HEAT_TREATMENT",
+  "COMPONENTS",
+  "TOOLING",
+  "IN_HOUSE",
+  "OTHER",
+] as const;
+
+export const CHANGE_STATUSES: readonly ChangeStatus[] = [
+  "DRAFT",
+  "PROPOSED",
+  "APPROVED",
+  "IMPLEMENTED",
+  "REJECTED",
+] as const;
+
 export const TEST_OUTCOMES: readonly TestOutcome[] = ["INFO", "PASS", "FAIL"] as const;
 
 /** Timegrapher positions in the conventional order. */

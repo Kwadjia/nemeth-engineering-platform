@@ -19,6 +19,7 @@ import { describeError } from "@/lib/api";
 import { formatDate, formOptional, formText, titleCase } from "@/lib/format";
 import { useCreatePartInstances, usePartInstances } from "@/lib/prototypeQueries";
 import { useRevisions } from "@/lib/queries";
+import { useSuppliers } from "@/lib/supplierQueries";
 
 export function PartInstancesPage() {
   const [params, setParams] = useSearchParams();
@@ -94,6 +95,7 @@ export function PartInstancesPage() {
                 <TH className="w-24">Source</TH>
                 <TH className="w-28">Serial</TH>
                 <TH className="w-28">Lot</TH>
+                <TH className="w-32">Supplier</TH>
                 <TH className="w-28">In</TH>
                 <TH className="w-28">Recorded</TH>
               </TR>
@@ -136,6 +138,16 @@ export function PartInstancesPage() {
                     {i.lot ?? "—"}
                   </TD>
                   <TD>
+                    {i.supplier ? (
+                      <Identifier
+                        value={i.supplier.identifier}
+                        to={`/suppliers/${i.supplier.identifier}`}
+                      />
+                    ) : (
+                      <span className="text-fg-subtle">—</span>
+                    )}
+                  </TD>
+                  <TD>
                     {i.current_prototype ? (
                       <Identifier
                         value={i.current_prototype.identifier}
@@ -168,6 +180,7 @@ function NewInstancesForm({ onDone }: { onDone: () => void }) {
   const [componentRef, setComponentRef] = useState("");
   const [lookup, setLookup] = useState("");
   const revisions = useRevisions(lookup);
+  const suppliers = useSuppliers();
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
 
@@ -195,6 +208,7 @@ function NewInstancesForm({ onDone }: { onDone: () => void }) {
         material_lot: formOptional(fd, "material_lot"),
         heat_treatment_lot: formOptional(fd, "heat_treatment_lot"),
         supplier_note: formOptional(fd, "supplier_note"),
+        supplier_id: formOptional(fd, "supplier_id"),
         notes: formOptional(fd, "notes"),
       },
       {
@@ -286,7 +300,17 @@ function NewInstancesForm({ onDone }: { onDone: () => void }) {
           <Field label="Heat treatment lot" htmlFor="i-htlot">
             <Input id="i-htlot" name="heat_treatment_lot" className="font-mono" />
           </Field>
-          <Field label="Supplier note" htmlFor="i-supplier" className="sm:col-span-2">
+          <Field label="Supplier" htmlFor="i-supplier-id">
+            <Select id="i-supplier-id" name="supplier_id" defaultValue="">
+              <option value="">None</option>
+              {(suppliers.data?.items ?? []).map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.identifier} · {s.name}
+                </option>
+              ))}
+            </Select>
+          </Field>
+          <Field label="Supplier note" htmlFor="i-supplier">
             <Input id="i-supplier" name="supplier_note" />
           </Field>
           <Field label="Notes" htmlFor="i-notes" className="sm:col-span-4">

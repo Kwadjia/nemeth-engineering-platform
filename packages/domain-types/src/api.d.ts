@@ -165,6 +165,112 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/changes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Changes */
+    get: operations["list_changes_api_v1_changes_get"];
+    put?: never;
+    /** Create Change */
+    post: operations["create_change_api_v1_changes_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/changes/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Change */
+    get: operations["get_change_api_v1_changes__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Change */
+    patch: operations["update_change_api_v1_changes__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/changes/{ref}/experiments/{experiment_ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Link Experiment */
+    post: operations["link_experiment_api_v1_changes__ref__experiments__experiment_ref__post"];
+    /** Unlink Experiment */
+    delete: operations["unlink_experiment_api_v1_changes__ref__experiments__experiment_ref__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/changes/{ref}/revisions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Link Revision */
+    post: operations["link_revision_api_v1_changes__ref__revisions_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/changes/{ref}/revisions/{revision_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Unlink Revision */
+    delete: operations["unlink_revision_api_v1_changes__ref__revisions__revision_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/changes/{ref}/test-runs/{run_ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Link Test Run */
+    post: operations["link_test_run_api_v1_changes__ref__test_runs__run_ref__post"];
+    /** Unlink Test Run */
+    delete: operations["unlink_test_run_api_v1_changes__ref__test_runs__run_ref__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/components": {
     parameters: {
       query?: never;
@@ -815,6 +921,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/revisions/{revision_id}/changes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Revision Changes
+     * @description Changes in which this revision is affected or proposed: why it exists, or why it ended.
+     */
+    get: operations["revision_changes_api_v1_revisions__revision_id__changes_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/revisions/{revision_id}/experiments": {
     parameters: {
       query?: never;
@@ -881,6 +1007,82 @@ export interface paths {
      * @description Watches that currently contain a part made to this exact revision.
      */
     get: operations["revision_watches_api_v1_revisions__revision_id__watches_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/suppliers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Suppliers */
+    get: operations["list_suppliers_api_v1_suppliers_get"];
+    put?: never;
+    /** Create Supplier */
+    post: operations["create_supplier_api_v1_suppliers_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/suppliers/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Supplier */
+    get: operations["get_supplier_api_v1_suppliers__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Supplier */
+    patch: operations["update_supplier_api_v1_suppliers__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/suppliers/{ref}/part-instances": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Supplier Part Instances
+     * @description Physical parts actually sourced from this supplier.
+     */
+    get: operations["supplier_part_instances_api_v1_suppliers__ref__part_instances_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/suppliers/{ref}/revisions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Supplier Revisions
+     * @description Component revisions that name this supplier as their default source.
+     */
+    get: operations["supplier_revisions_api_v1_suppliers__ref__revisions_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1740,6 +1942,152 @@ export interface components {
       /** Thickness Mm */
       thickness_mm?: number | string | null;
     };
+    /** ChangeCreate */
+    ChangeCreate: {
+      /** Affected Revision Ids */
+      affected_revision_ids?: string[];
+      /** Description */
+      description?: string | null;
+      /** Experiment Refs */
+      experiment_refs?: string[];
+      /**
+       * Identifier
+       * @description Generated as ECR-NNNN when omitted.
+       */
+      identifier?: string | null;
+      /** Impact */
+      impact?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** Notes */
+      notes?: string | null;
+      /** Proposed Revision Ids */
+      proposed_revision_ids?: string[];
+      /** Reason */
+      reason?: string | null;
+      /** Requested By */
+      requested_by?: string | null;
+      /** Title */
+      title: string;
+    };
+    /** ChangeRead */
+    ChangeRead: {
+      /** Approved By */
+      approved_by: string | null;
+      /** Approved On */
+      approved_on: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Description */
+      description?: string | null;
+      /** Experiments */
+      experiments: components["schemas"]["ExperimentSummary"][];
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Impact */
+      impact?: string | null;
+      /** Implemented On */
+      implemented_on: string | null;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Notes */
+      notes?: string | null;
+      /** Reason */
+      reason?: string | null;
+      /** Requested By */
+      requested_by: string;
+      /** Revisions */
+      revisions: components["schemas"]["ChangeRevisionLink"][];
+      status: components["schemas"]["ChangeStatus"];
+      /** Test Runs */
+      test_runs: components["schemas"]["TestRunSummary"][];
+      /** Title */
+      title: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /** ChangeRevisionLink */
+    ChangeRevisionLink: {
+      component: components["schemas"]["ComponentSummary"];
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      revision: components["schemas"]["RevisionSummary"];
+      role: components["schemas"]["ChangeRole"];
+    };
+    /**
+     * ChangeRole
+     * @enum {string}
+     */
+    ChangeRole: "AFFECTED" | "PROPOSED";
+    /**
+     * ChangeStatus
+     * @enum {string}
+     */
+    ChangeStatus: "DRAFT" | "PROPOSED" | "APPROVED" | "IMPLEMENTED" | "REJECTED";
+    /** ChangeSummary */
+    ChangeSummary: {
+      /** Approved On */
+      approved_on: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Implemented On */
+      implemented_on: string | null;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Requested By */
+      requested_by: string;
+      status: components["schemas"]["ChangeStatus"];
+      /** Title */
+      title: string;
+    };
+    /** ChangeUpdate */
+    ChangeUpdate: {
+      /** Approved By */
+      approved_by?: string | null;
+      /** Approved On */
+      approved_on?: string | null;
+      /** Description */
+      description?: string | null;
+      /** Impact */
+      impact?: string | null;
+      /** Implemented On */
+      implemented_on?: string | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      /** Notes */
+      notes?: string | null;
+      /** Reason */
+      reason?: string | null;
+      status?: components["schemas"]["ChangeStatus"] | null;
+      /** Title */
+      title?: string | null;
+    };
     /** ComponentCreate */
     ComponentCreate: {
       /**
@@ -1911,6 +2259,10 @@ export interface components {
       };
       latest_timing: components["schemas"]["TimingSummary"] | null;
       latest_timing_run: components["schemas"]["TestRunSummary"] | null;
+      /** Open Change Count */
+      open_change_count: number;
+      /** Open Changes */
+      open_changes: components["schemas"]["ChangeSummary"][];
       /** Products */
       products: components["schemas"]["ProductSummary"][];
       /** Prototype Count */
@@ -1923,6 +2275,8 @@ export interface components {
       recent_revisions: components["schemas"]["RecentRevision"][];
       /** Recent Test Runs */
       recent_test_runs: components["schemas"]["TestRunSummary"][];
+      /** Supplier Count */
+      supplier_count: number;
       /** Test Run Count */
       test_run_count: number;
       /** Watch Count */
@@ -2189,6 +2543,15 @@ export interface components {
       /** Role */
       role?: string | null;
     };
+    /** LinkRevisionRole */
+    LinkRevisionRole: {
+      /**
+       * Component Revision Id
+       * Format: uuid
+       */
+      component_revision_id: string;
+      role: components["schemas"]["ChangeRole"];
+    };
     /** MeasurementCreate */
     MeasurementCreate: {
       /** Extra */
@@ -2268,6 +2631,17 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** Page[ChangeRead] */
+    Page_ChangeRead_: {
+      /** Items */
+      items: components["schemas"]["ChangeRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
     /** Page[ComponentRead] */
     Page_ComponentRead_: {
       /** Items */
@@ -2316,6 +2690,17 @@ export interface components {
     Page_PrototypeRead_: {
       /** Items */
       items: components["schemas"]["PrototypeRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
+    /** Page[SupplierRead] */
+    Page_SupplierRead_: {
+      /** Items */
+      items: components["schemas"]["SupplierRead"][];
       /** Limit */
       limit: number;
       /** Offset */
@@ -2375,6 +2760,8 @@ export interface components {
       serial_number?: string | null;
       /** @default IN_HOUSE */
       source?: components["schemas"]["PartSource"];
+      /** Supplier Id */
+      supplier_id?: string | null;
       /** Supplier Note */
       supplier_note?: string | null;
     };
@@ -2412,6 +2799,7 @@ export interface components {
       serial_number: string | null;
       source: components["schemas"]["PartSource"];
       status: components["schemas"]["PartInstanceStatus"];
+      supplier: components["schemas"]["SupplierSummary"] | null;
       /** Supplier Note */
       supplier_note: string | null;
       /**
@@ -2458,6 +2846,8 @@ export interface components {
       /** Serial Number */
       serial_number?: string | null;
       source?: components["schemas"]["PartSource"] | null;
+      /** Supplier Id */
+      supplier_id?: string | null;
       /** Supplier Note */
       supplier_note?: string | null;
     };
@@ -2813,6 +3203,8 @@ export interface components {
       material?: string | null;
       /** Notes */
       notes?: string | null;
+      /** Supplier Id */
+      supplier_id?: string | null;
       /** Supplier Note */
       supplier_note?: string | null;
       /** Tolerances */
@@ -2890,6 +3282,9 @@ export interface components {
       revision_number: number;
       /** Superseded By Id */
       superseded_by_id: string | null;
+      supplier?: components["schemas"]["SupplierSummary"] | null;
+      /** Supplier Id */
+      supplier_id?: string | null;
       /** Supplier Note */
       supplier_note?: string | null;
       /** Tolerances */
@@ -2952,12 +3347,148 @@ export interface components {
       material?: string | null;
       /** Notes */
       notes?: string | null;
+      /** Supplier Id */
+      supplier_id?: string | null;
       /** Supplier Note */
       supplier_note?: string | null;
       /** Tolerances */
       tolerances?: {
         [key: string]: unknown;
       } | null;
+    };
+    /** SupplierCreate */
+    SupplierCreate: {
+      /** Address */
+      address?: string | null;
+      /** Capabilities */
+      capabilities?: string | null;
+      /** Contact Name */
+      contact_name?: string | null;
+      /** Country */
+      country?: string | null;
+      /** Email */
+      email?: string | null;
+      /**
+       * Identifier
+       * @description Generated as SUP-NNN when omitted.
+       */
+      identifier?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** @default OTHER */
+      kind?: components["schemas"]["SupplierKind"];
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /** Phone */
+      phone?: string | null;
+      /** Website */
+      website?: string | null;
+    };
+    /**
+     * SupplierKind
+     * @enum {string}
+     */
+    SupplierKind:
+      | "MACHINE_SHOP"
+      | "MATERIAL"
+      | "PLATING"
+      | "HEAT_TREATMENT"
+      | "COMPONENTS"
+      | "TOOLING"
+      | "IN_HOUSE"
+      | "OTHER";
+    /** SupplierRead */
+    SupplierRead: {
+      /** Address */
+      address: string | null;
+      /** Capabilities */
+      capabilities: string | null;
+      /** Contact Name */
+      contact_name: string | null;
+      /** Country */
+      country: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Email */
+      email: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Active */
+      is_active: boolean;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      kind: components["schemas"]["SupplierKind"];
+      /** Name */
+      name: string;
+      /** Notes */
+      notes: string | null;
+      /** Phone */
+      phone: string | null;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+      /** Website */
+      website: string | null;
+    };
+    /** SupplierSummary */
+    SupplierSummary: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Active */
+      is_active: boolean;
+      kind: components["schemas"]["SupplierKind"];
+      /** Name */
+      name: string;
+    };
+    /** SupplierUpdate */
+    SupplierUpdate: {
+      /** Address */
+      address?: string | null;
+      /** Capabilities */
+      capabilities?: string | null;
+      /** Contact Name */
+      contact_name?: string | null;
+      /** Country */
+      country?: string | null;
+      /** Email */
+      email?: string | null;
+      /** Is Active */
+      is_active?: boolean | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      kind?: components["schemas"]["SupplierKind"] | null;
+      /** Name */
+      name?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Phone */
+      phone?: string | null;
+      /** Website */
+      website?: string | null;
     };
     /** SystemInfo */
     SystemInfo: {
@@ -3970,6 +4501,331 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["BomTree"];
         };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_changes_api_v1_changes_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        status?: components["schemas"]["ChangeStatus"] | null;
+        open_only?: boolean;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_ChangeRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_change_api_v1_changes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangeCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_change_api_v1_changes__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_change_api_v1_changes__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangeUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  link_experiment_api_v1_changes__ref__experiments__experiment_ref__post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+        experiment_ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  unlink_experiment_api_v1_changes__ref__experiments__experiment_ref__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+        experiment_ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  link_revision_api_v1_changes__ref__revisions_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LinkRevisionRole"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  unlink_revision_api_v1_changes__ref__revisions__revision_id__delete: {
+    parameters: {
+      query: {
+        role: components["schemas"]["ChangeRole"];
+      };
+      header?: never;
+      path: {
+        ref: string;
+        revision_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  link_test_run_api_v1_changes__ref__test_runs__run_ref__post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+        run_ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  unlink_test_run_api_v1_changes__ref__test_runs__run_ref__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+        run_ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
       /** @description Validation Error */
       422: {
@@ -5652,6 +6508,37 @@ export interface operations {
       };
     };
   };
+  revision_changes_api_v1_revisions__revision_id__changes_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        revision_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ChangeSummary"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   revision_experiments_api_v1_revisions__revision_id__experiments_get: {
     parameters: {
       query?: never;
@@ -5767,6 +6654,202 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["WatchSummary"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_suppliers_api_v1_suppliers_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        kind?: components["schemas"]["SupplierKind"] | null;
+        include_inactive?: boolean;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_SupplierRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_supplier_api_v1_suppliers_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SupplierCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SupplierRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_supplier_api_v1_suppliers__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SupplierRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_supplier_api_v1_suppliers__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SupplierUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SupplierRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  supplier_part_instances_api_v1_suppliers__ref__part_instances_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PartInstanceRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  supplier_revisions_api_v1_suppliers__ref__revisions_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RevisionRead"][];
         };
       };
       /** @description Validation Error */

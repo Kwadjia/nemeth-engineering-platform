@@ -6,6 +6,8 @@ import { BomExplorerPage } from "@/features/boms/BomExplorerPage";
 import { BomsPage } from "@/features/boms/BomsPage";
 import { CaliberDetailPage } from "@/features/calibers/CaliberDetailPage";
 import { CalibersPage } from "@/features/calibers/CalibersPage";
+import { ChangeDetailPage } from "@/features/changes/ChangeDetailPage";
+import { ChangesPage } from "@/features/changes/ChangesPage";
 import { ComponentCreatePage } from "@/features/components/ComponentCreatePage";
 import { ComponentDetailPage } from "@/features/components/ComponentDetailPage";
 import { ComponentsPage } from "@/features/components/ComponentsPage";
@@ -13,13 +15,14 @@ import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { DocumentsPage } from "@/features/documents/DocumentsPage";
 import { ExperimentDetailPage } from "@/features/experiments/ExperimentDetailPage";
 import { ExperimentsPage } from "@/features/experiments/ExperimentsPage";
-import { PlannedPage } from "@/features/planned/PlannedPage";
 import { ProductDetailPage } from "@/features/products/ProductDetailPage";
 import { ProductsPage } from "@/features/products/ProductsPage";
 import { PartInstancesPage } from "@/features/prototypes/PartInstancesPage";
 import { PrototypeDetailPage } from "@/features/prototypes/PrototypeDetailPage";
 import { PrototypesPage } from "@/features/prototypes/PrototypesPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
+import { SupplierDetailPage } from "@/features/suppliers/SupplierDetailPage";
+import { SuppliersPage } from "@/features/suppliers/SuppliersPage";
 import { TestingPage } from "@/features/testing/TestingPage";
 import { TestRunDetailPage } from "@/features/testing/TestRunDetailPage";
 import { WatchDetailPage } from "@/features/watches/WatchDetailPage";
@@ -51,9 +54,11 @@ export const router = createBrowserRouter([
       { path: "testing/:ref", element: <TestRunDetailPage /> },
       { path: "watches", element: <WatchesPage /> },
       { path: "watches/:ref", element: <WatchDetailPage /> },
-      { path: "suppliers", element: <PlannedPage area="suppliers" /> },
+      { path: "suppliers", element: <SuppliersPage /> },
+      { path: "suppliers/:ref", element: <SupplierDetailPage /> },
       { path: "documents", element: <DocumentsPage /> },
-      { path: "changes", element: <PlannedPage area="changes" /> },
+      { path: "changes", element: <ChangesPage /> },
+      { path: "changes/:ref", element: <ChangeDetailPage /> },
       { path: "settings", element: <SettingsPage /> },
       { path: "*", element: <NotFound /> },
     ],

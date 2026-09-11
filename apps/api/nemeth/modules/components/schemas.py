@@ -8,15 +8,9 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from nemeth.core.lifecycle import LifecycleState
+from nemeth.core.schemas import AuditFields as AuditFields
 from nemeth.modules.components.models import ComponentFamily, ComponentKind
-
-
-class AuditFields(BaseModel):
-    created_at: datetime
-    created_by: str
-    updated_at: datetime
-    updated_by: str
-
+from nemeth.modules.suppliers.schemas import SupplierSummary
 
 # --- revisions ---------------------------------------------------------------------
 
@@ -33,6 +27,7 @@ class RevisionContent(BaseModel):
     tolerances: dict[str, Any] | None = None
     mass_g: Decimal | None = Field(default=None, ge=0)
     supplier_note: str | None = Field(default=None, max_length=300)
+    supplier_id: uuid.UUID | None = None
     inspection_requirements: str | None = None
     notes: str | None = None
 
@@ -66,6 +61,7 @@ class RevisionRead(RevisionSummary, RevisionContent, AuditFields):
     display_identifier: str
     superseded_by_id: uuid.UUID | None
     allowed_transitions: list[LifecycleState]
+    supplier: SupplierSummary | None = None
 
 
 class RevisionCreate(BaseModel):

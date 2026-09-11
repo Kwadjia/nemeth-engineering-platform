@@ -12,11 +12,12 @@ import {
 import { BomTree } from "@/components/domain/BomTree";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Field, FormError, Input, Textarea } from "@/components/ui/form";
+import { Field, FormError, Input, Select, Textarea } from "@/components/ui/form";
 import { EmptyState, ErrorNotice, KV, LoadingRows, PageHeader } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { AttachmentsPanel } from "@/components/domain/AttachmentsPanel";
 import { PartInstancesPanel } from "@/features/components/PartInstancesPanel";
+import { RevisionChangesPanel } from "@/features/components/RevisionChangesPanel";
 import { describeError } from "@/lib/api";
 import { displayValue, formText, formatDateTime, formatNumber, titleCase } from "@/lib/format";
 import {
@@ -28,6 +29,7 @@ import {
   useUpdateRevision,
   useWhereUsed,
 } from "@/lib/queries";
+import { useSuppliers } from "@/lib/supplierQueries";
 import { cn } from "@/lib/utils";
 
 export function ComponentDetailPage() {
@@ -117,6 +119,9 @@ export function ComponentDetailPage() {
           ) : null}
           <WhereUsedPanel componentRef={c.identifier} />
           <PartInstancesPanel componentRef={c.identifier} />
+          {selected ? (
+            <RevisionChangesPanel revisionId={selected.id} label={selected.revision_label} />
+          ) : null}
           {selected ? (
             <AttachmentsPanel
               entityType="component_revision"
@@ -209,7 +214,20 @@ function RevisionPanel({
                   label: "Mass",
                   value: revision.mass_g ? formatNumber(revision.mass_g, "g") : null,
                 },
-                { label: "Supplier", value: revision.supplier_note },
+                {
+                  label: "Supplier",
+                  value: revision.supplier ? (
+                    <span className="inline-flex items-center gap-2">
+                      <Identifier
+                        value={revision.supplier.identifier}
+                        to={`/suppliers/${revision.supplier.identifier}`}
+                      />
+                      <span>{revision.supplier.name}</span>
+                    </span>
+                  ) : (
+                    revision.supplier_note
+                  ),
+                },
                 { label: "Description", value: revision.description, span: 2 },
                 { label: "Inspection requirements", value: revision.inspection_requirements },
                 { label: "Notes", value: revision.notes, span: 2 },
@@ -281,6 +299,7 @@ function parseJsonObject(value: FormDataEntryValue | null): Record<string, unkno
 
 function RevisionEditor({ revision, onDone }: { revision: RevisionRead; onDone: () => void }) {
   const update = useUpdateRevision(revision.id);
+  const suppliers = useSuppliers();
   const [error, setError] = useState<string | null>(null);
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -309,6 +328,7 @@ function RevisionEditor({ revision, onDone }: { revision: RevisionRead; onDone: 
         tolerances,
         mass_g: mass,
         supplier_note: optional(fd.get("supplier_note")),
+        supplier_id: optional(fd.get("supplier_id")),
         inspection_requirements: optional(fd.get("inspection_requirements")),
         notes: optional(fd.get("notes")),
       },
@@ -352,6 +372,16 @@ function RevisionEditor({ revision, onDone }: { revision: RevisionRead; onDone: 
       </Field>
       <Field label="Supplier note" htmlFor="e-supplier">
         <Input id="e-supplier" name="supplier_note" defaultValue={revision.supplier_note ?? ""} />
+      </Field>
+      <Field label="Default supplier" htmlFor="e-supplier-id">
+        <Select id="e-supplier-id" name="supplier_id" defaultValue={revision.supplier?.id ?? ""}>
+          <option value="">None</option>
+          {(suppliers.data?.items ?? []).map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.identifier} · {s.name}
+            </option>
+          ))}
+        </Select>
       </Field>
       <Field
         label="Dimensions (JSON)"

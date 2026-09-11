@@ -26,6 +26,7 @@ from nemeth.core.lifecycle import ALLOWED_TRANSITIONS, LifecycleState, is_frozen
 
 if TYPE_CHECKING:
     from nemeth.modules.bom.models import BomLine
+    from nemeth.modules.suppliers.models import Supplier
 
 
 class ComponentKind(StrEnum):
@@ -129,6 +130,9 @@ class ComponentRevision(UUIDPrimaryKeyMixin, AuditMixin, Base):
     tolerances: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     mass_g: Mapped[Decimal | None] = mapped_column(Numeric(10, 4))
     supplier_note: Mapped[str | None] = mapped_column(String(300))
+    supplier_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("suppliers.id", ondelete="RESTRICT"), index=True
+    )
     inspection_requirements: Mapped[str | None] = mapped_column(Text)
     notes: Mapped[str | None] = mapped_column(Text)
 
@@ -141,6 +145,7 @@ class ComponentRevision(UUIDPrimaryKeyMixin, AuditMixin, Base):
     component: Mapped[Component] = relationship(
         back_populates="revisions", foreign_keys=[component_id]
     )
+    supplier: Mapped[Supplier | None] = relationship(foreign_keys=[supplier_id])
     superseded_by: Mapped[ComponentRevision | None] = relationship(
         remote_side="ComponentRevision.id", foreign_keys=[superseded_by_id]
     )
@@ -162,6 +167,7 @@ class ComponentRevision(UUIDPrimaryKeyMixin, AuditMixin, Base):
         "tolerances",
         "mass_g",
         "supplier_note",
+        "supplier_id",
         "inspection_requirements",
         "notes",
     )

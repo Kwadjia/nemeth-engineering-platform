@@ -38,10 +38,10 @@ Rules:
 | Watch | `{PRODUCT}-{NNN}` | `N1-017` | `N1` |
 | Movement (serialized) *(planned)* | `{CALIBER}-{NNNN}` | `CAL-N1-0001` | `CAL-N1` |
 | Experiment | `EXP-{NNN}` | `EXP-014` | `EXP` |
-| Engineering change *(planned)* | `ECR-{NNNN}` | `ECR-0021` | `ECR` |
+| Engineering change | `ECR-{NNNN}` | `ECR-0021` | `ECR` |
 | Test run | `TR-{NNNNN}` | `TR-00042` | `TR` |
 | Test type | `{CODE}` (uppercase, underscores) | `TIMEGRAPHER` | manual |
-| Supplier *(planned)* | `SUP-{NNN}` | `SUP-003` | `SUP` |
+| Supplier | `SUP-{NNN}` | `SUP-003` | `SUP` |
 | Document / attachment | `DOC-{NNNNN}` | `DOC-00108` | `DOC` |
 
 Component families (the `{FAMILY}` segment) are a fixed vocabulary that

@@ -34,6 +34,7 @@ from nemeth.modules.components.schemas import (
     RevisionCreate,
     RevisionUpdate,
 )
+from nemeth.modules.suppliers import service as suppliers
 
 _WITH_REVISIONS = (selectinload(Component.revisions),)
 
@@ -135,6 +136,7 @@ def get_revision(session: Session, revision_id: uuid.UUID) -> ComponentRevision:
         .options(
             selectinload(ComponentRevision.component).selectinload(Component.revisions),
             selectinload(ComponentRevision.bom_lines),
+            selectinload(ComponentRevision.supplier),
         )
     )
     revision = session.execute(stmt).scalar_one_or_none()
@@ -183,9 +185,11 @@ def assert_editable(revision: ComponentRevision) -> None:
 
 
 def _apply_content(
-    revision: ComponentRevision, content: RevisionContent, *, only_set: bool
+    session: Session, revision: ComponentRevision, content: RevisionContent, *, only_set: bool
 ) -> None:
     data = content.model_dump(exclude_unset=only_set)
+    if data.get("supplier_id") is not None:
+        suppliers.require_supplier(session, data["supplier_id"])
     for field, value in data.items():
         setattr(revision, field, value)
 
@@ -221,7 +225,7 @@ def create_component(session: Session, actor: Actor, data: ComponentCreate) -> C
         change_summary=data.change_summary,
     )
     if data.initial_revision is not None:
-        _apply_content(initial, data.initial_revision, only_set=False)
+        _apply_content(session, initial, data.initial_revision, only_set=False)
     stamp_created(initial, actor)
     component.revisions.append(initial)
 
@@ -275,7 +279,7 @@ def create_revision(
     for field in ComponentRevision.CONTENT_FIELDS:
         setattr(revision, field, getattr(source, field))
     if data.content is not None:
-        _apply_content(revision, data.content, only_set=True)
+        _apply_content(session, revision, data.content, only_set=True)
     stamp_created(revision, actor)
     session.add(revision)
     session.flush()
@@ -309,6 +313,8 @@ def update_revision(
 ) -> ComponentRevision:
     assert_editable(revision)
     changes = data.model_dump(exclude_unset=True)
+    if changes.get("supplier_id") is not None:
+        suppliers.require_supplier(session, changes["supplier_id"])
     for field, value in changes.items():
         setattr(revision, field, value)
     stamp_updated(revision, actor)

@@ -7,11 +7,18 @@ models from their own modules.
 from nemeth.core.db import Base
 from nemeth.core.identifiers import IdentifierCounter
 from nemeth.modules.bom.models import BomLine
+from nemeth.modules.changes.models import (
+    ChangeExperiment,
+    ChangeRevision,
+    ChangeTestRun,
+    EngineeringChange,
+)
 from nemeth.modules.components.models import Component, ComponentRevision
 from nemeth.modules.documents.models import Attachment
 from nemeth.modules.experiments.models import Experiment, ExperimentPrototype, ExperimentRevision
 from nemeth.modules.products.models import Caliber, Product, ProductModel
 from nemeth.modules.prototypes.models import BuildEntry, BuildRecord, PartInstance, Prototype
+from nemeth.modules.suppliers.models import Supplier
 from nemeth.modules.testing.models import Measurement, TestRun, TestType
 from nemeth.modules.watches.models import Watch
 
@@ -22,8 +29,12 @@ __all__ = [
     "BuildEntry",
     "BuildRecord",
     "Caliber",
+    "ChangeExperiment",
+    "ChangeRevision",
+    "ChangeTestRun",
     "Component",
     "ComponentRevision",
+    "EngineeringChange",
     "Experiment",
     "ExperimentPrototype",
     "ExperimentRevision",
@@ -33,6 +44,7 @@ __all__ = [
     "Product",
     "ProductModel",
     "Prototype",
+    "Supplier",
     "TestRun",
     "TestType",
     "Watch",

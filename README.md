@@ -91,7 +91,8 @@ recursive BOMs with pinned or floating resolution and where-used, Prototypes
 with part instances and append-only build records (derived as-built
 configuration), N1 seed data, tests. Experiments as a lab notebook, an extensible measurement model with
 timegrapher summaries, serialized Watches with a dossier endpoint, Documents attached to any
-record with SHA-256 change detection.
-Planned next: Suppliers, Engineering Changes.
+record with SHA-256 change detection, Suppliers, and Engineering Changes
+with affected/proposed revisions and evidence links. That completes the
+v0.1 scope.
 
 All seed data is marked **placeholder** in the database and in the UI.

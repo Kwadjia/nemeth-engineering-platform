@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import type { PrototypeSummary } from "@nemeth/domain-types";
 import { Identifier, LifecycleBadge, PlaceholderBadge } from "@/components/domain/badges";
+import { ChangeStatusBadge } from "@/components/domain/changeBadges";
 import { ExperimentStatusBadge, OutcomeBadge } from "@/components/domain/experimentBadges";
 import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
 import { WatchStatusBadge } from "@/components/domain/watchBadges";
@@ -305,15 +306,37 @@ export function DashboardPage() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader eyebrow="Quality" title="Open engineering issues" />
-          <CardContent>
-            <EmptyState
-              icon={GitBranch}
-              title="No engineering changes or issues"
-              description="Engineering change records arrive in slice 12."
-              className="py-6"
-            />
-          </CardContent>
+          <CardHeader
+            eyebrow="Quality"
+            title="Open engineering changes"
+            actions={
+              <Link to="/changes" className="text-xs text-fg-muted hover:text-fg hover:underline">
+                All changes
+              </Link>
+            }
+          />
+          {dashboard.isLoading ? (
+            <LoadingRows rows={2} />
+          ) : dashboard.data && dashboard.data.open_changes.length > 0 ? (
+            <ul className="divide-y divide-border">
+              {dashboard.data.open_changes.map((c) => (
+                <li key={c.id} className="flex items-center gap-3 px-4 py-2">
+                  <Identifier value={c.identifier} to={`/changes/${c.identifier}`} />
+                  <span className="flex-1 truncate text-sm text-fg">{c.title}</span>
+                  <ChangeStatusBadge status={c.status} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <CardContent>
+              <EmptyState
+                icon={GitBranch}
+                title="No open engineering changes"
+                description="Open one when a revision needs to become the next one."
+                className="py-6"
+              />
+            </CardContent>
+          )}
         </Card>
       </div>
     </div>
