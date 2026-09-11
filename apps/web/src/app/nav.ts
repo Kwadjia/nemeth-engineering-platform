@@ -57,7 +57,7 @@ export const NAV: NavGroup[] = [
     label: "Manufacturing & quality",
     items: [
       { label: "Suppliers", to: "/suppliers", icon: Truck, plannedSlice: 12 },
-      { label: "Documents", to: "/documents", icon: FileText, plannedSlice: 11 },
+      { label: "Documents", to: "/documents", icon: FileText },
       { label: "Engineering changes", to: "/changes", icon: GitBranch, plannedSlice: 12 },
     ],
   },

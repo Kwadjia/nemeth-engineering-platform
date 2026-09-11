@@ -11,6 +11,7 @@ from nemeth.core.errors import install_error_handlers
 from nemeth.core.logging import RequestContextMiddleware, configure_logging
 from nemeth.modules.bom.router import router as bom_router
 from nemeth.modules.components.router import router as components_router
+from nemeth.modules.documents.router import router as documents_router
 from nemeth.modules.experiments.router import router as experiments_router
 from nemeth.modules.products.router import router as products_router
 from nemeth.modules.prototypes.router import router as prototypes_router
@@ -61,6 +62,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     api.include_router(experiments_router)
     api.include_router(testing_router)
     api.include_router(watches_router)
+    api.include_router(documents_router)
     app.include_router(api)
     return app
 

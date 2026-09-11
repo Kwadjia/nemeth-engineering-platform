@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { AttachmentsPanel } from "@/components/domain/AttachmentsPanel";
 import { Identifier, PlaceholderBadge } from "@/components/domain/badges";
 import { OutcomeBadgeTest, TestTypeBadge } from "@/components/domain/testingBadges";
 import { TimingTable } from "@/components/domain/TimingTable";
@@ -116,6 +117,7 @@ export function TestRunDetailPage() {
             )}
           </Card>
           <AppendForm run={r} />
+          <AttachmentsPanel entityType="test_run" entityId={r.id} defaultKind="TEST_RESULT" />
         </div>
         <Card className="self-start">
           <CardHeader eyebrow="Record" title="Details" />

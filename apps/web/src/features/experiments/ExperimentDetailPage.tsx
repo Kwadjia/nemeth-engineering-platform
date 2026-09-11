@@ -9,6 +9,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { AttachmentsPanel } from "@/components/domain/AttachmentsPanel";
 import { Identifier, LifecycleBadge, PlaceholderBadge } from "@/components/domain/badges";
 import { ExperimentStatusBadge, OutcomeBadge } from "@/components/domain/experimentBadges";
 import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
@@ -130,6 +131,7 @@ export function ExperimentDetailPage() {
             </Card>
           )}
           <ExperimentTestRunsPanel experimentRef={e.identifier} />
+          <AttachmentsPanel entityType="experiment" entityId={e.id} defaultKind="PHOTO" />
         </div>
         <div className="grid gap-4 self-start">
           <LinksPanel experiment={e} locked={closed} />

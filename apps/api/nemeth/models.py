@@ -8,6 +8,7 @@ from nemeth.core.db import Base
 from nemeth.core.identifiers import IdentifierCounter
 from nemeth.modules.bom.models import BomLine
 from nemeth.modules.components.models import Component, ComponentRevision
+from nemeth.modules.documents.models import Attachment
 from nemeth.modules.experiments.models import Experiment, ExperimentPrototype, ExperimentRevision
 from nemeth.modules.products.models import Caliber, Product, ProductModel
 from nemeth.modules.prototypes.models import BuildEntry, BuildRecord, PartInstance, Prototype
@@ -15,6 +16,7 @@ from nemeth.modules.testing.models import Measurement, TestRun, TestType
 from nemeth.modules.watches.models import Watch
 
 __all__ = [
+    "Attachment",
     "Base",
     "BomLine",
     "BuildEntry",

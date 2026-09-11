@@ -2,6 +2,7 @@ import { PROTOTYPE_STATUSES, type PrototypeRead, type PrototypeStatus } from "@n
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { AttachmentsPanel } from "@/components/domain/AttachmentsPanel";
 import { Identifier, PlaceholderBadge } from "@/components/domain/badges";
 import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -96,6 +97,7 @@ export function PrototypeDetailPage() {
           ) : null}
           <ExperimentsPanel prototypeRef={p.identifier} />
           <PrototypeTestRunsPanel prototypeRef={p.identifier} />
+          <AttachmentsPanel entityType="prototype" entityId={p.id} defaultKind="PHOTO" />
         </div>
         <Card className="self-start">
           <CardHeader eyebrow="Record" title="Details" />

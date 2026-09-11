@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, FormError, Input, Textarea } from "@/components/ui/form";
 import { EmptyState, ErrorNotice, KV, LoadingRows, PageHeader } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
+import { AttachmentsPanel } from "@/components/domain/AttachmentsPanel";
 import { PartInstancesPanel } from "@/features/components/PartInstancesPanel";
 import { describeError } from "@/lib/api";
 import { displayValue, formText, formatDateTime, formatNumber, titleCase } from "@/lib/format";
@@ -116,6 +117,14 @@ export function ComponentDetailPage() {
           ) : null}
           <WhereUsedPanel componentRef={c.identifier} />
           <PartInstancesPanel componentRef={c.identifier} />
+          {selected ? (
+            <AttachmentsPanel
+              entityType="component_revision"
+              entityId={selected.id}
+              eyebrow={`Files · Rev ${selected.revision_label}`}
+              defaultKind="CAD"
+            />
+          ) : null}
         </div>
       </div>
     </div>

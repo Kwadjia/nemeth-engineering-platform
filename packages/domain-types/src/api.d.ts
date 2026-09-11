@@ -4,6 +4,77 @@
  */
 
 export interface paths {
+  "/api/v1/attachments": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Attachments */
+    get: operations["list_attachments_api_v1_attachments_get"];
+    put?: never;
+    /** Upload Attachment */
+    post: operations["upload_attachment_api_v1_attachments_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/attachments/policy": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Upload Policy */
+    get: operations["upload_policy_api_v1_attachments_policy_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/attachments/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Attachment */
+    get: operations["get_attachment_api_v1_attachments__ref__get"];
+    put?: never;
+    post?: never;
+    /** Delete Attachment */
+    delete: operations["delete_attachment_api_v1_attachments__ref__delete"];
+    options?: never;
+    head?: never;
+    /** Update Attachment */
+    patch: operations["update_attachment_api_v1_attachments__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/attachments/{ref}/content": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Download Attachment */
+    get: operations["download_attachment_api_v1_attachments__ref__content_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/bom-lines/{line_id}": {
     parameters: {
       query?: never;
@@ -1070,6 +1141,165 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /**
+     * AttachmentKind
+     * @enum {string}
+     */
+    AttachmentKind:
+      "CAD" | "DRAWING" | "PHOTO" | "TEST_RESULT" | "MANUFACTURING" | "CERTIFICATE" | "OTHER";
+    /** AttachmentRead */
+    AttachmentRead: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Description */
+      description: string | null;
+      /**
+       * Entity Id
+       * Format: uuid
+       */
+      entity_id: string;
+      /**
+       * Entity Type
+       * @enum {string}
+       */
+      entity_type:
+        | "product"
+        | "product_model"
+        | "caliber"
+        | "component"
+        | "component_revision"
+        | "prototype"
+        | "part_instance"
+        | "build_record"
+        | "experiment"
+        | "test_run"
+        | "watch";
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      kind: components["schemas"]["AttachmentKind"];
+      /** Mime Type */
+      mime_type: string;
+      /** Original Filename */
+      original_filename: string;
+      /** Sha256 */
+      sha256: string;
+      /** Size Bytes */
+      size_bytes: number;
+      /** Stored Key */
+      stored_key: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /** AttachmentUpdate */
+    AttachmentUpdate: {
+      /** Description */
+      description?: string | null;
+      kind?: components["schemas"]["AttachmentKind"] | null;
+    };
+    /** AttachmentWithEntity */
+    AttachmentWithEntity: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Description */
+      description: string | null;
+      entity: components["schemas"]["EntityRef"] | null;
+      /**
+       * Entity Id
+       * Format: uuid
+       */
+      entity_id: string;
+      /**
+       * Entity Type
+       * @enum {string}
+       */
+      entity_type:
+        | "product"
+        | "product_model"
+        | "caliber"
+        | "component"
+        | "component_revision"
+        | "prototype"
+        | "part_instance"
+        | "build_record"
+        | "experiment"
+        | "test_run"
+        | "watch";
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      kind: components["schemas"]["AttachmentKind"];
+      /** Mime Type */
+      mime_type: string;
+      /** Original Filename */
+      original_filename: string;
+      /** Sha256 */
+      sha256: string;
+      /** Size Bytes */
+      size_bytes: number;
+      /** Stored Key */
+      stored_key: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /** Body_upload_attachment_api_v1_attachments_post */
+    Body_upload_attachment_api_v1_attachments_post: {
+      /** Description */
+      description?: string | null;
+      /**
+       * Entity Id
+       * Format: uuid
+       */
+      entity_id: string;
+      /**
+       * Entity Type
+       * @enum {string}
+       */
+      entity_type:
+        | "product"
+        | "product_model"
+        | "caliber"
+        | "component"
+        | "component_revision"
+        | "prototype"
+        | "part_instance"
+        | "build_record"
+        | "experiment"
+        | "test_run"
+        | "watch";
+      /** File */
+      file: string;
+      /** @default OTHER */
+      kind?: components["schemas"]["AttachmentKind"];
+    };
     /** BomFlat */
     BomFlat: {
       /**
@@ -1663,6 +1893,10 @@ export interface components {
       active_prototype: components["schemas"]["PrototypeSummary"] | null;
       /** Assembly Count */
       assembly_count: number;
+      /** Attachments By Kind */
+      attachments_by_kind: {
+        [key: string]: number;
+      };
       /** Calibers */
       calibers: components["schemas"]["CaliberSummary"][];
       /** Component Count */
@@ -1695,6 +1929,34 @@ export interface components {
       watch_count: number;
       /** Watches */
       watches: components["schemas"]["WatchSummary"][];
+    };
+    /** EntityRef */
+    EntityRef: {
+      /**
+       * Entity Id
+       * Format: uuid
+       */
+      entity_id: string;
+      /**
+       * Entity Type
+       * @enum {string}
+       */
+      entity_type:
+        | "product"
+        | "product_model"
+        | "caliber"
+        | "component"
+        | "component_revision"
+        | "prototype"
+        | "part_instance"
+        | "build_record"
+        | "experiment"
+        | "test_run"
+        | "watch";
+      /** Identifier */
+      identifier: string;
+      /** Label */
+      label: string;
     };
     /** ExperimentCreate */
     ExperimentCreate: {
@@ -1983,6 +2245,17 @@ export interface components {
       label: string;
       /** Unit */
       unit?: string | null;
+    };
+    /** Page[AttachmentWithEntity] */
+    Page_AttachmentWithEntity_: {
+      /** Items */
+      items: components["schemas"]["AttachmentWithEntity"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
     };
     /** Page[CaliberRead] */
     Page_CaliberRead_: {
@@ -2973,6 +3246,17 @@ export interface components {
       unit_kind: "prototype" | "watch";
       watch: components["schemas"]["WatchSummary"] | null;
     };
+    /** UploadPolicy */
+    UploadPolicy: {
+      /** Allowed Extensions */
+      allowed_extensions: string[];
+      /** Entity Types */
+      entity_types: string[];
+      /** Kinds */
+      kinds: components["schemas"]["AttachmentKind"][];
+      /** Max Bytes */
+      max_bytes: number;
+    };
     /** ValidationError */
     ValidationError: {
       /** Context */
@@ -3142,6 +3426,237 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+  list_attachments_api_v1_attachments_get: {
+    parameters: {
+      query?: {
+        entity_type?:
+          | (
+              | "product"
+              | "product_model"
+              | "caliber"
+              | "component"
+              | "component_revision"
+              | "prototype"
+              | "part_instance"
+              | "build_record"
+              | "experiment"
+              | "test_run"
+              | "watch"
+            )
+          | null;
+        entity_id?: string | null;
+        kind?: components["schemas"]["AttachmentKind"] | null;
+        q?: string | null;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_AttachmentWithEntity_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  upload_attachment_api_v1_attachments_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "multipart/form-data": components["schemas"]["Body_upload_attachment_api_v1_attachments_post"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AttachmentRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  upload_policy_api_v1_attachments_policy_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadPolicy"];
+        };
+      };
+    };
+  };
+  get_attachment_api_v1_attachments__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AttachmentWithEntity"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  delete_attachment_api_v1_attachments__ref__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_attachment_api_v1_attachments__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AttachmentUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AttachmentWithEntity"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  download_attachment_api_v1_attachments__ref__content_get: {
+    parameters: {
+      query?: {
+        inline?: boolean;
+      };
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   get_bom_line_api_v1_bom_lines__line_id__get: {
     parameters: {
       query?: never;

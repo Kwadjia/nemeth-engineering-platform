@@ -10,6 +10,7 @@ import { ComponentCreatePage } from "@/features/components/ComponentCreatePage";
 import { ComponentDetailPage } from "@/features/components/ComponentDetailPage";
 import { ComponentsPage } from "@/features/components/ComponentsPage";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { DocumentsPage } from "@/features/documents/DocumentsPage";
 import { ExperimentDetailPage } from "@/features/experiments/ExperimentDetailPage";
 import { ExperimentsPage } from "@/features/experiments/ExperimentsPage";
 import { PlannedPage } from "@/features/planned/PlannedPage";
@@ -51,7 +52,7 @@ export const router = createBrowserRouter([
       { path: "watches", element: <WatchesPage /> },
       { path: "watches/:ref", element: <WatchDetailPage /> },
       { path: "suppliers", element: <PlannedPage area="suppliers" /> },
-      { path: "documents", element: <PlannedPage area="documents" /> },
+      { path: "documents", element: <DocumentsPage /> },
       { path: "changes", element: <PlannedPage area="changes" /> },
       { path: "settings", element: <SettingsPage /> },
       { path: "*", element: <NotFound /> },

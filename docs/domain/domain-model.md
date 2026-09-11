@@ -313,13 +313,24 @@ anglage → Geneva stripes → rhodium plate → final inspection*),
 `Nonconformance`, `Issue`. See
 [`docs/manufacturing/README.md`](../manufacturing/README.md).
 
-## Documents (planned, slice 11)
+## Documents (implemented)
 
-`Attachment` — polymorphic link `(entity_type, entity_id)` plus file
-metadata: original filename, stored key, SHA-256, MIME type, size,
-uploaded at/by, kind (`CAD`, `DRAWING`, `PHOTO`, `TEST_RESULT`,
-`CERTIFICATE`, `OTHER`), description. Bytes live in `FileStorage`
-(ADR-003), never in PostgreSQL.
+`Attachment` (`DOC-00108`) — a link `(entity_type, entity_id)` to any of:
+product, product model, caliber, component, component revision, prototype,
+part instance, build record, experiment, test run, watch; plus file
+metadata: kind (`CAD`, `DRAWING`, `PHOTO`, `TEST_RESULT`, `MANUFACTURING`,
+`CERTIFICATE`, `OTHER`), original filename (metadata only), server-generated
+stored key (`{category}/{yyyy}/{mm}/{uuid}{ext}`), SHA-256, MIME type, size,
+description, uploaded at/by. Bytes live in `FileStorage` (ADR-003), never
+in PostgreSQL.
+
+Rules: an explicit extension allow-list, a size limit, non-empty content,
+the owning record must exist, and identical content already attached to the
+same record is reported as a conflict naming the existing document, which
+is how "did this CAD file actually change?" is answered. Deleting an
+attachment removes the file; attachments on frozen revisions are the
+engineering record and should be replaced by uploading the changed file
+rather than deleted.
 
 ## Engineering change (planned, slice 12)
 

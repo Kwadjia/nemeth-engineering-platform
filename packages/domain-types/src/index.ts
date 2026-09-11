@@ -91,6 +91,23 @@ export type WatchCreate = Schemas["WatchCreate"];
 export type WatchUpdate = Schemas["WatchUpdate"];
 export type WatchDossier = Schemas["WatchDossier"];
 
+export type AttachmentKind = Schemas["AttachmentKind"];
+export type AttachmentRead = Schemas["AttachmentRead"];
+export type AttachmentWithEntity = Schemas["AttachmentWithEntity"];
+export type AttachmentUpdate = Schemas["AttachmentUpdate"];
+export type EntityType = Schemas["EntityRef"]["entity_type"];
+export type UploadPolicy = Schemas["UploadPolicy"];
+
+export const ATTACHMENT_KINDS: readonly AttachmentKind[] = [
+  "CAD",
+  "DRAWING",
+  "PHOTO",
+  "TEST_RESULT",
+  "MANUFACTURING",
+  "CERTIFICATE",
+  "OTHER",
+] as const;
+
 export const TEST_OUTCOMES: readonly TestOutcome[] = ["INFO", "PASS", "FAIL"] as const;
 
 /** Timegrapher positions in the conventional order. */

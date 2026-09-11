@@ -3,7 +3,7 @@ import { Construction } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, PageHeader } from "@/components/ui/layout";
 
-type Area = "suppliers" | "documents" | "changes";
+type Area = "suppliers" | "changes";
 
 const AREAS: Record<Area, { title: string; slice: number; summary: string; contents: string[] }> = {
   suppliers: {
@@ -14,17 +14,6 @@ const AREAS: Record<Area, { title: string; slice: number; summary: string; conte
       "Supplier register",
       "Default supplier per revision",
       "Actual supplier per part instance",
-    ],
-  },
-  documents: {
-    title: "Documents",
-    slice: 11,
-    summary:
-      "CAD, drawings, photos, test results and certificates attached to any engineering entity, stored outside the database with SHA-256 verification.",
-    contents: [
-      "Attachment upload with validation",
-      "SHA-256 change detection",
-      "Storage backends: local now, object storage later",
     ],
   },
   changes: {

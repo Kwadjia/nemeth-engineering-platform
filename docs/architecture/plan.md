@@ -45,8 +45,8 @@ is **Caliber N1**.
 | 8 | Experiments (lab notebook, links to prototypes and revisions) | ✅ done |
 | 9 | Measurements / test records (test-type registry, timegrapher summaries) | ✅ done |
 | 10 | Serialized watches, shared genealogy, dossier | ✅ done |
-| 11 | Documents / attachments (SHA-256, local storage backend) | ⬜ next |
-| 12 | Suppliers, Engineering Changes (lightweight) | ⬜ |
+| 11 | Documents / attachments (SHA-256, local storage backend) | ✅ done |
+| 12 | Suppliers, Engineering Changes (lightweight) | ⬜ next |
 
 Out of scope for v0.1: MES, travelers, CAD integration, calculators, AI
 assistant, e-commerce, customer ownership, public provenance pages. Paths
@@ -175,6 +175,18 @@ flow, and [`decisions/`](decisions/) for the ADRs.
 - [x] UI: Watches list, dossier-driven detail with shared build panels, watch subject in
       test runs, dashboard watches card
 - [x] Tests: identifiers/serials, status flow, part movement prototype → watch, dossier, API
+
+### Domain — Documents (slice 11)
+- [x] `Attachment` (`DOC-NNNNN`) linked to any entity type; kind, original filename,
+      server-generated stored key, SHA-256, MIME, size, description
+- [x] Upload validation: extension allow-list, size limit, non-empty, entity must exist;
+      identical content on the same entity → 409 with the existing identifier
+- [x] Bytes through `FileStorage` (local backend), atomic writes, no client paths
+- [x] REST: policy, list/filter, upload (multipart), metadata, download/inline, update, delete
+- [x] UI: attachments panel on revisions, prototypes, experiments, test runs, watches;
+      Documents page across all records
+- [x] Tests: hashing and keys, duplicates, disallowed types, empty/unknown entity,
+      update/list/delete, HTTP upload/download/policy
 
 ### Seed & tests & docs
 - [x] `python -m nemeth seed` — idempotent N1 seed, marked as placeholder

@@ -14,6 +14,7 @@ from nemeth.core.db import get_session
 from nemeth.modules.bom import service as bom
 from nemeth.modules.components import service as components
 from nemeth.modules.components.schemas import ComponentSummary, RevisionSummary
+from nemeth.modules.documents import service as documents
 from nemeth.modules.experiments import service as experiments
 from nemeth.modules.experiments.schemas import ExperimentSummary
 from nemeth.modules.products import service as products
@@ -68,6 +69,7 @@ class DashboardSummary(BaseModel):
     latest_timing: TimingSummary | None
     latest_timing_run: TestRunSummary | None
     watch_count: int
+    attachments_by_kind: dict[str, int]
     watches: list[WatchSummary]
 
 
@@ -142,5 +144,6 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
         latest_timing=testing.timing_summary(latest_run) if latest_run else None,
         latest_timing_run=TestRunSummary.model_validate(latest_run) if latest_run else None,
         watch_count=watches.count(session),
+        attachments_by_kind=documents.count_by_kind(session),
         watches=[WatchSummary.model_validate(w) for w in watch_items],
     )

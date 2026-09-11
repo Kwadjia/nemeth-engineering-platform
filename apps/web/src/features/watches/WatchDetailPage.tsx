@@ -2,6 +2,7 @@ import { type WatchRead, type WatchStatus } from "@nemeth/domain-types";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { AttachmentsPanel } from "@/components/domain/AttachmentsPanel";
 import { Identifier, PlaceholderBadge } from "@/components/domain/badges";
 import { ExperimentStatusBadge, OutcomeBadge } from "@/components/domain/experimentBadges";
 import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
@@ -195,6 +196,7 @@ export function WatchDetailPage() {
               />
             </CardContent>
           </Card>
+          <AttachmentsPanel entityType="watch" entityId={w.id} defaultKind="PHOTO" />
           <Card>
             <CardHeader eyebrow="Lineage" title="Experiments" />
             {d.experiments.length > 0 ? (

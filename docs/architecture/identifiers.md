@@ -42,7 +42,7 @@ Rules:
 | Test run | `TR-{NNNNN}` | `TR-00042` | `TR` |
 | Test type | `{CODE}` (uppercase, underscores) | `TIMEGRAPHER` | manual |
 | Supplier *(planned)* | `SUP-{NNN}` | `SUP-003` | `SUP` |
-| Document *(planned)* | `DOC-{NNNNN}` | `DOC-00108` | `DOC` |
+| Document / attachment | `DOC-{NNNNN}` | `DOC-00108` | `DOC` |
 
 Component families (the `{FAMILY}` segment) are a fixed vocabulary that
 doubles as a filter in the UI:
