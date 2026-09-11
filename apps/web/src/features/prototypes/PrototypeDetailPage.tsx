@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, FormError, Input, Select, Textarea } from "@/components/ui/form";
 import { EmptyState, ErrorNotice, KV, LoadingRows, PageHeader, Stat } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
+import { ExperimentsPanel } from "@/features/prototypes/ExperimentsPanel";
 import { describeError } from "@/lib/api";
 import { formatDate, formatDateTime, formOptional, formText, titleCase } from "@/lib/format";
 import {
@@ -96,6 +97,7 @@ export function PrototypeDetailPage() {
         <div className="grid gap-4 xl:col-span-2">
           <ConfigurationPanel prototypeRef={p.identifier} />
           <BuildLogPanel prototypeRef={p.identifier} />
+          <ExperimentsPanel prototypeRef={p.identifier} />
           {p.status !== "RETIRED" ? <NewBuildForm prototype={p} /> : null}
         </div>
         <Card className="self-start">

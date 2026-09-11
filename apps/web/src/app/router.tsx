@@ -10,6 +10,8 @@ import { ComponentCreatePage } from "@/features/components/ComponentCreatePage";
 import { ComponentDetailPage } from "@/features/components/ComponentDetailPage";
 import { ComponentsPage } from "@/features/components/ComponentsPage";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { ExperimentDetailPage } from "@/features/experiments/ExperimentDetailPage";
+import { ExperimentsPage } from "@/features/experiments/ExperimentsPage";
 import { PlannedPage } from "@/features/planned/PlannedPage";
 import { ProductDetailPage } from "@/features/products/ProductDetailPage";
 import { ProductsPage } from "@/features/products/ProductsPage";
@@ -38,7 +40,8 @@ export const router = createBrowserRouter([
       { path: "prototypes", element: <PrototypesPage /> },
       { path: "prototypes/:ref", element: <PrototypeDetailPage /> },
       { path: "part-instances", element: <PartInstancesPage /> },
-      { path: "experiments", element: <PlannedPage area="experiments" /> },
+      { path: "experiments", element: <ExperimentsPage /> },
+      { path: "experiments/:ref", element: <ExperimentDetailPage /> },
       { path: "testing", element: <PlannedPage area="testing" /> },
       { path: "watches", element: <PlannedPage area="watches" /> },
       { path: "suppliers", element: <PlannedPage area="suppliers" /> },

@@ -236,6 +236,110 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/experiments": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Experiments */
+    get: operations["list_experiments_api_v1_experiments_get"];
+    put?: never;
+    /** Create Experiment */
+    post: operations["create_experiment_api_v1_experiments_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/experiments/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Experiment */
+    get: operations["get_experiment_api_v1_experiments__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Experiment */
+    patch: operations["update_experiment_api_v1_experiments__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/experiments/{ref}/prototypes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Link Prototype */
+    post: operations["link_prototype_api_v1_experiments__ref__prototypes_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/experiments/{ref}/prototypes/{prototype_ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Unlink Prototype */
+    delete: operations["unlink_prototype_api_v1_experiments__ref__prototypes__prototype_ref__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/experiments/{ref}/revisions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Link Revision */
+    post: operations["link_revision_api_v1_experiments__ref__revisions_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/experiments/{ref}/revisions/{revision_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Unlink Revision */
+    delete: operations["unlink_revision_api_v1_experiments__ref__revisions__revision_id__delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/health": {
     parameters: {
       query?: never;
@@ -466,6 +570,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/prototypes/{ref}/experiments": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Prototype Experiments */
+    get: operations["prototype_experiments_api_v1_prototypes__ref__experiments_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/revisions/{revision_id}": {
     parameters: {
       query?: never;
@@ -527,6 +648,23 @@ export interface paths {
     };
     /** Get Bom Flat */
     get: operations["get_bom_flat_api_v1_revisions__revision_id__bom_flat_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/revisions/{revision_id}/experiments": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Revision Experiments */
+    get: operations["revision_experiments_api_v1_revisions__revision_id__experiments_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1193,14 +1331,211 @@ export interface components {
       components_by_state: {
         [key: string]: number;
       };
+      /** Experiments By Status */
+      experiments_by_status: {
+        [key: string]: number;
+      };
       /** Products */
       products: components["schemas"]["ProductSummary"][];
       /** Prototype Count */
       prototype_count: number;
       /** Prototypes */
       prototypes: components["schemas"]["PrototypeSummary"][];
+      /** Recent Experiments */
+      recent_experiments: components["schemas"]["ExperimentSummary"][];
       /** Recent Revisions */
       recent_revisions: components["schemas"]["RecentRevision"][];
+    };
+    /** ExperimentCreate */
+    ExperimentCreate: {
+      /** Conclusion */
+      conclusion?: string | null;
+      /** Configuration */
+      configuration?: string | null;
+      /** Equipment */
+      equipment?: string | null;
+      /** Follow Up */
+      follow_up?: string | null;
+      /** Hypothesis */
+      hypothesis?: string | null;
+      /**
+       * Identifier
+       * @description Generated as EXP-NNN when omitted.
+       */
+      identifier?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** Methodology */
+      methodology?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Objective */
+      objective?: string | null;
+      /** Observations */
+      observations?: string | null;
+      /** Procedure */
+      procedure?: string | null;
+      /** Prototype Ids */
+      prototype_ids?: string[];
+      /** Results */
+      results?: string | null;
+      /** Started On */
+      started_on?: string | null;
+      /** @default PLANNED */
+      status?: components["schemas"]["ExperimentStatus"];
+      /** Title */
+      title: string;
+    };
+    /**
+     * ExperimentOutcome
+     * @enum {string}
+     */
+    ExperimentOutcome: "IMPROVEMENT" | "NO_CHANGE" | "REGRESSION" | "INCONCLUSIVE";
+    /** ExperimentPrototypeLink */
+    ExperimentPrototypeLink: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      prototype: components["schemas"]["PrototypeSummary"];
+      /** Role */
+      role: string | null;
+    };
+    /** ExperimentRead */
+    ExperimentRead: {
+      /** Completed On */
+      completed_on: string | null;
+      /** Conclusion */
+      conclusion?: string | null;
+      /** Configuration */
+      configuration?: string | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Equipment */
+      equipment?: string | null;
+      /** Follow Up */
+      follow_up?: string | null;
+      /** Hypothesis */
+      hypothesis?: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Methodology */
+      methodology?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Objective */
+      objective?: string | null;
+      /** Observations */
+      observations?: string | null;
+      outcome: components["schemas"]["ExperimentOutcome"] | null;
+      /** Procedure */
+      procedure?: string | null;
+      /** Prototypes */
+      prototypes: components["schemas"]["ExperimentPrototypeLink"][];
+      /** Results */
+      results?: string | null;
+      /** Revisions */
+      revisions: components["schemas"]["ExperimentRevisionLink"][];
+      /** Started On */
+      started_on: string | null;
+      status: components["schemas"]["ExperimentStatus"];
+      /** Title */
+      title: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /** ExperimentRevisionLink */
+    ExperimentRevisionLink: {
+      component: components["schemas"]["ComponentSummary"];
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      revision: components["schemas"]["RevisionSummary"];
+      /** Role */
+      role: string | null;
+    };
+    /**
+     * ExperimentStatus
+     * @enum {string}
+     */
+    ExperimentStatus: "PLANNED" | "IN_PROGRESS" | "COMPLETED" | "ABANDONED";
+    /** ExperimentSummary */
+    ExperimentSummary: {
+      /** Completed On */
+      completed_on: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      outcome: components["schemas"]["ExperimentOutcome"] | null;
+      /** Started On */
+      started_on: string | null;
+      status: components["schemas"]["ExperimentStatus"];
+      /** Title */
+      title: string;
+    };
+    /** ExperimentUpdate */
+    ExperimentUpdate: {
+      /** Completed On */
+      completed_on?: string | null;
+      /** Conclusion */
+      conclusion?: string | null;
+      /** Configuration */
+      configuration?: string | null;
+      /** Equipment */
+      equipment?: string | null;
+      /** Follow Up */
+      follow_up?: string | null;
+      /** Hypothesis */
+      hypothesis?: string | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      /** Methodology */
+      methodology?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Objective */
+      objective?: string | null;
+      /** Observations */
+      observations?: string | null;
+      outcome?: components["schemas"]["ExperimentOutcome"] | null;
+      /** Procedure */
+      procedure?: string | null;
+      /** Results */
+      results?: string | null;
+      /** Started On */
+      started_on?: string | null;
+      status?: components["schemas"]["ExperimentStatus"] | null;
+      /** Title */
+      title?: string | null;
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -1223,6 +1558,25 @@ export interface components {
      * @enum {string}
      */
     LifecycleState: "CONCEPT" | "DESIGN" | "PROTOTYPE" | "VALIDATION" | "RELEASED" | "OBSOLETE";
+    /** LinkPrototype */
+    LinkPrototype: {
+      /** Prototype Id */
+      prototype_id?: string | null;
+      /** Prototype Identifier */
+      prototype_identifier?: string | null;
+      /** Role */
+      role?: string | null;
+    };
+    /** LinkRevision */
+    LinkRevision: {
+      /**
+       * Component Revision Id
+       * Format: uuid
+       */
+      component_revision_id: string;
+      /** Role */
+      role?: string | null;
+    };
     /** Page[CaliberRead] */
     Page_CaliberRead_: {
       /** Items */
@@ -1238,6 +1592,17 @@ export interface components {
     Page_ComponentRead_: {
       /** Items */
       items: components["schemas"]["ComponentRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
+    /** Page[ExperimentRead] */
+    Page_ExperimentRead_: {
+      /** Items */
+      items: components["schemas"]["ExperimentRead"][];
       /** Limit */
       limit: number;
       /** Offset */
@@ -2613,6 +2978,270 @@ export interface operations {
       };
     };
   };
+  list_experiments_api_v1_experiments_get: {
+    parameters: {
+      query?: {
+        q?: string | null;
+        status?: components["schemas"]["ExperimentStatus"] | null;
+        prototype_id?: string | null;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_ExperimentRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_experiment_api_v1_experiments_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExperimentCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_experiment_api_v1_experiments__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_experiment_api_v1_experiments__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExperimentUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  link_prototype_api_v1_experiments__ref__prototypes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LinkPrototype"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  unlink_prototype_api_v1_experiments__ref__prototypes__prototype_ref__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+        prototype_ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  link_revision_api_v1_experiments__ref__revisions_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LinkRevision"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  unlink_revision_api_v1_experiments__ref__revisions__revision_id__delete: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+        revision_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   health_api_v1_health_get: {
     parameters: {
       query?: never;
@@ -3314,6 +3943,37 @@ export interface operations {
       };
     };
   };
+  prototype_experiments_api_v1_prototypes__ref__experiments_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentSummary"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   get_revision_api_v1_revisions__revision_id__get: {
     parameters: {
       query?: never;
@@ -3468,6 +4128,37 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["BomFlat"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  revision_experiments_api_v1_revisions__revision_id__experiments_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        revision_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ExperimentSummary"][];
         };
       };
       /** @description Validation Error */

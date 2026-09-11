@@ -64,6 +64,27 @@ export type BuildRecordCreate = Schemas["BuildRecordCreate"];
 export type BuildEntryCreate = Schemas["BuildEntryCreate"];
 export type BuildEntryRead = Schemas["BuildEntryRead"];
 
+export type ExperimentStatus = Schemas["ExperimentStatus"];
+export type ExperimentOutcome = Schemas["ExperimentOutcome"];
+export type ExperimentSummary = Schemas["ExperimentSummary"];
+export type ExperimentRead = Schemas["ExperimentRead"];
+export type ExperimentCreate = Schemas["ExperimentCreate"];
+export type ExperimentUpdate = Schemas["ExperimentUpdate"];
+
+export const EXPERIMENT_STATUSES: readonly ExperimentStatus[] = [
+  "PLANNED",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "ABANDONED",
+] as const;
+
+export const EXPERIMENT_OUTCOMES: readonly ExperimentOutcome[] = [
+  "IMPROVEMENT",
+  "NO_CHANGE",
+  "REGRESSION",
+  "INCONCLUSIVE",
+] as const;
+
 export const PROTOTYPE_STATUSES: readonly PrototypeStatus[] = [
   "PLANNED",
   "BUILDING",

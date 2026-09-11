@@ -3,21 +3,9 @@ import { Construction } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, PageHeader } from "@/components/ui/layout";
 
-type Area = "experiments" | "testing" | "watches" | "suppliers" | "documents" | "changes";
+type Area = "testing" | "watches" | "suppliers" | "documents" | "changes";
 
 const AREAS: Record<Area, { title: string; slice: number; summary: string; contents: string[] }> = {
-  experiments: {
-    title: "Experiments",
-    slice: 8,
-    summary:
-      "Watchmaking development treated like iterative product development: hypothesis, procedure, measurements, conclusion.",
-    contents: [
-      "EXP-001 ST36 complete disassembly",
-      "EXP-002 ST36 reassembly",
-      "EXP-003 ST36 baseline timing",
-      "Before/after comparisons",
-    ],
-  },
   testing: {
     title: "Testing",
     slice: 9,

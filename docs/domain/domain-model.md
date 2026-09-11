@@ -235,14 +235,24 @@ contain a part made to this revision".
 Serialized watches (slice 10) add `Watch` and a `watch_id` on `BuildRecord`
 with a check that exactly one unit is set; the genealogy code is shared.
 
-## Development (planned)
+## Experiments (implemented)
 
-### Experiment — slice 8
-Iterative development treated like software. `EXP-014`. Fields: identifier,
-title, objective, hypothesis, prototype(s), configuration (free text +
-links to component revisions involved), methodology, equipment, procedure,
-observations, results, conclusion, follow-up actions, status. Test runs and
-measurements attach to an experiment. Attachments (photos, CSV) via slice 11.
+### Experiment
+Iterative development treated like software. `EXP-014`. A lab-notebook
+record with sections: objective, hypothesis, configuration, methodology,
+equipment, procedure, observations, results, conclusion, follow-up, notes.
+Status `PLANNED` → `IN_PROGRESS` → `COMPLETED`, or `ABANDONED` from either
+open state; `outcome` (`IMPROVEMENT`, `NO_CHANGE`, `REGRESSION`,
+`INCONCLUSIVE`) is recorded when known. Dates: started, completed.
+
+Links (many-to-many, each with a free-text role such as *subject*,
+*control*, *before*, *after*): `ExperimentPrototype` and
+`ExperimentRevision`. These are the evidence trail that engineering
+changes (slice 12) cite: "what experiments caused Rev B → Rev C" is
+`ExperimentRevision` rows for both revisions. Test runs and measurements
+attach to an experiment in slice 9; attachments in slice 11.
+
+## Development (planned)
 
 ### TestRun and Measurement — slice 9
 An **extensible measurement model**:

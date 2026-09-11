@@ -42,8 +42,8 @@ is **Caliber N1**.
 | 5 | N1 seed data (clearly marked placeholder) | ✅ done (product/caliber/components; prototype + experiment seeds arrive with their slices) |
 | 6 | Tests: revision immutability, recursive BOM | ✅ done |
 | 7 | Prototypes, part instances, build records (physical genealogy, ADR-008) | ✅ done |
-| 8 | Experiments | ⬜ next |
-| 9 | Measurements / test records (timegrapher first, extensible) | ⬜ |
+| 8 | Experiments (lab notebook, links to prototypes and revisions) | ✅ done |
+| 9 | Measurements / test records (timegrapher first, extensible) | ⬜ next |
 | 10 | Serialized watches / build genealogy | ⬜ |
 | 11 | Documents / attachments (SHA-256, local storage backend) | ⬜ |
 | 12 | Suppliers, Engineering Changes (lightweight) | ⬜ |
@@ -137,6 +137,17 @@ flow, and [`decisions/`](decisions/) for the ADRs.
 - [x] Seed: N1-P001 (planned, placeholder); seed is idempotent per record
 - [x] Tests: identifiers, frozen-revision rule, install/remove/salvage history,
       configuration derivation, retired prototypes, API flow
+
+### Domain — Experiments (slice 8)
+- [x] `Experiment` (`EXP-NNN`): notebook sections (objective, hypothesis, configuration,
+      methodology, equipment, procedure, observations, results, conclusion, follow-up),
+      status PLANNED → IN_PROGRESS → COMPLETED | ABANDONED, outcome
+- [x] Links to prototypes and component revisions with a free-text role
+- [x] REST: experiments CRUD, link/unlink, by prototype, by revision
+- [x] UI: Experiments list, notebook page with editor, links panel; prototype experiments
+      panel; dashboard recent experiments
+- [x] Seed: EXP-001 ST36 disassembly, EXP-002 reassembly, EXP-003 baseline timing
+- [x] Tests: identifiers, status flow, links, seed, API flow
 
 ### Seed & tests & docs
 - [x] `python -m nemeth seed` — idempotent N1 seed, marked as placeholder

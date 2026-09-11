@@ -14,6 +14,8 @@ from nemeth.core.db import get_session
 from nemeth.modules.bom import service as bom
 from nemeth.modules.components import service as components
 from nemeth.modules.components.schemas import ComponentSummary, RevisionSummary
+from nemeth.modules.experiments import service as experiments
+from nemeth.modules.experiments.schemas import ExperimentSummary
 from nemeth.modules.products import service as products
 from nemeth.modules.products.schemas import CaliberSummary, ProductSummary
 from nemeth.modules.prototypes import service as prototypes
@@ -55,6 +57,8 @@ class DashboardSummary(BaseModel):
     prototype_count: int
     active_prototype: PrototypeSummary | None
     prototypes: list[PrototypeSummary]
+    recent_experiments: list[ExperimentSummary]
+    experiments_by_status: dict[str, int]
 
 
 @router.get("/health", response_model=Health)
@@ -117,4 +121,8 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
         prototype_count=proto_total,
         active_prototype=PrototypeSummary.model_validate(active) if active else None,
         prototypes=[PrototypeSummary.model_validate(p) for p in proto_items],
+        recent_experiments=[
+            ExperimentSummary.model_validate(e) for e in experiments.recent(session, 5)
+        ],
+        experiments_by_status=experiments.count_by_status(session),
     )

@@ -48,7 +48,7 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "Prototypes", to: "/prototypes", icon: Layers },
       { label: "Part instances", to: "/part-instances", icon: Boxes },
-      { label: "Experiments", to: "/experiments", icon: FlaskConical, plannedSlice: 8 },
+      { label: "Experiments", to: "/experiments", icon: FlaskConical },
       { label: "Testing", to: "/testing", icon: Activity, plannedSlice: 9 },
       { label: "Watches", to: "/watches", icon: Watch, plannedSlice: 10 },
     ],

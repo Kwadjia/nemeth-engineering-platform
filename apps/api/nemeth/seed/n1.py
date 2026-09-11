@@ -28,6 +28,9 @@ from nemeth.modules.bom.schemas import BomLineCreate
 from nemeth.modules.components import service as components
 from nemeth.modules.components.models import Component, ComponentFamily, ComponentKind
 from nemeth.modules.components.schemas import ComponentCreate, RevisionContent
+from nemeth.modules.experiments import service as experiments
+from nemeth.modules.experiments.models import Experiment, ExperimentStatus
+from nemeth.modules.experiments.schemas import ExperimentCreate
 from nemeth.modules.products import service as products
 from nemeth.modules.products.models import Caliber, Product, ProductModel
 from nemeth.modules.products.schemas import CaliberCreate, ProductCreate, ProductModelCreate
@@ -299,7 +302,32 @@ BOM: tuple[tuple[str, str, int], ...] = (
     ("N1-MVT-012", "N1-MVT-013", 1),
 )
 
-SeedModel = type[Product] | type[ProductModel] | type[Caliber] | type[Component] | type[Prototype]
+SeedModel = (
+    type[Product]
+    | type[ProductModel]
+    | type[Caliber]
+    | type[Component]
+    | type[Prototype]
+    | type[Experiment]
+)
+
+EXPERIMENTS: tuple[tuple[str, str, str], ...] = (
+    (
+        "EXP-001",
+        "ST36 Complete Disassembly",
+        "Document and understand the architecture of a manual-wind mechanical movement.",
+    ),
+    (
+        "EXP-002",
+        "ST36 Reassembly",
+        "Successfully reassemble and operate a manual-wind movement.",
+    ),
+    (
+        "EXP-003",
+        "ST36 Baseline Timing",
+        "Measure rate, amplitude and beat error in multiple positions.",
+    ),
+)
 
 
 def _exists(session: Session, model: SeedModel, identifier: str) -> bool:
@@ -319,6 +347,7 @@ def _sync_counters(session: Session) -> None:
     for prefix, value in highest.items():
         ensure_counter_at_least(session, prefix, value)
     ensure_counter_at_least(session, "N1-P", 1)
+    ensure_counter_at_least(session, "EXP", len(EXPERIMENTS))
 
 
 def _seed_components(session: Session, result: SeedResult) -> dict[str, Component]:
@@ -453,6 +482,24 @@ def seed_n1(session: Session) -> SeedResult:
             ),
         )
         result.records.append("prototype N1-P001")
+
+    for identifier, title, objective in EXPERIMENTS:
+        if _exists(session, Experiment, identifier):
+            continue
+        experiments.create_experiment(
+            session,
+            SEED_ACTOR,
+            ExperimentCreate(
+                identifier=identifier,
+                title=title,
+                objective=objective,
+                status=ExperimentStatus.PLANNED,
+                equipment="ST36 (ETA 6497 clone) movement, screwdrivers, tweezers, loupe, timegrapher",
+                notes=PLACEHOLDER,
+                is_placeholder=True,
+            ),
+        )
+        result.records.append(f"experiment {identifier}")
 
     session.flush()
     return result

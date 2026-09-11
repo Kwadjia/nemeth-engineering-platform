@@ -37,7 +37,7 @@ Rules:
 | Build record | `BR-{NNNNN}` | `BR-00007` | `BR` |
 | Watch *(planned)* | `{PRODUCT}-{NNN}` | `N1-017` | `N1` |
 | Movement (serialized) *(planned)* | `{CALIBER}-{NNNN}` | `CAL-N1-0001` | `CAL-N1` |
-| Experiment *(planned)* | `EXP-{NNN}` | `EXP-014` | `EXP` |
+| Experiment | `EXP-{NNN}` | `EXP-014` | `EXP` |
 | Engineering change *(planned)* | `ECR-{NNNN}` | `ECR-0021` | `ECR` |
 | Test run *(planned)* | `TR-{NNNNN}` | `TR-00042` | `TR` |
 | Supplier *(planned)* | `SUP-{NNN}` | `SUP-003` | `SUP` |
