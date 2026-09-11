@@ -1,0 +1,30 @@
+{
+  "name": "nemeth-engineering-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NEMETH Engineering Platform — monorepo root (npm workspaces for the web app and shared TypeScript packages; the Python API lives in apps/api).",
+  "workspaces": [
+    "apps/web",
+    "packages/domain-types"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web",
+    "typecheck": "npm run typecheck --workspace apps/web",
+    "lint": "npm run lint --workspace apps/web",
+    "format": "prettier --write \"apps/web/src/**/*.{ts,tsx,css}\" \"packages/**/*.ts\"",
+    "format:check": "prettier --check \"apps/web/src/**/*.{ts,tsx,css}\" \"packages/**/*.ts\"",
+    "test": "npm run test --workspace apps/web",
+    "generate:types": "openapi-typescript packages/domain-types/openapi.json -o packages/domain-types/src/api.d.ts --default-non-nullable=false",
+    "api:openapi": "cd apps/api && python -m nemeth openapi --out ../../packages/domain-types/openapi.json",
+    "api:types": "npm run api:openapi && npm run generate:types"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.4.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,43 @@
+# --- OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# --- environment
+.env
+.env.local
+.env.*.local
+
+# --- python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# --- node
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+coverage/
+playwright-report/
+test-results/
+
+# --- engineering file storage (content is data, not code)
+storage/**/*
+!storage/README.md
+!storage/**/.gitkeep
+
+# --- docker
+pgdata/

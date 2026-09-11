@@ -1,0 +1,88 @@
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  NEMETH — Detroit. Dark navy, graphite, brushed steel, off-white.
+  Tokens are HSL triplets consumed by tailwind.config.ts.
+*/
+@layer base {
+  :root {
+    --bg: 222 34% 5%;
+    --bg-elevated: 221 28% 8%;
+    --surface: 220 24% 11%;
+    --surface-2: 219 20% 14%;
+    --border: 219 16% 20%;
+    --border-strong: 218 14% 28%;
+    --fg: 40 16% 91%;
+    --fg-muted: 218 12% 66%;
+    --fg-subtle: 218 10% 48%;
+    --steel: 210 12% 76%;
+    --accent: 207 46% 64%;
+    --accent-fg: 222 34% 5%;
+    --ok: 152 40% 52%;
+    --warn: 38 70% 58%;
+    --danger: 4 62% 60%;
+  }
+
+  html {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--fg));
+    font-feature-settings:
+      "tnum" 1,
+      "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-bg font-sans text-sm text-fg;
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.35);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  a {
+    @apply underline-offset-2;
+  }
+
+  /* Subtle brushed texture on the app frame; restrained on purpose. */
+  .brushed {
+    background-image: repeating-linear-gradient(
+      180deg,
+      hsl(var(--fg) / 0.018) 0px,
+      hsl(var(--fg) / 0.018) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border-strong));
+    border: 3px solid hsl(var(--bg));
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .label {
+    @apply text-2xs font-medium uppercase tracking-label text-fg-subtle;
+  }
+  .mono {
+    @apply font-mono tabular-nums;
+  }
+}

@@ -1,0 +1,110 @@
+from __future__ import annotations
+
+import logging
+
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from nemeth import __version__
+from nemeth.core.auth import Actor, get_actor
+from nemeth.core.config import Settings, get_settings
+from nemeth.core.db import get_session
+from nemeth.modules.bom import service as bom
+from nemeth.modules.components import service as components
+from nemeth.modules.components.schemas import ComponentSummary, RevisionSummary
+from nemeth.modules.products import service as products
+from nemeth.modules.products.schemas import CaliberSummary, ProductSummary
+
+log = logging.getLogger(__name__)
+router = APIRouter(tags=["system"])
+
+
+class Health(BaseModel):
+    status: str
+    version: str
+    environment: str
+    database: str
+
+
+class SystemInfo(BaseModel):
+    app_name: str
+    version: str
+    environment: str
+    api_prefix: str
+    storage_backend: str
+    storage_root: str
+    actor_id: str
+    actor_name: str
+
+
+class RecentRevision(RevisionSummary):
+    component: ComponentSummary
+
+
+class DashboardSummary(BaseModel):
+    products: list[ProductSummary]
+    calibers: list[CaliberSummary]
+    component_count: int
+    assembly_count: int
+    components_by_state: dict[str, int]
+    recent_revisions: list[RecentRevision]
+
+
+@router.get("/health", response_model=Health)
+def health(
+    session: Session = Depends(get_session), settings: Settings = Depends(get_settings)
+) -> Health:
+    try:
+        session.execute(text("SELECT 1"))
+        database = "ok"
+    except Exception:  # pragma: no cover - only reachable when the database is down
+        log.exception("database health check failed")
+        database = "error"
+    return Health(
+        status="ok" if database == "ok" else "degraded",
+        version=__version__,
+        environment=settings.environment,
+        database=database,
+    )
+
+
+@router.get("/system/info", response_model=SystemInfo)
+def system_info(
+    settings: Settings = Depends(get_settings), actor: Actor = Depends(get_actor)
+) -> SystemInfo:
+    return SystemInfo(
+        app_name=settings.app_name,
+        version=__version__,
+        environment=settings.environment,
+        api_prefix=settings.api_prefix,
+        storage_backend=settings.storage_backend,
+        storage_root=str(settings.storage_root),
+        actor_id=actor.id,
+        actor_name=actor.display_name,
+    )
+
+
+@router.get("/dashboard/summary", response_model=DashboardSummary)
+def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSummary:
+    from nemeth.core.pagination import PageParams
+
+    product_items, _ = products.list_products(session, PageParams(limit=20, offset=0))
+    caliber_items, _ = products.list_calibers(session, PageParams(limit=20, offset=0))
+    by_state = components.count_by_state(session)
+    recent = components.recent_revisions(session, limit=8)
+    return DashboardSummary(
+        products=[ProductSummary.model_validate(p) for p in product_items],
+        calibers=[CaliberSummary.model_validate(c) for c in caliber_items],
+        component_count=sum(by_state.values()),
+        assembly_count=bom.assembly_count(session),
+        components_by_state=by_state,
+        recent_revisions=[
+            RecentRevision(
+                **RevisionSummary.model_validate(r).model_dump(),
+                component=ComponentSummary.model_validate(r.component),
+            )
+            for r in recent
+        ],
+    )

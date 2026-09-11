@@ -1,0 +1,15 @@
+{
+  "name": "@nemeth/domain-types",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TypeScript types generated from the NEMETH API's OpenAPI document. Do not edit src/api.d.ts by hand; run `npm run api:types` at the repository root.",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "openapi.json"
+  ]
+}

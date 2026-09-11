@@ -1,0 +1,63 @@
+name: nemeth
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nemeth}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nemeth}
+      POSTGRES_DB: ${POSTGRES_DB:-nemeth}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/db/init-test-database.sh:/docker-entrypoint-initdb.d/10-test-database.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nemeth} -d ${POSTGRES_DB:-nemeth}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./apps/api
+    command: >
+      sh -c "python -m nemeth db upgrade
+      && uvicorn nemeth.main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      NEMETH_ENVIRONMENT: development
+      NEMETH_LOG_FORMAT: ${NEMETH_LOG_FORMAT:-console}
+      NEMETH_LOG_LEVEL: ${NEMETH_LOG_LEVEL:-INFO}
+      NEMETH_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-nemeth}:${POSTGRES_PASSWORD:-nemeth}@db:5432/${POSTGRES_DB:-nemeth}
+      NEMETH_TEST_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-nemeth}:${POSTGRES_PASSWORD:-nemeth}@db:5432/nemeth_test
+      NEMETH_STORAGE_ROOT: /storage
+      NEMETH_CORS_ORIGINS: '["http://localhost:5173","http://127.0.0.1:5173"]'
+      NEMETH_ACTOR_ID: ${NEMETH_ACTOR_ID:-local}
+      NEMETH_ACTOR_NAME: ${NEMETH_ACTOR_NAME:-Local User}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/api:/app
+      - ./storage:/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    image: node:22-alpine
+    working_dir: /workspace
+    command: sh -c "npm install --no-audit --no-fund && npm run dev --workspace apps/web -- --host 0.0.0.0"
+    environment:
+      VITE_API_PROXY_TARGET: http://api:8000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/workspace
+      - web_node_modules:/workspace/node_modules
+      - web_app_node_modules:/workspace/apps/web/node_modules
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  web_node_modules:
+  web_app_node_modules:
