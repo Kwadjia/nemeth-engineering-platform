@@ -87,5 +87,7 @@ disallow_untyped_decorators = false
 # --- pytest --------------------------------------------------------------------
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Domain classes are named Test* (TestRun, TestType); only functions are tests here.
+python_classes = "Suite*"
 addopts = "-ra --strict-markers"
 filterwarnings = ["error::DeprecationWarning:nemeth.*"]

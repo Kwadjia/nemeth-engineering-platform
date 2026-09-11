@@ -254,26 +254,36 @@ attach to an experiment in slice 9; attachments in slice 11.
 
 ## Development (planned)
 
-### TestRun and Measurement — slice 9
+### TestType, TestRun and Measurement (implemented)
 An **extensible measurement model**:
 
 * `TestType` — a registry row: code (`TIMEGRAPHER`, `POWER_RESERVE`,
   `WATER_RESISTANCE`, `DIMENSIONAL_INSPECTION`, `TORQUE`, `TEMPERATURE`,
-  `MAGNETISM`, `VISUAL_INSPECTION`, `CUSTOM`), name, and a JSON Schema for
-  its measurement payload. New test types are rows, not migrations.
-* `TestRun` — a session: test type, subject (prototype, watch, part
-  instance, or component revision), experiment (optional), performed at/by,
-  equipment, conditions (temperature, humidity), outcome
-  (`PASS`/`FAIL`/`INFO`), notes.
-* `Measurement` — one observation within a run: `recorded_at`, typed
-  columns for the common numeric fields that must be queryable across
-  types (`value`, `unit`, `position`), and `payload` JSONB validated
-  against the test type's schema. Timegrapher rows carry
-  `rate_sec_day`, `amplitude_deg`, `beat_error_ms`, `lift_angle_deg`,
-  `position` (`DU`, `DD`, `CU`, `CD`, `CL`, `CR`).
+  `MAGNETISM`, `VISUAL_INSPECTION`, `CUSTOM`, plus any you add), name, a
+  **metric list** (`key`, `label`, `unit`), whether custom metric keys are
+  allowed, and whether readings are taken per position. New test types are
+  rows, not migrations; built-ins are installed by the seed and never
+  overwritten.
+* `TestRun` (`TR-00042`) — a session: test type, at most one subject
+  (prototype, part instance, or component revision; watches join in slice
+  10), optional experiment, performed at/by, equipment, `conditions` JSON
+  (temperature, humidity, state of wind), outcome (`PASS`/`FAIL`/`INFO`),
+  notes.
+* `Measurement` — **one observation per row** (long format): `metric`,
+  `value` (NUMERIC), `unit` (defaulted from the type's metric list),
+  `position` (`DU`, `DD`, `CU`, `CD`, `CL`, `CR` for position-based types),
+  `recorded_at`, notes, `extra` JSON. Validated against the type: unknown
+  metrics are rejected unless the type allows custom keys. A timegrapher
+  reading in one position is three rows sharing a position; a later reading
+  for the same metric and position supersedes the earlier one in summaries
+  while both remain stored.
 
-This keeps the common analytics (rate over time, amplitude before/after)
-in SQL while letting new tests be introduced without schema changes.
+The long format keeps analytics in SQL: rate over time for a prototype,
+amplitude before and after an experiment, per-position deltas. The
+**timing summary** (per-position rate/amplitude/beat error, mean rate,
+delta, amplitude range, max beat error, lift angle) is derived on read for
+any timegrapher run and exposed for a prototype's latest run and on the
+dashboard.
 
 ### Watch, BuildRecord, PartInstance — slice 10
 * `Watch` — a serialized unit: `N1-001`, product model, serial, status

@@ -6,6 +6,7 @@ import type { PrototypeSummary } from "@nemeth/domain-types";
 import { Identifier, LifecycleBadge, PlaceholderBadge } from "@/components/domain/badges";
 import { ExperimentStatusBadge, OutcomeBadge } from "@/components/domain/experimentBadges";
 import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
+import { TimingTable } from "@/components/domain/TimingTable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, ErrorNotice, LoadingRows, PageHeader, Stat } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -233,14 +234,40 @@ export function DashboardPage() {
         </div>
 
         <Card>
-          <CardHeader eyebrow="Testing" title="Latest N1 test results" />
+          <CardHeader
+            eyebrow="Testing"
+            title="Latest timegrapher run"
+            actions={
+              <Link to="/testing" className="text-xs text-fg-muted hover:text-fg hover:underline">
+                All test runs
+              </Link>
+            }
+          />
           <CardContent>
-            <EmptyState
-              icon={Activity}
-              title="No measurements recorded"
-              description="Timegrapher and inspection data arrive in slice 9."
-              className="py-6"
-            />
+            {dashboard.isLoading ? (
+              <LoadingRows rows={3} />
+            ) : dashboard.data?.latest_timing && dashboard.data.latest_timing_run ? (
+              <div className="grid gap-3">
+                <div className="flex items-center gap-2 text-xs text-fg-muted">
+                  <Identifier
+                    value={dashboard.data.latest_timing_run.identifier}
+                    to={`/testing/${dashboard.data.latest_timing_run.identifier}`}
+                  />
+                  <span>{dashboard.data.latest_timing_run.title ?? "Timegrapher"}</span>
+                  <span className="text-fg-subtle">
+                    {formatDateTime(dashboard.data.latest_timing_run.performed_at)}
+                  </span>
+                </div>
+                <TimingTable timing={dashboard.data.latest_timing} />
+              </div>
+            ) : (
+              <EmptyState
+                icon={Activity}
+                title="No measurements recorded"
+                description="Record a timegrapher run on the Testing page."
+                className="py-6"
+              />
+            )}
           </CardContent>
         </Card>
         <Card>

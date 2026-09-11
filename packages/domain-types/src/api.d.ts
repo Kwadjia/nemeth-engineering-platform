@@ -340,6 +340,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/experiments/{ref}/test-runs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Experiment Test Runs */
+    get: operations["experiment_test_runs_api_v1_experiments__ref__test_runs_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/health": {
     parameters: {
       query?: never;
@@ -443,6 +460,23 @@ export interface paths {
     head?: never;
     /** Update Part Instance */
     patch: operations["update_part_instance_api_v1_part_instances__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/part-instances/{ref}/test-runs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Part Instance Test Runs */
+    get: operations["part_instance_test_runs_api_v1_part_instances__ref__test_runs_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   "/api/v1/products": {
@@ -579,6 +613,43 @@ export interface paths {
     };
     /** Prototype Experiments */
     get: operations["prototype_experiments_api_v1_prototypes__ref__experiments_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/prototypes/{ref}/test-runs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Prototype Test Runs */
+    get: operations["prototype_test_runs_api_v1_prototypes__ref__test_runs_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/prototypes/{ref}/timing": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Prototype Timing
+     * @description Timing summary of the most recent timegrapher run on this prototype.
+     */
+    get: operations["prototype_timing_api_v1_prototypes__ref__timing_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -725,6 +796,112 @@ export interface paths {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  "/api/v1/test-positions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Positions */
+    get: operations["list_positions_api_v1_test_positions_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/test-runs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Test Runs */
+    get: operations["list_test_runs_api_v1_test_runs_get"];
+    put?: never;
+    /** Create Test Run */
+    post: operations["create_test_run_api_v1_test_runs_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/test-runs/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Test Run */
+    get: operations["get_test_run_api_v1_test_runs__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Test Run */
+    patch: operations["update_test_run_api_v1_test_runs__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/test-runs/{ref}/measurements": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Add Measurements */
+    post: operations["add_measurements_api_v1_test_runs__ref__measurements_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/test-types": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Test Types */
+    get: operations["list_test_types_api_v1_test_types_get"];
+    put?: never;
+    /** Create Test Type */
+    post: operations["create_test_type_api_v1_test_types_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/test-types/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Test Type */
+    get: operations["get_test_type_api_v1_test_types__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Test Type */
+    patch: operations["update_test_type_api_v1_test_types__ref__patch"];
     trace?: never;
   };
 }
@@ -1335,6 +1512,8 @@ export interface components {
       experiments_by_status: {
         [key: string]: number;
       };
+      latest_timing: components["schemas"]["TimingSummary"] | null;
+      latest_timing_run: components["schemas"]["TestRunSummary"] | null;
       /** Products */
       products: components["schemas"]["ProductSummary"][];
       /** Prototype Count */
@@ -1345,6 +1524,10 @@ export interface components {
       recent_experiments: components["schemas"]["ExperimentSummary"][];
       /** Recent Revisions */
       recent_revisions: components["schemas"]["RecentRevision"][];
+      /** Recent Test Runs */
+      recent_test_runs: components["schemas"]["TestRunSummary"][];
+      /** Test Run Count */
+      test_run_count: number;
     };
     /** ExperimentCreate */
     ExperimentCreate: {
@@ -1577,6 +1760,63 @@ export interface components {
       /** Role */
       role?: string | null;
     };
+    /** MeasurementCreate */
+    MeasurementCreate: {
+      /** Extra */
+      extra?: {
+        [key: string]: unknown;
+      } | null;
+      /** Metric */
+      metric: string;
+      /** Notes */
+      notes?: string | null;
+      /** Position */
+      position?: string | null;
+      /** Recorded At */
+      recorded_at?: string | null;
+      /** Unit */
+      unit?: string | null;
+      /** Value */
+      value: number | string;
+    };
+    /** MeasurementRead */
+    MeasurementRead: {
+      /** Extra */
+      extra: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Metric */
+      metric: string;
+      /** Notes */
+      notes: string | null;
+      /** Position */
+      position: string | null;
+      /**
+       * Recorded At
+       * Format: date-time
+       */
+      recorded_at: string;
+      /** Sequence */
+      sequence: number;
+      /** Unit */
+      unit: string | null;
+      /** Value */
+      value: string;
+    };
+    /** MetricDef */
+    MetricDef: {
+      /** Key */
+      key: string;
+      /** Label */
+      label: string;
+      /** Unit */
+      unit?: string | null;
+    };
     /** Page[CaliberRead] */
     Page_CaliberRead_: {
       /** Items */
@@ -1636,6 +1876,17 @@ export interface components {
     Page_PrototypeRead_: {
       /** Items */
       items: components["schemas"]["PrototypeRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
+    /** Page[TestRunRead] */
+    Page_TestRunRead_: {
+      /** Items */
+      items: components["schemas"]["TestRunRead"][];
       /** Limit */
       limit: number;
       /** Offset */
@@ -1763,6 +2014,19 @@ export interface components {
      * @enum {string}
      */
     PartSource: "IN_HOUSE" | "PURCHASED" | "SALVAGED" | "OTHER";
+    /** PositionReading */
+    PositionReading: {
+      /** Amplitude Deg */
+      amplitude_deg: string | null;
+      /** Beat Error Ms */
+      beat_error_ms: string | null;
+      /** Label */
+      label: string;
+      /** Position */
+      position: string;
+      /** Rate Sec Day */
+      rate_sec_day: string | null;
+    };
     /** ProductCreate */
     ProductCreate: {
       /** Description */
@@ -2269,6 +2533,250 @@ export interface components {
       storage_root: string;
       /** Version */
       version: string;
+    };
+    /**
+     * TestOutcome
+     * @enum {string}
+     */
+    TestOutcome: "PASS" | "FAIL" | "INFO";
+    /** TestRunCreate */
+    TestRunCreate: {
+      /** Component Revision Id */
+      component_revision_id?: string | null;
+      /** Conditions */
+      conditions?: {
+        [key: string]: unknown;
+      } | null;
+      /** Equipment */
+      equipment?: string | null;
+      /** Experiment Ref */
+      experiment_ref?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** Measurements */
+      measurements?: components["schemas"]["MeasurementCreate"][];
+      /** Notes */
+      notes?: string | null;
+      /** @default INFO */
+      outcome?: components["schemas"]["TestOutcome"];
+      /** Part Instance Ref */
+      part_instance_ref?: string | null;
+      /** Performed At */
+      performed_at?: string | null;
+      /** Performed By */
+      performed_by?: string | null;
+      /** Prototype Ref */
+      prototype_ref?: string | null;
+      /** Test Type Code */
+      test_type_code: string;
+      /** Title */
+      title?: string | null;
+    };
+    /** TestRunRead */
+    TestRunRead: {
+      component: components["schemas"]["ComponentSummary"] | null;
+      /** Conditions */
+      conditions: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Equipment */
+      equipment: string | null;
+      experiment: components["schemas"]["ExperimentSummary"] | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Measurements */
+      measurements: components["schemas"]["MeasurementRead"][];
+      /** Notes */
+      notes: string | null;
+      outcome: components["schemas"]["TestOutcome"];
+      part_instance: components["schemas"]["PartInstanceSummary"] | null;
+      /**
+       * Performed At
+       * Format: date-time
+       */
+      performed_at: string;
+      /** Performed By */
+      performed_by: string;
+      prototype: components["schemas"]["PrototypeSummary"] | null;
+      revision: components["schemas"]["RevisionSummary"] | null;
+      test_type: components["schemas"]["TestTypeSummary"];
+      timing: components["schemas"]["TimingSummary"] | null;
+      /** Title */
+      title: string | null;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /** TestRunSummary */
+    TestRunSummary: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      outcome: components["schemas"]["TestOutcome"];
+      /**
+       * Performed At
+       * Format: date-time
+       */
+      performed_at: string;
+      /** Performed By */
+      performed_by: string;
+      test_type: components["schemas"]["TestTypeSummary"];
+      /** Title */
+      title: string | null;
+    };
+    /** TestRunUpdate */
+    TestRunUpdate: {
+      /** Conditions */
+      conditions?: {
+        [key: string]: unknown;
+      } | null;
+      /** Equipment */
+      equipment?: string | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      /** Notes */
+      notes?: string | null;
+      outcome?: components["schemas"]["TestOutcome"] | null;
+      /** Title */
+      title?: string | null;
+    };
+    /** TestTypeCreate */
+    TestTypeCreate: {
+      /**
+       * Allow Custom Metrics
+       * @default false
+       */
+      allow_custom_metrics?: boolean;
+      /** Code */
+      code: string;
+      /** Description */
+      description?: string | null;
+      /** Metrics */
+      metrics?: components["schemas"]["MetricDef"][];
+      /** Name */
+      name: string;
+      /**
+       * Uses Positions
+       * @default false
+       */
+      uses_positions?: boolean;
+    };
+    /** TestTypeRead */
+    TestTypeRead: {
+      /** Allow Custom Metrics */
+      allow_custom_metrics: boolean;
+      /** Code */
+      code: string;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Description */
+      description: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Is Active */
+      is_active: boolean;
+      /** Is Builtin */
+      is_builtin: boolean;
+      /** Metrics */
+      metrics: components["schemas"]["MetricDef"][];
+      /** Name */
+      name: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+      /** Uses Positions */
+      uses_positions: boolean;
+    };
+    /** TestTypeSummary */
+    TestTypeSummary: {
+      /** Code */
+      code: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Name */
+      name: string;
+      /** Uses Positions */
+      uses_positions: boolean;
+    };
+    /** TestTypeUpdate */
+    TestTypeUpdate: {
+      /** Allow Custom Metrics */
+      allow_custom_metrics?: boolean | null;
+      /** Description */
+      description?: string | null;
+      /** Is Active */
+      is_active?: boolean | null;
+      /** Metrics */
+      metrics?: components["schemas"]["MetricDef"][] | null;
+      /** Name */
+      name?: string | null;
+      /** Uses Positions */
+      uses_positions?: boolean | null;
+    };
+    /**
+     * TimingSummary
+     * @description Per-position timegrapher readings and the classic derived figures.
+     */
+    TimingSummary: {
+      /**
+       * Delta Sec Day
+       * @description Max minus min rate across positions.
+       */
+      delta_sec_day?: string | null;
+      /** Lift Angle Deg */
+      lift_angle_deg: string | null;
+      /** Max Amplitude Deg */
+      max_amplitude_deg: string | null;
+      /** Max Beat Error Ms */
+      max_beat_error_ms: string | null;
+      /** Mean Rate Sec Day */
+      mean_rate_sec_day: string | null;
+      /** Min Amplitude Deg */
+      min_amplitude_deg: string | null;
+      /** Positions */
+      positions: components["schemas"]["PositionReading"][];
     };
     /** TransitionRequest */
     TransitionRequest: {
@@ -3242,6 +3750,37 @@ export interface operations {
       };
     };
   };
+  experiment_test_runs_api_v1_experiments__ref__test_runs_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   health_api_v1_health_get: {
     parameters: {
       query?: never;
@@ -3504,6 +4043,37 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["PartInstanceRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  part_instance_test_runs_api_v1_part_instances__ref__test_runs_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"][];
         };
       };
       /** @description Validation Error */
@@ -3974,6 +4544,68 @@ export interface operations {
       };
     };
   };
+  prototype_test_runs_api_v1_prototypes__ref__test_runs_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  prototype_timing_api_v1_prototypes__ref__timing_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TimingSummary"] | null;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   get_revision_api_v1_revisions__revision_id__get: {
     parameters: {
       query?: never;
@@ -4254,6 +4886,330 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["SystemInfo"];
+        };
+      };
+    };
+  };
+  list_positions_api_v1_test_positions_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            [key: string]: string;
+          }[];
+        };
+      };
+    };
+  };
+  list_test_runs_api_v1_test_runs_get: {
+    parameters: {
+      query?: {
+        /** @description Test type code */
+        test_type?: string | null;
+        prototype_id?: string | null;
+        part_instance_id?: string | null;
+        experiment_id?: string | null;
+        revision_id?: string | null;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_TestRunRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_test_run_api_v1_test_runs_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TestRunCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_test_run_api_v1_test_runs__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_test_run_api_v1_test_runs__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TestRunUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  add_measurements_api_v1_test_runs__ref__measurements_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MeasurementCreate"][];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_test_types_api_v1_test_types_get: {
+    parameters: {
+      query?: {
+        include_inactive?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestTypeRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_test_type_api_v1_test_types_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TestTypeCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestTypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_test_type_api_v1_test_types__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestTypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_test_type_api_v1_test_types__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["TestTypeUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestTypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
     };

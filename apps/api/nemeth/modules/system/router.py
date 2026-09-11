@@ -20,6 +20,8 @@ from nemeth.modules.products import service as products
 from nemeth.modules.products.schemas import CaliberSummary, ProductSummary
 from nemeth.modules.prototypes import service as prototypes
 from nemeth.modules.prototypes.schemas import PrototypeSummary
+from nemeth.modules.testing import service as testing
+from nemeth.modules.testing.schemas import TestRunSummary, TimingSummary
 
 log = logging.getLogger(__name__)
 router = APIRouter(tags=["system"])
@@ -59,6 +61,10 @@ class DashboardSummary(BaseModel):
     prototypes: list[PrototypeSummary]
     recent_experiments: list[ExperimentSummary]
     experiments_by_status: dict[str, int]
+    test_run_count: int
+    recent_test_runs: list[TestRunSummary]
+    latest_timing: TimingSummary | None
+    latest_timing_run: TestRunSummary | None
 
 
 @router.get("/health", response_model=Health)
@@ -104,6 +110,7 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
     by_state = components.count_by_state(session)
     recent = components.recent_revisions(session, limit=8)
     active = prototypes.active_prototype(session)
+    latest_run = testing.latest_timegrapher_run(session)
     proto_items, proto_total = prototypes.list_prototypes(session, PageParams(limit=6, offset=0))
     return DashboardSummary(
         products=[ProductSummary.model_validate(p) for p in product_items],
@@ -125,4 +132,8 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
             ExperimentSummary.model_validate(e) for e in experiments.recent(session, 5)
         ],
         experiments_by_status=experiments.count_by_status(session),
+        test_run_count=testing.run_count(session),
+        recent_test_runs=[TestRunSummary.model_validate(r) for r in testing.recent_runs(session)],
+        latest_timing=testing.timing_summary(latest_run) if latest_run else None,
+        latest_timing_run=TestRunSummary.model_validate(latest_run) if latest_run else None,
     )

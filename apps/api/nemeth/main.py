@@ -15,6 +15,7 @@ from nemeth.modules.experiments.router import router as experiments_router
 from nemeth.modules.products.router import router as products_router
 from nemeth.modules.prototypes.router import router as prototypes_router
 from nemeth.modules.system.router import router as system_router
+from nemeth.modules.testing.router import router as testing_router
 
 DESCRIPTION = """
 Internal engineering platform for **NEMETH — Detroit**: product definition, components
@@ -57,6 +58,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     api.include_router(bom_router)
     api.include_router(prototypes_router)
     api.include_router(experiments_router)
+    api.include_router(testing_router)
     app.include_router(api)
     return app
 

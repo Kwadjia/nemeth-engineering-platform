@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, FormError, Input, Select, Textarea } from "@/components/ui/form";
 import { EmptyState, ErrorNotice, KV, LoadingRows, PageHeader } from "@/components/ui/layout";
+import { ExperimentTestRunsPanel } from "@/features/testing/TestRunsPanel";
 import { describeError } from "@/lib/api";
 import {
   useExperiment,
@@ -103,7 +104,7 @@ export function ExperimentDetailPage() {
       />
 
       <div className="grid gap-4 xl:grid-cols-3">
-        <div className="xl:col-span-2">
+        <div className="grid gap-4 xl:col-span-2">
           {editing ? (
             <NotebookEditor experiment={e} onDone={() => setEditing(false)} />
           ) : (
@@ -128,6 +129,7 @@ export function ExperimentDetailPage() {
               </CardContent>
             </Card>
           )}
+          <ExperimentTestRunsPanel experimentRef={e.identifier} />
         </div>
         <div className="grid gap-4 self-start">
           <LinksPanel experiment={e} locked={closed} />

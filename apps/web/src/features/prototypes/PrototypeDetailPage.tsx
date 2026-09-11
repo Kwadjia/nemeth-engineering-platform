@@ -18,6 +18,7 @@ import { Field, FormError, Input, Select, Textarea } from "@/components/ui/form"
 import { EmptyState, ErrorNotice, KV, LoadingRows, PageHeader, Stat } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { ExperimentsPanel } from "@/features/prototypes/ExperimentsPanel";
+import { PrototypeTestRunsPanel } from "@/features/testing/TestRunsPanel";
 import { describeError } from "@/lib/api";
 import { formatDate, formatDateTime, formOptional, formText, titleCase } from "@/lib/format";
 import {
@@ -98,6 +99,7 @@ export function PrototypeDetailPage() {
           <ConfigurationPanel prototypeRef={p.identifier} />
           <BuildLogPanel prototypeRef={p.identifier} />
           <ExperimentsPanel prototypeRef={p.identifier} />
+          <PrototypeTestRunsPanel prototypeRef={p.identifier} />
           {p.status !== "RETIRED" ? <NewBuildForm prototype={p} /> : null}
         </div>
         <Card className="self-start">

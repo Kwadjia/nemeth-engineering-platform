@@ -37,6 +37,7 @@ from nemeth.modules.products.schemas import CaliberCreate, ProductCreate, Produc
 from nemeth.modules.prototypes import service as prototypes
 from nemeth.modules.prototypes.models import Prototype, PrototypeStatus
 from nemeth.modules.prototypes.schemas import PrototypeCreate
+from nemeth.modules.testing import service as testing
 
 SEED_ACTOR = Actor(id="seed", display_name="Seed script")
 PLACEHOLDER = "PLACEHOLDER — sample data from the N1 seed. Replace with real engineering data."
@@ -399,6 +400,9 @@ def _seed_bom(session: Session, created: dict[str, Component], result: SeedResul
 
 def seed_n1(session: Session) -> SeedResult:
     result = SeedResult()
+    added_types = testing.ensure_builtin_test_types(session, SEED_ACTOR)
+    if added_types:
+        result.records.append(f"{added_types} built-in test types")
     created = _seed_components(session, result)
     _seed_bom(session, created, result)
     _sync_counters(session)

@@ -1965,6 +1965,26 @@
             "title": "Experiments By Status",
             "type": "object"
           },
+          "latest_timing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TimingSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest_timing_run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TestRunSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "products": {
             "items": {
               "$ref": "#/components/schemas/ProductSummary"
@@ -1996,6 +2016,17 @@
             },
             "title": "Recent Revisions",
             "type": "array"
+          },
+          "recent_test_runs": {
+            "items": {
+              "$ref": "#/components/schemas/TestRunSummary"
+            },
+            "title": "Recent Test Runs",
+            "type": "array"
+          },
+          "test_run_count": {
+            "title": "Test Run Count",
+            "type": "integer"
           }
         },
         "required": [
@@ -2009,7 +2040,11 @@
           "active_prototype",
           "prototypes",
           "recent_experiments",
-          "experiments_by_status"
+          "experiments_by_status",
+          "test_run_count",
+          "recent_test_runs",
+          "latest_timing",
+          "latest_timing_run"
         ],
         "title": "DashboardSummary",
         "type": "object"
@@ -2889,6 +2924,210 @@
         "title": "LinkRevision",
         "type": "object"
       },
+      "MeasurementCreate": {
+        "properties": {
+          "extra": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra"
+          },
+          "metric": {
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Metric",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "maxLength": 8,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "recorded_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded At"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "metric",
+          "value"
+        ],
+        "title": "MeasurementCreate",
+        "type": "object"
+      },
+      "MeasurementRead": {
+        "properties": {
+          "extra": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "recorded_at": {
+            "format": "date-time",
+            "title": "Recorded At",
+            "type": "string"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "value": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "metric",
+          "value",
+          "unit",
+          "position",
+          "recorded_at",
+          "notes",
+          "extra"
+        ],
+        "title": "MeasurementRead",
+        "type": "object"
+      },
+      "MetricDef": {
+        "properties": {
+          "key": {
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "maxLength": 16,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "MetricDef",
+        "type": "object"
+      },
       "Page_CaliberRead_": {
         "properties": {
           "items": {
@@ -3073,6 +3312,37 @@
           "offset"
         ],
         "title": "Page[PrototypeRead]",
+        "type": "object"
+      },
+      "Page_TestRunRead_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TestRunRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[TestRunRead]",
         "type": "object"
       },
       "PartInstanceCreate": {
@@ -3483,6 +3753,63 @@
         ],
         "title": "PartSource",
         "type": "string"
+      },
+      "PositionReading": {
+        "properties": {
+          "amplitude_deg": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amplitude Deg"
+          },
+          "beat_error_ms": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beat Error Ms"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "string"
+          },
+          "rate_sec_day": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Sec Day"
+          }
+        },
+        "required": [
+          "position",
+          "label",
+          "rate_sec_day",
+          "amplitude_deg",
+          "beat_error_ms"
+        ],
+        "title": "PositionReading",
+        "type": "object"
       },
       "ProductCreate": {
         "properties": {
@@ -5196,6 +5523,817 @@
         "title": "SystemInfo",
         "type": "object"
       },
+      "TestOutcome": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "INFO"
+        ],
+        "title": "TestOutcome",
+        "type": "string"
+      },
+      "TestRunCreate": {
+        "properties": {
+          "component_revision_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Component Revision Id"
+          },
+          "conditions": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "equipment": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equipment"
+          },
+          "experiment_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experiment Ref"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "measurements": {
+            "items": {
+              "$ref": "#/components/schemas/MeasurementCreate"
+            },
+            "title": "Measurements",
+            "type": "array"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/TestOutcome",
+            "default": "INFO"
+          },
+          "part_instance_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part Instance Ref"
+          },
+          "performed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Performed At"
+          },
+          "performed_by": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Performed By"
+          },
+          "prototype_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prototype Ref"
+          },
+          "test_type_code": {
+            "maxLength": 32,
+            "minLength": 2,
+            "title": "Test Type Code",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "test_type_code"
+        ],
+        "title": "TestRunCreate",
+        "type": "object"
+      },
+      "TestRunRead": {
+        "properties": {
+          "component": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ComponentSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "conditions": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "equipment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equipment"
+          },
+          "experiment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "measurements": {
+            "items": {
+              "$ref": "#/components/schemas/MeasurementRead"
+            },
+            "title": "Measurements",
+            "type": "array"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/TestOutcome"
+          },
+          "part_instance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PartInstanceSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "performed_at": {
+            "format": "date-time",
+            "title": "Performed At",
+            "type": "string"
+          },
+          "performed_by": {
+            "title": "Performed By",
+            "type": "string"
+          },
+          "prototype": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RevisionSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "test_type": {
+            "$ref": "#/components/schemas/TestTypeSummary"
+          },
+          "timing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TimingSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "title": "Updated By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by",
+          "id",
+          "identifier",
+          "title",
+          "test_type",
+          "performed_at",
+          "performed_by",
+          "outcome",
+          "is_placeholder",
+          "prototype",
+          "part_instance",
+          "revision",
+          "component",
+          "experiment",
+          "equipment",
+          "conditions",
+          "notes",
+          "measurements",
+          "timing"
+        ],
+        "title": "TestRunRead",
+        "type": "object"
+      },
+      "TestRunSummary": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/TestOutcome"
+          },
+          "performed_at": {
+            "format": "date-time",
+            "title": "Performed At",
+            "type": "string"
+          },
+          "performed_by": {
+            "title": "Performed By",
+            "type": "string"
+          },
+          "test_type": {
+            "$ref": "#/components/schemas/TestTypeSummary"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "id",
+          "identifier",
+          "title",
+          "test_type",
+          "performed_at",
+          "performed_by",
+          "outcome",
+          "is_placeholder"
+        ],
+        "title": "TestRunSummary",
+        "type": "object"
+      },
+      "TestRunUpdate": {
+        "properties": {
+          "conditions": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "equipment": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Equipment"
+          },
+          "is_placeholder": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Placeholder"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TestOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "TestRunUpdate",
+        "type": "object"
+      },
+      "TestTypeCreate": {
+        "properties": {
+          "allow_custom_metrics": {
+            "default": false,
+            "title": "Allow Custom Metrics",
+            "type": "boolean"
+          },
+          "code": {
+            "maxLength": 32,
+            "minLength": 2,
+            "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+            "title": "Code",
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricDef"
+            },
+            "title": "Metrics",
+            "type": "array"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "uses_positions": {
+            "default": false,
+            "title": "Uses Positions",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "name"
+        ],
+        "title": "TestTypeCreate",
+        "type": "object"
+      },
+      "TestTypeRead": {
+        "properties": {
+          "allow_custom_metrics": {
+            "title": "Allow Custom Metrics",
+            "type": "boolean"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "is_builtin": {
+            "title": "Is Builtin",
+            "type": "boolean"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricDef"
+            },
+            "title": "Metrics",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "title": "Updated By",
+            "type": "string"
+          },
+          "uses_positions": {
+            "title": "Uses Positions",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by",
+          "id",
+          "code",
+          "name",
+          "uses_positions",
+          "description",
+          "metrics",
+          "allow_custom_metrics",
+          "is_builtin",
+          "is_active"
+        ],
+        "title": "TestTypeRead",
+        "type": "object"
+      },
+      "TestTypeSummary": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "uses_positions": {
+            "title": "Uses Positions",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "uses_positions"
+        ],
+        "title": "TestTypeSummary",
+        "type": "object"
+      },
+      "TestTypeUpdate": {
+        "properties": {
+          "allow_custom_metrics": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allow Custom Metrics"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/MetricDef"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metrics"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "uses_positions": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uses Positions"
+          }
+        },
+        "title": "TestTypeUpdate",
+        "type": "object"
+      },
+      "TimingSummary": {
+        "description": "Per-position timegrapher readings and the classic derived figures.",
+        "properties": {
+          "delta_sec_day": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Max minus min rate across positions.",
+            "title": "Delta Sec Day"
+          },
+          "lift_angle_deg": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lift Angle Deg"
+          },
+          "max_amplitude_deg": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Amplitude Deg"
+          },
+          "max_beat_error_ms": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Beat Error Ms"
+          },
+          "mean_rate_sec_day": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean Rate Sec Day"
+          },
+          "min_amplitude_deg": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Amplitude Deg"
+          },
+          "positions": {
+            "items": {
+              "$ref": "#/components/schemas/PositionReading"
+            },
+            "title": "Positions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "positions",
+          "mean_rate_sec_day",
+          "min_amplitude_deg",
+          "max_amplitude_deg",
+          "max_beat_error_ms",
+          "lift_angle_deg"
+        ],
+        "title": "TimingSummary",
+        "type": "object"
+      },
       "TransitionRequest": {
         "properties": {
           "target_state": {
@@ -6757,6 +7895,52 @@
         ]
       }
     },
+    "/api/v1/experiments/{ref}/test-runs": {
+      "get": {
+        "operationId": "experiment_test_runs_api_v1_experiments__ref__test_runs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TestRunRead"
+                  },
+                  "title": "Response Experiment Test Runs Api V1 Experiments  Ref  Test Runs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Experiment Test Runs",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "health_api_v1_health_get",
@@ -7207,6 +8391,52 @@
         "summary": "Update Part Instance",
         "tags": [
           "prototypes"
+        ]
+      }
+    },
+    "/api/v1/part-instances/{ref}/test-runs": {
+      "get": {
+        "operationId": "part_instance_test_runs_api_v1_part_instances__ref__test_runs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TestRunRead"
+                  },
+                  "title": "Response Part Instance Test Runs Api V1 Part Instances  Ref  Test Runs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Part Instance Test Runs",
+        "tags": [
+          "testing"
         ]
       }
     },
@@ -7880,6 +9110,103 @@
         ]
       }
     },
+    "/api/v1/prototypes/{ref}/test-runs": {
+      "get": {
+        "operationId": "prototype_test_runs_api_v1_prototypes__ref__test_runs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TestRunRead"
+                  },
+                  "title": "Response Prototype Test Runs Api V1 Prototypes  Ref  Test Runs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Prototype Test Runs",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/prototypes/{ref}/timing": {
+      "get": {
+        "description": "Timing summary of the most recent timegrapher run on this prototype.",
+        "operationId": "prototype_timing_api_v1_prototypes__ref__timing_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TimingSummary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Prototype Timing Api V1 Prototypes  Ref  Timing Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Prototype Timing",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
     "/api/v1/revisions/{revision_id}": {
       "get": {
         "operationId": "get_revision_api_v1_revisions__revision_id__get",
@@ -8307,6 +9634,541 @@
         "summary": "System Info",
         "tags": [
           "system"
+        ]
+      }
+    },
+    "/api/v1/test-positions": {
+      "get": {
+        "operationId": "list_positions_api_v1_test_positions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "title": "Response List Positions Api V1 Test Positions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Positions",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/test-runs": {
+      "get": {
+        "operationId": "list_test_runs_api_v1_test_runs_get",
+        "parameters": [
+          {
+            "description": "Test type code",
+            "in": "query",
+            "name": "test_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Test type code",
+              "title": "Test Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "prototype_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prototype Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "part_instance_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Part Instance Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "experiment_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Experiment Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "revision_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Revision Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_TestRunRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Test Runs",
+        "tags": [
+          "testing"
+        ]
+      },
+      "post": {
+        "operationId": "create_test_run_api_v1_test_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestRunCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestRunRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Test Run",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/test-runs/{ref}": {
+      "get": {
+        "operationId": "get_test_run_api_v1_test_runs__ref__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestRunRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Test Run",
+        "tags": [
+          "testing"
+        ]
+      },
+      "patch": {
+        "operationId": "update_test_run_api_v1_test_runs__ref__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestRunUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestRunRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Test Run",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/test-runs/{ref}/measurements": {
+      "post": {
+        "operationId": "add_measurements_api_v1_test_runs__ref__measurements_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/MeasurementCreate"
+                },
+                "title": "Payload",
+                "type": "array"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestRunRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Measurements",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/test-types": {
+      "get": {
+        "operationId": "list_test_types_api_v1_test_types_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include_inactive",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Include Inactive",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TestTypeRead"
+                  },
+                  "title": "Response List Test Types Api V1 Test Types Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Test Types",
+        "tags": [
+          "testing"
+        ]
+      },
+      "post": {
+        "operationId": "create_test_type_api_v1_test_types_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestTypeCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestTypeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Test Type",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/test-types/{ref}": {
+      "get": {
+        "operationId": "get_test_type_api_v1_test_types__ref__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestTypeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Test Type",
+        "tags": [
+          "testing"
+        ]
+      },
+      "patch": {
+        "operationId": "update_test_type_api_v1_test_types__ref__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestTypeUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestTypeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Test Type",
+        "tags": [
+          "testing"
         ]
       }
     }

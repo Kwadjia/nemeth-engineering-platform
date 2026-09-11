@@ -3,20 +3,9 @@ import { Construction } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, PageHeader } from "@/components/ui/layout";
 
-type Area = "testing" | "watches" | "suppliers" | "documents" | "changes";
+type Area = "watches" | "suppliers" | "documents" | "changes";
 
 const AREAS: Record<Area, { title: string; slice: number; summary: string; contents: string[] }> = {
-  testing: {
-    title: "Testing",
-    slice: 9,
-    summary:
-      "An extensible measurement model. Timegrapher first (rate, amplitude, beat error, lift angle, six positions), then power reserve, water resistance, dimensional inspection and custom test types.",
-    contents: [
-      "Test type registry with payload schemas",
-      "Test runs with equipment and conditions",
-      "Measurements queryable across types",
-    ],
-  },
   watches: {
     title: "Watches",
     slice: 10,

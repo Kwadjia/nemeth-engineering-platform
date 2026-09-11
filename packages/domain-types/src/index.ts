@@ -71,6 +71,31 @@ export type ExperimentRead = Schemas["ExperimentRead"];
 export type ExperimentCreate = Schemas["ExperimentCreate"];
 export type ExperimentUpdate = Schemas["ExperimentUpdate"];
 
+export type TestOutcome = Schemas["TestOutcome"];
+export type TestTypeRead = Schemas["TestTypeRead"];
+export type TestTypeSummary = Schemas["TestTypeSummary"];
+export type MetricDef = Schemas["MetricDef"];
+export type TestRunRead = Schemas["TestRunRead"];
+export type TestRunSummary = Schemas["TestRunSummary"];
+export type TestRunCreate = Schemas["TestRunCreate"];
+export type TestRunUpdate = Schemas["TestRunUpdate"];
+export type MeasurementCreate = Schemas["MeasurementCreate"];
+export type MeasurementRead = Schemas["MeasurementRead"];
+export type TimingSummary = Schemas["TimingSummary"];
+export type PositionReading = Schemas["PositionReading"];
+
+export const TEST_OUTCOMES: readonly TestOutcome[] = ["INFO", "PASS", "FAIL"] as const;
+
+/** Timegrapher positions in the conventional order. */
+export const POSITIONS: readonly { code: string; label: string }[] = [
+  { code: "DU", label: "Dial up" },
+  { code: "DD", label: "Dial down" },
+  { code: "CU", label: "Crown up" },
+  { code: "CD", label: "Crown down" },
+  { code: "CL", label: "Crown left" },
+  { code: "CR", label: "Crown right" },
+] as const;
+
 export const EXPERIMENT_STATUSES: readonly ExperimentStatus[] = [
   "PLANNED",
   "IN_PROGRESS",

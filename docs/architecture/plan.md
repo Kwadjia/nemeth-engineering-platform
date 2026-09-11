@@ -43,8 +43,8 @@ is **Caliber N1**.
 | 6 | Tests: revision immutability, recursive BOM | ✅ done |
 | 7 | Prototypes, part instances, build records (physical genealogy, ADR-008) | ✅ done |
 | 8 | Experiments (lab notebook, links to prototypes and revisions) | ✅ done |
-| 9 | Measurements / test records (timegrapher first, extensible) | ⬜ next |
-| 10 | Serialized watches / build genealogy | ⬜ |
+| 9 | Measurements / test records (test-type registry, timegrapher summaries) | ✅ done |
+| 10 | Serialized watches / build genealogy | ⬜ next |
 | 11 | Documents / attachments (SHA-256, local storage backend) | ⬜ |
 | 12 | Suppliers, Engineering Changes (lightweight) | ⬜ |
 
@@ -148,6 +148,22 @@ flow, and [`decisions/`](decisions/) for the ADRs.
       panel; dashboard recent experiments
 - [x] Seed: EXP-001 ST36 disassembly, EXP-002 reassembly, EXP-003 baseline timing
 - [x] Tests: identifiers, status flow, links, seed, API flow
+
+### Domain — Testing (slice 9)
+- [x] `TestType` registry rows (code, metric list with units, custom-metrics flag,
+      positions flag); nine built-ins installed by the seed; new types via POST
+- [x] `TestRun` (`TR-NNNNN`): type, at most one subject (prototype / part instance /
+      revision), optional experiment, performed at/by, equipment, conditions JSON, outcome
+- [x] `Measurement` long format: metric, value, unit (defaulted from the type), position,
+      recorded_at, notes, extra; validated against the type
+- [x] Timegrapher summary: per-position rate/amplitude/beat error, mean, delta,
+      amplitude range, max beat error, lift angle
+- [x] REST: test types, test runs, append measurements, by prototype/experiment/part,
+      prototype latest timing, dashboard latest timing
+- [x] UI: Testing list, new-run form (six-position grid for timegrapher, generic rows
+      otherwise), run detail with timing table, prototype and experiment panels, dashboard
+- [x] Tests: built-ins, timing maths, metric/position validation, custom types,
+      subject rule, API flow; Vitest timing table
 
 ### Seed & tests & docs
 - [x] `python -m nemeth seed` — idempotent N1 seed, marked as placeholder

@@ -11,6 +11,7 @@ from nemeth.modules.components.models import Component, ComponentRevision
 from nemeth.modules.experiments.models import Experiment, ExperimentPrototype, ExperimentRevision
 from nemeth.modules.products.models import Caliber, Product, ProductModel
 from nemeth.modules.prototypes.models import BuildEntry, BuildRecord, PartInstance, Prototype
+from nemeth.modules.testing.models import Measurement, TestRun, TestType
 
 __all__ = [
     "Base",
@@ -24,8 +25,11 @@ __all__ = [
     "ExperimentPrototype",
     "ExperimentRevision",
     "IdentifierCounter",
+    "Measurement",
     "PartInstance",
     "Product",
     "ProductModel",
     "Prototype",
+    "TestRun",
+    "TestType",
 ]

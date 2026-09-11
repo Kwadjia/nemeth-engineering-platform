@@ -19,6 +19,8 @@ import { PartInstancesPage } from "@/features/prototypes/PartInstancesPage";
 import { PrototypeDetailPage } from "@/features/prototypes/PrototypeDetailPage";
 import { PrototypesPage } from "@/features/prototypes/PrototypesPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
+import { TestingPage } from "@/features/testing/TestingPage";
+import { TestRunDetailPage } from "@/features/testing/TestRunDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -42,7 +44,8 @@ export const router = createBrowserRouter([
       { path: "part-instances", element: <PartInstancesPage /> },
       { path: "experiments", element: <ExperimentsPage /> },
       { path: "experiments/:ref", element: <ExperimentDetailPage /> },
-      { path: "testing", element: <PlannedPage area="testing" /> },
+      { path: "testing", element: <TestingPage /> },
+      { path: "testing/:ref", element: <TestRunDetailPage /> },
       { path: "watches", element: <PlannedPage area="watches" /> },
       { path: "suppliers", element: <PlannedPage area="suppliers" /> },
       { path: "documents", element: <PlannedPage area="documents" /> },
