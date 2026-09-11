@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import date
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -13,6 +14,9 @@ from nemeth.modules.prototypes.models import (
     PartSource,
     PrototypeStatus,
 )
+from nemeth.modules.watches.schemas import WatchSummary
+
+UnitKind = Literal["prototype", "watch"]
 
 # --- prototypes --------------------------------------------------------------------
 
@@ -94,6 +98,7 @@ class PartInstanceRead(PartInstanceSummary, AuditFields):
     supplier_note: str | None
     notes: str | None
     current_prototype: PrototypeSummary | None
+    current_watch: WatchSummary | None
 
 
 class PartInstanceCreate(BaseModel):
@@ -161,7 +166,8 @@ class BuildRecordSummary(BaseModel):
 
 
 class BuildRecordRead(BuildRecordSummary, AuditFields):
-    prototype: PrototypeSummary
+    prototype: PrototypeSummary | None
+    watch: WatchSummary | None
     procedure: str | None
     notes: str | None
     entries: list[BuildEntryRead]
@@ -195,7 +201,11 @@ class ConfigurationRow(BaseModel):
     installed_by: BuildRecordSummary | None
 
 
-class PrototypeConfiguration(BaseModel):
-    prototype: PrototypeSummary
+class UnitConfiguration(BaseModel):
+    """What is physically inside a prototype or a watch right now."""
+
+    unit_kind: UnitKind
+    prototype: PrototypeSummary | None
+    watch: WatchSummary | None
     count: int
     rows: list[ConfigurationRow]

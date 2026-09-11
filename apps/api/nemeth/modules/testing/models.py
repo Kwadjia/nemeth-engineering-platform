@@ -26,6 +26,7 @@ from nemeth.core.db import AuditMixin, Base, UUIDPrimaryKeyMixin
 from nemeth.modules.components.models import ComponentRevision
 from nemeth.modules.experiments.models import Experiment
 from nemeth.modules.prototypes.models import PartInstance, Prototype
+from nemeth.modules.watches.models import Watch
 
 
 class TestOutcome(StrEnum):
@@ -87,7 +88,8 @@ class TestRun(UUIDPrimaryKeyMixin, AuditMixin, Base):
         CheckConstraint(
             "(CASE WHEN prototype_id IS NULL THEN 0 ELSE 1 END)"
             " + (CASE WHEN part_instance_id IS NULL THEN 0 ELSE 1 END)"
-            " + (CASE WHEN component_revision_id IS NULL THEN 0 ELSE 1 END) <= 1",
+            " + (CASE WHEN component_revision_id IS NULL THEN 0 ELSE 1 END)"
+            " + (CASE WHEN watch_id IS NULL THEN 0 ELSE 1 END) <= 1",
             name="single_subject",
         ),
     )
@@ -105,6 +107,9 @@ class TestRun(UUIDPrimaryKeyMixin, AuditMixin, Base):
     )
     component_revision_id: Mapped[uuid.UUID | None] = mapped_column(
         Uuid, ForeignKey("component_revisions.id", ondelete="RESTRICT"), index=True
+    )
+    watch_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("watches.id", ondelete="RESTRICT"), index=True
     )
     experiment_id: Mapped[uuid.UUID | None] = mapped_column(
         Uuid, ForeignKey("experiments.id", ondelete="RESTRICT"), index=True
@@ -128,6 +133,7 @@ class TestRun(UUIDPrimaryKeyMixin, AuditMixin, Base):
     prototype: Mapped[Prototype | None] = relationship()
     part_instance: Mapped[PartInstance | None] = relationship()
     revision: Mapped[ComponentRevision | None] = relationship()
+    watch: Mapped[Watch | None] = relationship()
     experiment: Mapped[Experiment | None] = relationship()
     measurements: Mapped[list[Measurement]] = relationship(
         back_populates="test_run", order_by="Measurement.sequence", cascade="all, delete-orphan"

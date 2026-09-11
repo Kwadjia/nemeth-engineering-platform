@@ -41,6 +41,7 @@ export function TestingPage() {
         <NewTestRunForm
           onDone={() => setCreating(false)}
           defaultPrototype={params.get("prototype") ?? undefined}
+          defaultWatch={params.get("watch") ?? undefined}
           defaultExperiment={params.get("experiment") ?? undefined}
         />
       ) : null}

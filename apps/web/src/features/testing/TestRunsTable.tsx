@@ -7,6 +7,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { formatDateTime, formatQuantity } from "@/lib/format";
 
 function subjectOf(run: TestRunRead): { label: string; to?: string } {
+  if (run.watch) return { label: run.watch.identifier, to: `/watches/${run.watch.identifier}` };
   if (run.prototype)
     return { label: run.prototype.identifier, to: `/prototypes/${run.prototype.identifier}` };
   if (run.part_instance)

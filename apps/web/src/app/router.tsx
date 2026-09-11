@@ -21,6 +21,8 @@ import { PrototypesPage } from "@/features/prototypes/PrototypesPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 import { TestingPage } from "@/features/testing/TestingPage";
 import { TestRunDetailPage } from "@/features/testing/TestRunDetailPage";
+import { WatchDetailPage } from "@/features/watches/WatchDetailPage";
+import { WatchesPage } from "@/features/watches/WatchesPage";
 
 export const router = createBrowserRouter([
   {
@@ -46,7 +48,8 @@ export const router = createBrowserRouter([
       { path: "experiments/:ref", element: <ExperimentDetailPage /> },
       { path: "testing", element: <TestingPage /> },
       { path: "testing/:ref", element: <TestRunDetailPage /> },
-      { path: "watches", element: <PlannedPage area="watches" /> },
+      { path: "watches", element: <WatchesPage /> },
+      { path: "watches/:ref", element: <WatchDetailPage /> },
       { path: "suppliers", element: <PlannedPage area="suppliers" /> },
       { path: "documents", element: <PlannedPage area="documents" /> },
       { path: "changes", element: <PlannedPage area="changes" /> },

@@ -11,6 +11,7 @@ from nemeth.modules.components.schemas import AuditFields, ComponentSummary, Rev
 from nemeth.modules.experiments.schemas import ExperimentSummary
 from nemeth.modules.prototypes.schemas import PartInstanceSummary, PrototypeSummary
 from nemeth.modules.testing.models import TestOutcome
+from nemeth.modules.watches.schemas import WatchSummary
 
 # --- test types --------------------------------------------------------------------
 
@@ -123,6 +124,7 @@ class TestRunSummary(BaseModel):
 
 class TestRunRead(TestRunSummary, AuditFields):
     prototype: PrototypeSummary | None
+    watch: WatchSummary | None
     part_instance: PartInstanceSummary | None
     revision: RevisionSummary | None
     component: ComponentSummary | None
@@ -138,6 +140,7 @@ class TestRunCreate(BaseModel):
     test_type_code: str = Field(min_length=2, max_length=32)
     title: str | None = Field(default=None, max_length=200)
     prototype_ref: str | None = None
+    watch_ref: str | None = None
     part_instance_ref: str | None = None
     component_revision_id: uuid.UUID | None = None
     experiment_ref: str | None = None
@@ -152,7 +155,12 @@ class TestRunCreate(BaseModel):
 
     @model_validator(mode="after")
     def _single_subject(self) -> TestRunCreate:
-        subjects = [self.prototype_ref, self.part_instance_ref, self.component_revision_id]
+        subjects = [
+            self.prototype_ref,
+            self.watch_ref,
+            self.part_instance_ref,
+            self.component_revision_id,
+        ]
         if sum(1 for s in subjects if s is not None) > 1:
             raise ValueError("a test run has at most one subject")
         return self

@@ -44,8 +44,8 @@ is **Caliber N1**.
 | 7 | Prototypes, part instances, build records (physical genealogy, ADR-008) | ✅ done |
 | 8 | Experiments (lab notebook, links to prototypes and revisions) | ✅ done |
 | 9 | Measurements / test records (test-type registry, timegrapher summaries) | ✅ done |
-| 10 | Serialized watches / build genealogy | ⬜ next |
-| 11 | Documents / attachments (SHA-256, local storage backend) | ⬜ |
+| 10 | Serialized watches, shared genealogy, dossier | ✅ done |
+| 11 | Documents / attachments (SHA-256, local storage backend) | ⬜ next |
 | 12 | Suppliers, Engineering Changes (lightweight) | ⬜ |
 
 Out of scope for v0.1: MES, travelers, CAD integration, calculators, AI
@@ -164,6 +164,17 @@ flow, and [`decisions/`](decisions/) for the ADRs.
       otherwise), run detail with timing table, prototype and experiment panels, dashboard
 - [x] Tests: built-ins, timing maths, metric/position validation, custom types,
       subject rule, API flow; Vitest timing table
+
+### Domain — Watches (slice 10)
+- [x] `Watch` (`{PRODUCT}-{NNN}`, serial derived): model, status flow, owner, origin prototype, dates
+- [x] Build records, part-instance location and test-run subject extended with `watch_id`
+      (check constraints: exactly one unit per build record, one location per part)
+- [x] Shared genealogy service: configuration, build records, physical where-used for both units
+- [x] Dossier endpoint: product, model, caliber, origin prototype, configuration, build log,
+      test runs, latest timing, experiment lineage
+- [x] UI: Watches list, dossier-driven detail with shared build panels, watch subject in
+      test runs, dashboard watches card
+- [x] Tests: identifiers/serials, status flow, part movement prototype → watch, dossier, API
 
 ### Seed & tests & docs
 - [x] `python -m nemeth seed` — idempotent N1 seed, marked as placeholder

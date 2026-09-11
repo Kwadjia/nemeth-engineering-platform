@@ -3,20 +3,9 @@ import { Construction } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, PageHeader } from "@/components/ui/layout";
 
-type Area = "watches" | "suppliers" | "documents" | "changes";
+type Area = "suppliers" | "documents" | "changes";
 
 const AREAS: Record<Area, { title: string; slice: number; summary: string; contents: string[] }> = {
-  watches: {
-    title: "Watches",
-    slice: 10,
-    summary:
-      "Serialized watches (N1-001 …) with a complete digital build record: BOM genealogy, exact revisions, assembly, test, regulation and service history.",
-    contents: [
-      "Serial register",
-      "Build records shared with prototypes",
-      "Part instances with supplier and lot traceability",
-    ],
-  },
   suppliers: {
     title: "Suppliers",
     slice: 12,

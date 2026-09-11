@@ -285,21 +285,24 @@ delta, amplitude range, max beat error, lift angle) is derived on read for
 any timegrapher run and exposed for a prototype's latest run and on the
 dashboard.
 
-### Watch, BuildRecord, PartInstance — slice 10
-* `Watch` — a serialized unit: `N1-001`, product model, serial, status
-  (`PERSONAL_PROTOTYPE`, `IN_BUILD`, `DELIVERED` …), owner, assembly date,
-  notes.
-* `BuildRecord` — an assembly event for a prototype or watch: date,
-  performed by, work instruction revision, steps, lubrication and torque
-  notes, and the set of `PartInstance`s installed.
-* `PartInstance` — a physical part: component revision, serial/lot,
-  supplier, manufacturing order, material lot, heat-treatment lot,
-  inspection test runs. Instances can be removed and replaced, producing
-  history.
+### Watch (implemented)
+A serialized unit: `N1-001` (serial `001`, derived from the identifier),
+product model, status (`PLANNED` → `IN_BUILD` → `BUILT`, then
+`PERSONAL_PROTOTYPE` / `DELIVERED` / `IN_SERVICE` move freely; `RETIRED`
+terminal), owner, origin prototype, assembled and delivered dates, notes.
 
-Together these give each watch its **digital build record**: BOM
-genealogy, exact revisions, assembly history, test history, regulation
-history, service history, issues and modifications.
+Watches share the genealogy structure with prototypes (ADR-008):
+`BuildRecord.watch_id`, `PartInstance.current_watch_id` and
+`TestRun.watch_id`, each guarded by a check constraint so a record has
+exactly one unit, a part has one location and a run one subject. Moving a
+part from a prototype into a watch is a removal record on one and an
+install record on the other; both stay in the history.
+
+The **dossier** (`GET /watches/{ref}/dossier`) is the digital build record
+in one document: product, model, caliber, origin prototype, current
+configuration with exact revisions, the build log, test runs with the
+latest timing summary, and the experiments linked to the origin prototype.
+Service history, issues and modifications are later additions to it.
 
 ## Manufacturing and quality (planned)
 

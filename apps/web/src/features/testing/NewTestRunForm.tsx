@@ -17,6 +17,7 @@ import { describeError } from "@/lib/api";
 import { useExperiments } from "@/lib/experimentQueries";
 import { formOptional, formText } from "@/lib/format";
 import { usePrototypes } from "@/lib/prototypeQueries";
+import { useWatches } from "@/lib/watchQueries";
 import { useCreateTestRun, useTestTypes } from "@/lib/testingQueries";
 
 interface Row {
@@ -32,14 +33,17 @@ const TIMEGRAPHER_METRICS = ["rate_sec_day", "amplitude_deg", "beat_error_ms"] a
 export function NewTestRunForm({
   onDone,
   defaultPrototype,
+  defaultWatch,
   defaultExperiment,
 }: {
   onDone: () => void;
   defaultPrototype?: string;
+  defaultWatch?: string;
   defaultExperiment?: string;
 }) {
   const types = useTestTypes();
   const prototypes = usePrototypes();
+  const watches = useWatches();
   const experiments = useExperiments({});
   const create = useCreateTestRun();
   const navigate = useNavigate();
@@ -98,6 +102,7 @@ export function NewTestRunForm({
         test_type_code: typeCode,
         title: formOptional(fd, "title"),
         prototype_ref: formOptional(fd, "prototype_ref"),
+        watch_ref: formOptional(fd, "watch_ref"),
         experiment_ref: formOptional(fd, "experiment_ref"),
         performed_at: formOptional(fd, "performed_at"),
         performed_by: formOptional(fd, "performed_by"),
@@ -126,7 +131,7 @@ export function NewTestRunForm({
       <CardHeader eyebrow="New" title="Test run" />
       <CardContent>
         <form onSubmit={onSubmit} className="grid gap-4">
-          <div className="grid gap-3 sm:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-5">
             <Field label="Test type" htmlFor="t-type">
               <Select
                 id="t-type"
@@ -149,6 +154,16 @@ export function NewTestRunForm({
                 {(prototypes.data?.items ?? []).map((p) => (
                   <option key={p.id} value={p.identifier}>
                     {p.identifier} · {p.name}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+            <Field label="Watch" htmlFor="t-watch" hint="the subject, if serialized">
+              <Select id="t-watch" name="watch_ref" defaultValue={defaultWatch ?? ""}>
+                <option value="">None</option>
+                {(watches.data?.items ?? []).map((w) => (
+                  <option key={w.id} value={w.identifier}>
+                    {w.identifier} · {w.product_model.identifier}
                   </option>
                 ))}
               </Select>

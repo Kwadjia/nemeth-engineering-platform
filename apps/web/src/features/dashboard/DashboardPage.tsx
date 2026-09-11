@@ -1,11 +1,12 @@
 import { LIFECYCLE_STATES } from "@nemeth/domain-types";
-import { Activity, FlaskConical, GitBranch, Layers } from "lucide-react";
+import { Activity, FlaskConical, GitBranch, Layers, Watch } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { PrototypeSummary } from "@nemeth/domain-types";
 import { Identifier, LifecycleBadge, PlaceholderBadge } from "@/components/domain/badges";
 import { ExperimentStatusBadge, OutcomeBadge } from "@/components/domain/experimentBadges";
 import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
+import { WatchStatusBadge } from "@/components/domain/watchBadges";
 import { TimingTable } from "@/components/domain/TimingTable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, ErrorNotice, LoadingRows, PageHeader, Stat } from "@/components/ui/layout";
@@ -193,6 +194,39 @@ export function DashboardPage() {
                 />
               )}
             </CardContent>
+          </Card>
+          <Card>
+            <CardHeader
+              eyebrow="Serialized"
+              title="Watches"
+              actions={
+                <Link to="/watches" className="text-xs text-fg-muted hover:text-fg hover:underline">
+                  All watches
+                </Link>
+              }
+            />
+            {dashboard.isLoading ? (
+              <LoadingRows rows={2} />
+            ) : dashboard.data && dashboard.data.watches.length > 0 ? (
+              <ul className="divide-y divide-border">
+                {dashboard.data.watches.map((w) => (
+                  <li key={w.id} className="flex items-center gap-3 px-4 py-2">
+                    <Identifier value={w.identifier} to={`/watches/${w.identifier}`} />
+                    <span className="flex-1 truncate text-sm text-fg">{w.owner_name ?? "—"}</span>
+                    <WatchStatusBadge status={w.status} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <CardContent>
+                <EmptyState
+                  icon={Watch}
+                  title="No serialized watches"
+                  description="Give a build a serial number when it earns one."
+                  className="py-6"
+                />
+              </CardContent>
+            )}
           </Card>
           <Card>
             <CardHeader

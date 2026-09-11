@@ -25,6 +25,7 @@ export interface InstanceFilters {
   q?: string;
   status?: PartInstanceStatus;
   prototype_id?: string;
+  watch_id?: string;
 }
 
 export function usePrototypes() {
@@ -72,6 +73,7 @@ export function usePartInstances(filters: InstanceFilters) {
               q: filters.q || undefined,
               status: filters.status,
               prototype_id: filters.prototype_id,
+              watch_id: filters.watch_id,
               limit: 200,
             },
           },

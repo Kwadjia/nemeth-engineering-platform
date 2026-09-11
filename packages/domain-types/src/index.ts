@@ -54,7 +54,7 @@ export type PrototypeSummary = Schemas["PrototypeSummary"];
 export type PrototypeRead = Schemas["PrototypeRead"];
 export type PrototypeCreate = Schemas["PrototypeCreate"];
 export type PrototypeUpdate = Schemas["PrototypeUpdate"];
-export type PrototypeConfiguration = Schemas["PrototypeConfiguration"];
+export type UnitConfiguration = Schemas["UnitConfiguration"];
 export type ConfigurationRow = Schemas["ConfigurationRow"];
 export type PartInstanceSummary = Schemas["PartInstanceSummary"];
 export type PartInstanceRead = Schemas["PartInstanceRead"];
@@ -83,6 +83,13 @@ export type MeasurementCreate = Schemas["MeasurementCreate"];
 export type MeasurementRead = Schemas["MeasurementRead"];
 export type TimingSummary = Schemas["TimingSummary"];
 export type PositionReading = Schemas["PositionReading"];
+
+export type WatchStatus = Schemas["WatchStatus"];
+export type WatchSummary = Schemas["WatchSummary"];
+export type WatchRead = Schemas["WatchRead"];
+export type WatchCreate = Schemas["WatchCreate"];
+export type WatchUpdate = Schemas["WatchUpdate"];
+export type WatchDossier = Schemas["WatchDossier"];
 
 export const TEST_OUTCOMES: readonly TestOutcome[] = ["INFO", "PASS", "FAIL"] as const;
 

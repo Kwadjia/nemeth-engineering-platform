@@ -1,8 +1,13 @@
-"""Prototype, part-instance and build-record rules (ADR-008)."""
+"""Prototype, part-instance and build-record rules (ADR-008).
+
+Build records, part-instance location and configuration are shared between prototypes
+and serialized watches: every function that takes a ``unit`` accepts either.
+"""
 
 from __future__ import annotations
 
 import uuid
+from typing import TypeAlias
 
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
@@ -34,11 +39,15 @@ from nemeth.modules.prototypes.schemas import (
     PartInstanceCreate,
     PartInstanceSummary,
     PartInstanceUpdate,
-    PrototypeConfiguration,
     PrototypeCreate,
     PrototypeSummary,
     PrototypeUpdate,
+    UnitConfiguration,
 )
+from nemeth.modules.watches.models import Watch, WatchStatus
+from nemeth.modules.watches.schemas import WatchSummary
+
+Unit: TypeAlias = Prototype | Watch
 
 PROTOTYPE_ORDER: tuple[PrototypeStatus, ...] = (
     PrototypeStatus.PLANNED,
@@ -56,9 +65,11 @@ _PROTOTYPE_OPTS = (
 _INSTANCE_OPTS = (
     selectinload(PartInstance.revision).selectinload(ComponentRevision.component),
     selectinload(PartInstance.current_prototype),
+    selectinload(PartInstance.current_watch),
 )
 _BUILD_OPTS = (
     selectinload(BuildRecord.prototype),
+    selectinload(BuildRecord.watch),
     selectinload(BuildRecord.entries)
     .selectinload(BuildEntry.part_instance)
     .selectinload(PartInstance.revision)
@@ -197,6 +208,7 @@ def list_part_instances(
     status: PartInstanceStatus | None = None,
     component_id: uuid.UUID | None = None,
     prototype_id: uuid.UUID | None = None,
+    watch_id: uuid.UUID | None = None,
 ) -> tuple[list[PartInstance], int]:
     stmt = select(PartInstance).join(
         ComponentRevision, PartInstance.component_revision_id == ComponentRevision.id
@@ -217,6 +229,8 @@ def list_part_instances(
         stmt = stmt.where(ComponentRevision.component_id == component_id)
     if prototype_id is not None:
         stmt = stmt.where(PartInstance.current_prototype_id == prototype_id)
+    if watch_id is not None:
+        stmt = stmt.where(PartInstance.current_watch_id == watch_id)
     total = session.execute(select(func.count()).select_from(stmt.subquery())).scalar_one()
     stmt = (
         stmt.options(*_INSTANCE_OPTS)
@@ -284,6 +298,58 @@ def update_part_instance(
     return instance
 
 
+# --- units (prototype or watch) ----------------------------------------------------
+
+
+def _is_watch(unit: Unit) -> bool:
+    return isinstance(unit, Watch)
+
+
+def _unit_location(instance: PartInstance) -> str | None:
+    if instance.current_prototype_id is not None:
+        return (
+            instance.current_prototype.identifier if instance.current_prototype else "a prototype"
+        )
+    if instance.current_watch_id is not None:
+        return instance.current_watch.identifier if instance.current_watch else "a watch"
+    return None
+
+
+def _installed_here(instance: PartInstance, unit: Unit) -> bool:
+    if isinstance(unit, Watch):
+        return instance.current_watch_id == unit.id
+    return instance.current_prototype_id == unit.id
+
+
+def _place(instance: PartInstance, unit: Unit | None) -> None:
+    instance.current_prototype = None
+    instance.current_prototype_id = None
+    instance.current_watch = None
+    instance.current_watch_id = None
+    if unit is None:
+        return
+    if isinstance(unit, Watch):
+        instance.current_watch = unit
+        instance.current_watch_id = unit.id
+    else:
+        instance.current_prototype = unit
+        instance.current_prototype_id = unit.id
+
+
+def _is_retired(unit: Unit) -> bool:
+    if isinstance(unit, Watch):
+        return unit.status is WatchStatus.RETIRED
+    return unit.status is PrototypeStatus.RETIRED
+
+
+def _start_building(unit: Unit) -> None:
+    if isinstance(unit, Watch):
+        if unit.status is WatchStatus.PLANNED:
+            unit.status = WatchStatus.IN_BUILD
+    elif unit.status is PrototypeStatus.PLANNED:
+        unit.status = PrototypeStatus.BUILDING
+
+
 # --- build records -----------------------------------------------------------------
 
 
@@ -296,10 +362,11 @@ def get_build_record(session: Session, ref: str) -> BuildRecord:
     return get_by_ref(session, BuildRecord, ref, options=_BUILD_OPTS, label="BuildRecord")
 
 
-def list_build_records(session: Session, prototype: Prototype) -> list[BuildRecord]:
+def list_build_records(session: Session, unit: Unit) -> list[BuildRecord]:
+    column = BuildRecord.watch_id if _is_watch(unit) else BuildRecord.prototype_id
     stmt = (
         select(BuildRecord)
-        .where(BuildRecord.prototype_id == prototype.id)
+        .where(column == unit.id)
         .options(*_BUILD_OPTS)
         .order_by(BuildRecord.performed_on.desc(), BuildRecord.created_at.desc())
     )
@@ -316,19 +383,20 @@ def _resolve_instance(
 
 
 def create_build_record(
-    session: Session, actor: Actor, prototype: Prototype, data: BuildRecordCreate
+    session: Session, actor: Actor, unit: Unit, data: BuildRecordCreate
 ) -> BuildRecord:
-    if prototype.status == PrototypeStatus.RETIRED:
+    if _is_retired(unit):
         raise DomainValidationError(
-            f"{prototype.identifier} is retired; no further build records can be added.",
-            prototype=prototype.identifier,
+            f"{unit.identifier} is retired; no further build records can be added.",
+            unit=unit.identifier,
         )
     identifier = next_identifier(
         session, "BR", exists=lambda c: _build_identifier_exists(session, c), width=5
     )
     record = BuildRecord(
         identifier=identifier,
-        prototype_id=prototype.id,
+        prototype_id=None if _is_watch(unit) else unit.id,
+        watch_id=unit.id if _is_watch(unit) else None,
         title=data.title.strip(),
         performed_on=data.performed_on,
         performed_by=(data.performed_by or actor.display_name).strip(),
@@ -356,30 +424,24 @@ def create_build_record(
                 raise DomainValidationError(
                     f"{instance.identifier} is scrapped and cannot be installed", field="entries"
                 )
-            if instance.current_prototype_id is not None:
-                where = (
-                    instance.current_prototype.identifier
-                    if instance.current_prototype
-                    else "another unit"
-                )
+            where = _unit_location(instance)
+            if where is not None:
                 raise DomainValidationError(
                     f"{instance.identifier} is already installed in {where}; remove it first",
                     field="entries",
                     part_instance=instance.identifier,
                 )
             instance.status = PartInstanceStatus.INSTALLED
-            instance.current_prototype = prototype
-            instance.current_prototype_id = prototype.id
+            _place(instance, unit)
         else:
-            if instance.current_prototype_id != prototype.id:
+            if not _installed_here(instance, unit):
                 raise DomainValidationError(
-                    f"{instance.identifier} is not installed in {prototype.identifier}",
+                    f"{instance.identifier} is not installed in {unit.identifier}",
                     field="entries",
                     part_instance=instance.identifier,
                 )
             instance.status = PartInstanceStatus.REMOVED
-            instance.current_prototype = None
-            instance.current_prototype_id = None
+            _place(instance, None)
         stamp_updated(instance, actor)
 
         row = BuildEntry(
@@ -392,11 +454,11 @@ def create_build_record(
         stamp_created(row, actor)
         record.entries.append(row)
 
-    if prototype.status is PrototypeStatus.PLANNED and data.entries:
-        prototype.status = PrototypeStatus.BUILDING
-    stamp_updated(prototype, actor)
+    if data.entries:
+        _start_building(unit)
+    stamp_updated(unit, actor)
     session.flush()
-    session.expire(prototype)
+    session.expire(unit)
     return get_build_record(session, str(record.id))
 
 
@@ -415,14 +477,15 @@ def update_build_record(
 # --- configuration -----------------------------------------------------------------
 
 
-def _last_install(session: Session, instance: PartInstance) -> BuildEntry | None:
+def _last_install(session: Session, instance: PartInstance, unit: Unit) -> BuildEntry | None:
+    column = BuildRecord.watch_id if _is_watch(unit) else BuildRecord.prototype_id
     stmt = (
         select(BuildEntry)
         .join(BuildRecord, BuildEntry.build_record_id == BuildRecord.id)
         .where(
             BuildEntry.part_instance_id == instance.id,
             BuildEntry.action == BuildAction.INSTALL,
-            BuildRecord.prototype_id == instance.current_prototype_id,
+            column == unit.id,
         )
         .options(selectinload(BuildEntry.build_record))
         .order_by(
@@ -435,19 +498,20 @@ def _last_install(session: Session, instance: PartInstance) -> BuildEntry | None
     return session.execute(stmt).scalars().first()
 
 
-def configuration(session: Session, prototype: Prototype) -> PrototypeConfiguration:
+def configuration(session: Session, unit: Unit) -> UnitConfiguration:
     """Every part instance currently installed, with its exact revision (ADR-008)."""
+    column = PartInstance.current_watch_id if _is_watch(unit) else PartInstance.current_prototype_id
     stmt = (
         select(PartInstance)
         .join(ComponentRevision, PartInstance.component_revision_id == ComponentRevision.id)
         .join(Component, ComponentRevision.component_id == Component.id)
-        .where(PartInstance.current_prototype_id == prototype.id)
+        .where(column == unit.id)
         .options(*_INSTANCE_OPTS)
         .order_by(Component.identifier, PartInstance.identifier)
     )
     rows: list[ConfigurationRow] = []
     for instance in session.execute(stmt).scalars().unique():
-        entry = _last_install(session, instance)
+        entry = _last_install(session, instance, unit)
         rows.append(
             ConfigurationRow(
                 part_instance=PartInstanceSummary.model_validate(instance),
@@ -459,8 +523,20 @@ def configuration(session: Session, prototype: Prototype) -> PrototypeConfigurat
                 ),
             )
         )
-    return PrototypeConfiguration(
-        prototype=PrototypeSummary.model_validate(prototype), count=len(rows), rows=rows
+    if isinstance(unit, Watch):
+        return UnitConfiguration(
+            unit_kind="watch",
+            prototype=None,
+            watch=WatchSummary.model_validate(unit),
+            count=len(rows),
+            rows=rows,
+        )
+    return UnitConfiguration(
+        unit_kind="prototype",
+        prototype=PrototypeSummary.model_validate(unit),
+        watch=None,
+        count=len(rows),
+        rows=rows,
     )
 
 
@@ -471,6 +547,18 @@ def prototypes_containing_revision(session: Session, revision_id: uuid.UUID) -> 
         .where(PartInstance.component_revision_id == revision_id)
         .options(*_PROTOTYPE_OPTS)
         .order_by(Prototype.identifier)
+        .distinct()
+    )
+    return list(session.execute(stmt).scalars().unique())
+
+
+def watches_containing_revision(session: Session, revision_id: uuid.UUID) -> list[Watch]:
+    stmt = (
+        select(Watch)
+        .join(PartInstance, PartInstance.current_watch_id == Watch.id)
+        .where(PartInstance.component_revision_id == revision_id)
+        .options(selectinload(Watch.product_model))
+        .order_by(Watch.identifier)
         .distinct()
     )
     return list(session.execute(stmt).scalars().unique())

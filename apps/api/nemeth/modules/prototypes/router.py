@@ -18,11 +18,11 @@ from nemeth.modules.prototypes.schemas import (
     PartInstanceCreate,
     PartInstanceRead,
     PartInstanceUpdate,
-    PrototypeConfiguration,
     PrototypeCreate,
     PrototypeRead,
     PrototypeSummary,
     PrototypeUpdate,
+    UnitConfiguration,
 )
 
 router = APIRouter(tags=["prototypes"])
@@ -73,8 +73,8 @@ def update_prototype(
     )
 
 
-@router.get("/prototypes/{ref}/configuration", response_model=PrototypeConfiguration)
-def get_configuration(ref: str, session: Session = Depends(get_session)) -> PrototypeConfiguration:
+@router.get("/prototypes/{ref}/configuration", response_model=UnitConfiguration)
+def get_configuration(ref: str, session: Session = Depends(get_session)) -> UnitConfiguration:
     return service.configuration(session, service.get_prototype(session, ref))
 
 
@@ -128,6 +128,7 @@ def list_part_instances(
     status_filter: PartInstanceStatus | None = Query(default=None, alias="status"),
     component_id: uuid.UUID | None = None,
     prototype_id: uuid.UUID | None = None,
+    watch_id: uuid.UUID | None = None,
     page: PageParams = Depends(page_params),
     session: Session = Depends(get_session),
 ) -> Page[PartInstanceRead]:
@@ -138,6 +139,7 @@ def list_part_instances(
         status=status_filter,
         component_id=component_id,
         prototype_id=prototype_id,
+        watch_id=watch_id,
     )
     return Page(
         items=[PartInstanceRead.model_validate(i) for i in items],

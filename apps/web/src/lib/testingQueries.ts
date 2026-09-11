@@ -72,6 +72,14 @@ export function usePrototypeTiming(ref: string) {
   });
 }
 
+export function useWatchTestRuns(ref: string) {
+  return useQuery({
+    queryKey: ["watches", ref, "test-runs"] as const,
+    queryFn: async () =>
+      unwrap(await api.GET("/api/v1/watches/{ref}/test-runs", { params: { path: { ref } } })),
+  });
+}
+
 export function useExperimentTestRuns(ref: string) {
   return useQuery({
     queryKey: testingKeys.forExperiment(ref),
@@ -91,7 +99,8 @@ export function useCreateTestRun() {
   return useMutation({
     mutationFn: async (body: TestRunCreate) =>
       unwrap(await api.POST("/api/v1/test-runs", { body })),
-    onSuccess: () => invalidate(testingKeys.runs, ["prototypes"], ["experiments"], keys.dashboard),
+    onSuccess: () =>
+      invalidate(testingKeys.runs, ["prototypes"], ["watches"], ["experiments"], keys.dashboard),
   });
 }
 

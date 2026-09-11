@@ -23,6 +23,7 @@ from nemeth.modules.testing.schemas import (
     TestTypeUpdate,
     TimingSummary,
 )
+from nemeth.modules.watches import service as watches
 
 router = APIRouter(tags=["testing"])
 
@@ -160,6 +161,20 @@ def prototype_timing(ref: str, session: Session = Depends(get_session)) -> Timin
     """Timing summary of the most recent timegrapher run on this prototype."""
     prototype = prototypes.get_prototype(session, ref)
     run = service.latest_timegrapher_run(session, prototype.id)
+    return service.timing_summary(run) if run else None
+
+
+@router.get("/watches/{ref}/test-runs", response_model=list[TestRunRead])
+def watch_test_runs(ref: str, session: Session = Depends(get_session)) -> list[TestRunRead]:
+    watch = watches.get_watch(session, ref)
+    items, _ = service.list_test_runs(session, PageParams(limit=500, offset=0), watch_id=watch.id)
+    return [_read(r) for r in items]
+
+
+@router.get("/watches/{ref}/timing", response_model=TimingSummary | None)
+def watch_timing(ref: str, session: Session = Depends(get_session)) -> TimingSummary | None:
+    watch = watches.get_watch(session, ref)
+    run = service.latest_timegrapher_run(session, watch_id=watch.id)
     return service.timing_summary(run) if run else None
 
 

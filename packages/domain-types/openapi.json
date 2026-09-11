@@ -742,7 +742,14 @@
             "title": "Procedure"
           },
           "prototype": {
-            "$ref": "#/components/schemas/PrototypeSummary"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "title": {
             "title": "Title",
@@ -756,6 +763,16 @@
           "updated_by": {
             "title": "Updated By",
             "type": "string"
+          },
+          "watch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WatchSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -769,6 +786,7 @@
           "performed_on",
           "performed_by",
           "prototype",
+          "watch",
           "procedure",
           "notes",
           "entries"
@@ -2027,6 +2045,17 @@
           "test_run_count": {
             "title": "Test Run Count",
             "type": "integer"
+          },
+          "watch_count": {
+            "title": "Watch Count",
+            "type": "integer"
+          },
+          "watches": {
+            "items": {
+              "$ref": "#/components/schemas/WatchSummary"
+            },
+            "title": "Watches",
+            "type": "array"
           }
         },
         "required": [
@@ -2044,7 +2073,9 @@
           "test_run_count",
           "recent_test_runs",
           "latest_timing",
-          "latest_timing_run"
+          "latest_timing_run",
+          "watch_count",
+          "watches"
         ],
         "title": "DashboardSummary",
         "type": "object"
@@ -3345,6 +3376,37 @@
         "title": "Page[TestRunRead]",
         "type": "object"
       },
+      "Page_WatchRead_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/WatchRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[WatchRead]",
+        "type": "object"
+      },
       "PartInstanceCreate": {
         "properties": {
           "component_revision_id": {
@@ -3471,6 +3533,16 @@
               }
             ]
           },
+          "current_watch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WatchSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "heat_treatment_lot": {
             "anyOf": [
               {
@@ -3587,7 +3659,8 @@
           "heat_treatment_lot",
           "supplier_note",
           "notes",
-          "current_prototype"
+          "current_prototype",
+          "current_watch"
         ],
         "title": "PartInstanceRead",
         "type": "object"
@@ -4345,31 +4418,6 @@
           }
         },
         "title": "ProductUpdate",
-        "type": "object"
-      },
-      "PrototypeConfiguration": {
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          },
-          "prototype": {
-            "$ref": "#/components/schemas/PrototypeSummary"
-          },
-          "rows": {
-            "items": {
-              "$ref": "#/components/schemas/ConfigurationRow"
-            },
-            "title": "Rows",
-            "type": "array"
-          }
-        },
-        "required": [
-          "prototype",
-          "count",
-          "rows"
-        ],
-        "title": "PrototypeConfiguration",
         "type": "object"
       },
       "PrototypeCreate": {
@@ -5671,6 +5719,17 @@
               }
             ],
             "title": "Title"
+          },
+          "watch_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Watch Ref"
           }
         },
         "required": [
@@ -5838,6 +5897,16 @@
           "updated_by": {
             "title": "Updated By",
             "type": "string"
+          },
+          "watch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WatchSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -5854,6 +5923,7 @@
           "outcome",
           "is_placeholder",
           "prototype",
+          "watch",
           "part_instance",
           "revision",
           "component",
@@ -6346,6 +6416,59 @@
         "title": "TransitionRequest",
         "type": "object"
       },
+      "UnitConfiguration": {
+        "description": "What is physically inside a prototype or a watch right now.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "prototype": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "unit_kind": {
+            "enum": [
+              "prototype",
+              "watch"
+            ],
+            "title": "Unit Kind",
+            "type": "string"
+          },
+          "watch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WatchSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "unit_kind",
+          "prototype",
+          "watch",
+          "count",
+          "rows"
+        ],
+        "title": "UnitConfiguration",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -6384,6 +6507,478 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "WatchCreate": {
+        "properties": {
+          "assembled_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assembled On"
+          },
+          "delivered_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivered On"
+          },
+          "identifier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Explicit identifier such as N1-017; generated when omitted.",
+            "title": "Identifier"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "origin_prototype_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Origin Prototype Ref"
+          },
+          "owner_name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Name"
+          },
+          "product_model_ref": {
+            "description": "Model identifier or id, e.g. N1.01",
+            "title": "Product Model Ref",
+            "type": "string"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defaults to the numeric part of the identifier.",
+            "title": "Serial Number"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WatchStatus",
+            "default": "PLANNED"
+          }
+        },
+        "required": [
+          "product_model_ref"
+        ],
+        "title": "WatchCreate",
+        "type": "object"
+      },
+      "WatchDossier": {
+        "properties": {
+          "build_records": {
+            "items": {
+              "$ref": "#/components/schemas/BuildRecordRead"
+            },
+            "title": "Build Records",
+            "type": "array"
+          },
+          "caliber": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CaliberSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "configuration": {
+            "$ref": "#/components/schemas/UnitConfiguration"
+          },
+          "experiments": {
+            "items": {
+              "$ref": "#/components/schemas/ExperimentSummary"
+            },
+            "title": "Experiments",
+            "type": "array"
+          },
+          "latest_timing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TimingSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest_timing_run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TestRunSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model": {
+            "$ref": "#/components/schemas/ProductModelSummary"
+          },
+          "origin_prototype": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "product": {
+            "$ref": "#/components/schemas/ProductSummary"
+          },
+          "test_runs": {
+            "items": {
+              "$ref": "#/components/schemas/TestRunSummary"
+            },
+            "title": "Test Runs",
+            "type": "array"
+          },
+          "watch": {
+            "$ref": "#/components/schemas/WatchRead"
+          }
+        },
+        "required": [
+          "watch",
+          "product",
+          "model",
+          "caliber",
+          "origin_prototype",
+          "configuration",
+          "build_records",
+          "test_runs",
+          "latest_timing",
+          "latest_timing_run",
+          "experiments"
+        ],
+        "title": "WatchDossier",
+        "type": "object"
+      },
+      "WatchRead": {
+        "properties": {
+          "assembled_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assembled On"
+          },
+          "build_count": {
+            "title": "Build Count",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "delivered_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivered On"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "installed_count": {
+            "title": "Installed Count",
+            "type": "integer"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "origin_prototype_identifier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Origin Prototype Identifier"
+          },
+          "owner_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Name"
+          },
+          "product_model": {
+            "$ref": "#/components/schemas/ProductModelSummary"
+          },
+          "serial_number": {
+            "title": "Serial Number",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WatchStatus"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "title": "Updated By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by",
+          "id",
+          "identifier",
+          "serial_number",
+          "status",
+          "owner_name",
+          "is_placeholder",
+          "product_model",
+          "origin_prototype_identifier",
+          "assembled_on",
+          "delivered_on",
+          "notes",
+          "installed_count",
+          "build_count"
+        ],
+        "title": "WatchRead",
+        "type": "object"
+      },
+      "WatchStatus": {
+        "enum": [
+          "PLANNED",
+          "IN_BUILD",
+          "BUILT",
+          "PERSONAL_PROTOTYPE",
+          "DELIVERED",
+          "IN_SERVICE",
+          "RETIRED"
+        ],
+        "title": "WatchStatus",
+        "type": "string"
+      },
+      "WatchSummary": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "owner_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Name"
+          },
+          "serial_number": {
+            "title": "Serial Number",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/WatchStatus"
+          }
+        },
+        "required": [
+          "id",
+          "identifier",
+          "serial_number",
+          "status",
+          "owner_name",
+          "is_placeholder"
+        ],
+        "title": "WatchSummary",
+        "type": "object"
+      },
+      "WatchUpdate": {
+        "properties": {
+          "assembled_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assembled On"
+          },
+          "delivered_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivered On"
+          },
+          "is_placeholder": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Placeholder"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "origin_prototype_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Origin Prototype Ref"
+          },
+          "owner_name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Name"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WatchStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "WatchUpdate",
         "type": "object"
       },
       "WhereUsedRow": {
@@ -8135,6 +8730,52 @@
         ]
       }
     },
+    "/api/v1/models/{ref}/watches": {
+      "get": {
+        "operationId": "model_watches_api_v1_models__ref__watches_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/WatchRead"
+                  },
+                  "title": "Response Model Watches Api V1 Models  Ref  Watches Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Model Watches",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
     "/api/v1/part-instances": {
       "get": {
         "operationId": "list_part_instances_api_v1_part_instances_get",
@@ -8205,6 +8846,23 @@
                 }
               ],
               "title": "Prototype Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "watch_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Watch Id"
             }
           },
           {
@@ -9041,7 +9699,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PrototypeConfiguration"
+                  "$ref": "#/components/schemas/UnitConfiguration"
                 }
               }
             },
@@ -9616,6 +10274,54 @@
         ]
       }
     },
+    "/api/v1/revisions/{revision_id}/watches": {
+      "get": {
+        "description": "Watches that currently contain a part made to this exact revision.",
+        "operationId": "revision_watches_api_v1_revisions__revision_id__watches_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "revision_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Revision Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/WatchSummary"
+                  },
+                  "title": "Response Revision Watches Api V1 Revisions  Revision Id  Watches Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revision Watches",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
     "/api/v1/system/info": {
       "get": {
         "operationId": "system_info_api_v1_system_info_get",
@@ -10167,6 +10873,486 @@
           }
         },
         "summary": "Update Test Type",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/watches": {
+      "get": {
+        "operationId": "list_watches_api_v1_watches_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/WatchStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_WatchRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Watches",
+        "tags": [
+          "watches"
+        ]
+      },
+      "post": {
+        "operationId": "create_watch_api_v1_watches_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Watch",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
+    "/api/v1/watches/{ref}": {
+      "get": {
+        "operationId": "get_watch_api_v1_watches__ref__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Watch",
+        "tags": [
+          "watches"
+        ]
+      },
+      "patch": {
+        "operationId": "update_watch_api_v1_watches__ref__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Watch",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
+    "/api/v1/watches/{ref}/builds": {
+      "get": {
+        "operationId": "list_builds_api_v1_watches__ref__builds_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BuildRecordRead"
+                  },
+                  "title": "Response List Builds Api V1 Watches  Ref  Builds Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Builds",
+        "tags": [
+          "watches"
+        ]
+      },
+      "post": {
+        "operationId": "create_build_api_v1_watches__ref__builds_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildRecordCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildRecordRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Build",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
+    "/api/v1/watches/{ref}/configuration": {
+      "get": {
+        "operationId": "get_configuration_api_v1_watches__ref__configuration_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnitConfiguration"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Configuration",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
+    "/api/v1/watches/{ref}/dossier": {
+      "get": {
+        "description": "The complete digital build record of one watch.",
+        "operationId": "get_dossier_api_v1_watches__ref__dossier_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchDossier"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Dossier",
+        "tags": [
+          "watches"
+        ]
+      }
+    },
+    "/api/v1/watches/{ref}/test-runs": {
+      "get": {
+        "operationId": "watch_test_runs_api_v1_watches__ref__test_runs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TestRunRead"
+                  },
+                  "title": "Response Watch Test Runs Api V1 Watches  Ref  Test Runs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Watch Test Runs",
+        "tags": [
+          "testing"
+        ]
+      }
+    },
+    "/api/v1/watches/{ref}/timing": {
+      "get": {
+        "operationId": "watch_timing_api_v1_watches__ref__timing_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TimingSummary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Watch Timing Api V1 Watches  Ref  Timing Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Watch Timing",
         "tags": [
           "testing"
         ]

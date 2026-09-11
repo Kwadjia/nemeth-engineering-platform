@@ -12,6 +12,7 @@ from nemeth.modules.experiments.models import Experiment, ExperimentPrototype, E
 from nemeth.modules.products.models import Caliber, Product, ProductModel
 from nemeth.modules.prototypes.models import BuildEntry, BuildRecord, PartInstance, Prototype
 from nemeth.modules.testing.models import Measurement, TestRun, TestType
+from nemeth.modules.watches.models import Watch
 
 __all__ = [
     "Base",
@@ -32,4 +33,5 @@ __all__ = [
     "Prototype",
     "TestRun",
     "TestType",
+    "Watch",
 ]

@@ -426,6 +426,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/models/{ref}/watches": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Model Watches */
+    get: operations["model_watches_api_v1_models__ref__watches_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/part-instances": {
     parameters: {
       query?: never;
@@ -781,6 +798,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/revisions/{revision_id}/watches": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Revision Watches
+     * @description Watches that currently contain a part made to this exact revision.
+     */
+    get: operations["revision_watches_api_v1_revisions__revision_id__watches_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/system/info": {
     parameters: {
       query?: never;
@@ -902,6 +939,131 @@ export interface paths {
     head?: never;
     /** Update Test Type */
     patch: operations["update_test_type_api_v1_test_types__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/watches": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Watches */
+    get: operations["list_watches_api_v1_watches_get"];
+    put?: never;
+    /** Create Watch */
+    post: operations["create_watch_api_v1_watches_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/watches/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Watch */
+    get: operations["get_watch_api_v1_watches__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Watch */
+    patch: operations["update_watch_api_v1_watches__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/watches/{ref}/builds": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Builds */
+    get: operations["list_builds_api_v1_watches__ref__builds_get"];
+    put?: never;
+    /** Create Build */
+    post: operations["create_build_api_v1_watches__ref__builds_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/watches/{ref}/configuration": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Configuration */
+    get: operations["get_configuration_api_v1_watches__ref__configuration_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/watches/{ref}/dossier": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get Dossier
+     * @description The complete digital build record of one watch.
+     */
+    get: operations["get_dossier_api_v1_watches__ref__dossier_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/watches/{ref}/test-runs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Watch Test Runs */
+    get: operations["watch_test_runs_api_v1_watches__ref__test_runs_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/watches/{ref}/timing": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Watch Timing */
+    get: operations["watch_timing_api_v1_watches__ref__timing_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
 }
@@ -1154,7 +1316,7 @@ export interface components {
       performed_on: string;
       /** Procedure */
       procedure: string | null;
-      prototype: components["schemas"]["PrototypeSummary"];
+      prototype: components["schemas"]["PrototypeSummary"] | null;
       /** Title */
       title: string;
       /**
@@ -1164,6 +1326,7 @@ export interface components {
       updated_at: string;
       /** Updated By */
       updated_by: string;
+      watch: components["schemas"]["WatchSummary"] | null;
     };
     /** BuildRecordSummary */
     BuildRecordSummary: {
@@ -1528,6 +1691,10 @@ export interface components {
       recent_test_runs: components["schemas"]["TestRunSummary"][];
       /** Test Run Count */
       test_run_count: number;
+      /** Watch Count */
+      watch_count: number;
+      /** Watches */
+      watches: components["schemas"]["WatchSummary"][];
     };
     /** ExperimentCreate */
     ExperimentCreate: {
@@ -1894,6 +2061,17 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** Page[WatchRead] */
+    Page_WatchRead_: {
+      /** Items */
+      items: components["schemas"]["WatchRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
     /** PartInstanceCreate */
     PartInstanceCreate: {
       /**
@@ -1938,6 +2116,7 @@ export interface components {
       /** Created By */
       created_by: string;
       current_prototype: components["schemas"]["PrototypeSummary"] | null;
+      current_watch: components["schemas"]["WatchSummary"] | null;
       /** Heat Treatment Lot */
       heat_treatment_lot: string | null;
       /**
@@ -2195,14 +2374,6 @@ export interface components {
       name?: string | null;
       /** Notes */
       notes?: string | null;
-    };
-    /** PrototypeConfiguration */
-    PrototypeConfiguration: {
-      /** Count */
-      count: number;
-      prototype: components["schemas"]["PrototypeSummary"];
-      /** Rows */
-      rows: components["schemas"]["ConfigurationRow"][];
     };
     /** PrototypeCreate */
     PrototypeCreate: {
@@ -2574,6 +2745,8 @@ export interface components {
       test_type_code: string;
       /** Title */
       title?: string | null;
+      /** Watch Ref */
+      watch_ref?: string | null;
     };
     /** TestRunRead */
     TestRunRead: {
@@ -2627,6 +2800,7 @@ export interface components {
       updated_at: string;
       /** Updated By */
       updated_by: string;
+      watch: components["schemas"]["WatchSummary"] | null;
     };
     /** TestRunSummary */
     TestRunSummary: {
@@ -2782,6 +2956,23 @@ export interface components {
     TransitionRequest: {
       target_state: components["schemas"]["LifecycleState"];
     };
+    /**
+     * UnitConfiguration
+     * @description What is physically inside a prototype or a watch right now.
+     */
+    UnitConfiguration: {
+      /** Count */
+      count: number;
+      prototype: components["schemas"]["PrototypeSummary"] | null;
+      /** Rows */
+      rows: components["schemas"]["ConfigurationRow"][];
+      /**
+       * Unit Kind
+       * @enum {string}
+       */
+      unit_kind: "prototype" | "watch";
+      watch: components["schemas"]["WatchSummary"] | null;
+    };
     /** ValidationError */
     ValidationError: {
       /** Context */
@@ -2794,6 +2985,147 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** WatchCreate */
+    WatchCreate: {
+      /** Assembled On */
+      assembled_on?: string | null;
+      /** Delivered On */
+      delivered_on?: string | null;
+      /**
+       * Identifier
+       * @description Explicit identifier such as N1-017; generated when omitted.
+       */
+      identifier?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** Notes */
+      notes?: string | null;
+      /** Origin Prototype Ref */
+      origin_prototype_ref?: string | null;
+      /** Owner Name */
+      owner_name?: string | null;
+      /**
+       * Product Model Ref
+       * @description Model identifier or id, e.g. N1.01
+       */
+      product_model_ref: string;
+      /**
+       * Serial Number
+       * @description Defaults to the numeric part of the identifier.
+       */
+      serial_number?: string | null;
+      /** @default PLANNED */
+      status?: components["schemas"]["WatchStatus"];
+    };
+    /** WatchDossier */
+    WatchDossier: {
+      /** Build Records */
+      build_records: components["schemas"]["BuildRecordRead"][];
+      caliber: components["schemas"]["CaliberSummary"] | null;
+      configuration: components["schemas"]["UnitConfiguration"];
+      /** Experiments */
+      experiments: components["schemas"]["ExperimentSummary"][];
+      latest_timing: components["schemas"]["TimingSummary"] | null;
+      latest_timing_run: components["schemas"]["TestRunSummary"] | null;
+      model: components["schemas"]["ProductModelSummary"];
+      origin_prototype: components["schemas"]["PrototypeSummary"] | null;
+      product: components["schemas"]["ProductSummary"];
+      /** Test Runs */
+      test_runs: components["schemas"]["TestRunSummary"][];
+      watch: components["schemas"]["WatchRead"];
+    };
+    /** WatchRead */
+    WatchRead: {
+      /** Assembled On */
+      assembled_on: string | null;
+      /** Build Count */
+      build_count: number;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Delivered On */
+      delivered_on: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Installed Count */
+      installed_count: number;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Notes */
+      notes: string | null;
+      /** Origin Prototype Identifier */
+      origin_prototype_identifier: string | null;
+      /** Owner Name */
+      owner_name: string | null;
+      product_model: components["schemas"]["ProductModelSummary"];
+      /** Serial Number */
+      serial_number: string;
+      status: components["schemas"]["WatchStatus"];
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /**
+     * WatchStatus
+     * @enum {string}
+     */
+    WatchStatus:
+      | "PLANNED"
+      | "IN_BUILD"
+      | "BUILT"
+      | "PERSONAL_PROTOTYPE"
+      | "DELIVERED"
+      | "IN_SERVICE"
+      | "RETIRED";
+    /** WatchSummary */
+    WatchSummary: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Owner Name */
+      owner_name: string | null;
+      /** Serial Number */
+      serial_number: string;
+      status: components["schemas"]["WatchStatus"];
+    };
+    /** WatchUpdate */
+    WatchUpdate: {
+      /** Assembled On */
+      assembled_on?: string | null;
+      /** Delivered On */
+      delivered_on?: string | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      /** Notes */
+      notes?: string | null;
+      /** Origin Prototype Ref */
+      origin_prototype_ref?: string | null;
+      /** Owner Name */
+      owner_name?: string | null;
+      status?: components["schemas"]["WatchStatus"] | null;
     };
     /** WhereUsedRow */
     WhereUsedRow: {
@@ -3920,6 +4252,37 @@ export interface operations {
       };
     };
   };
+  model_watches_api_v1_models__ref__watches_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WatchRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   list_part_instances_api_v1_part_instances_get: {
     parameters: {
       query?: {
@@ -3928,6 +4291,7 @@ export interface operations {
         status?: components["schemas"]["PartInstanceStatus"] | null;
         component_id?: string | null;
         prototype_id?: string | null;
+        watch_id?: string | null;
         limit?: number;
         offset?: number;
       };
@@ -4499,7 +4863,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["PrototypeConfiguration"];
+          "application/json": components["schemas"]["UnitConfiguration"];
         };
       };
       /** @description Validation Error */
@@ -4870,6 +5234,37 @@ export interface operations {
       };
     };
   };
+  revision_watches_api_v1_revisions__revision_id__watches_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        revision_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WatchSummary"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   system_info_api_v1_system_info_get: {
     parameters: {
       query?: never;
@@ -5201,6 +5596,328 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["TestTypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_watches_api_v1_watches_get: {
+    parameters: {
+      query?: {
+        status?: components["schemas"]["WatchStatus"] | null;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_WatchRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_watch_api_v1_watches_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WatchCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WatchRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_watch_api_v1_watches__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WatchRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_watch_api_v1_watches__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WatchUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WatchRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_builds_api_v1_watches__ref__builds_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BuildRecordRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_build_api_v1_watches__ref__builds_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BuildRecordCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BuildRecordRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_configuration_api_v1_watches__ref__configuration_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnitConfiguration"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_dossier_api_v1_watches__ref__dossier_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WatchDossier"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  watch_test_runs_api_v1_watches__ref__test_runs_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TestRunRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  watch_timing_api_v1_watches__ref__timing_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TimingSummary"] | null;
         };
       };
       /** @description Validation Error */

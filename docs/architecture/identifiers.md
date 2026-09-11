@@ -35,7 +35,7 @@ Rules:
 | Prototype | `{PRODUCT}-P{NNN}` | `N1-P003` | `N1-P` |
 | Part instance | `PI-{NNNNN}` | `PI-00042` | `PI` |
 | Build record | `BR-{NNNNN}` | `BR-00007` | `BR` |
-| Watch *(planned)* | `{PRODUCT}-{NNN}` | `N1-017` | `N1` |
+| Watch | `{PRODUCT}-{NNN}` | `N1-017` | `N1` |
 | Movement (serialized) *(planned)* | `{CALIBER}-{NNNN}` | `CAL-N1-0001` | `CAL-N1` |
 | Experiment | `EXP-{NNN}` | `EXP-014` | `EXP` |
 | Engineering change *(planned)* | `ECR-{NNNN}` | `ECR-0021` | `ECR` |

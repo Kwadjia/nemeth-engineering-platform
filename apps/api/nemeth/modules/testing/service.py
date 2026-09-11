@@ -37,6 +37,8 @@ from nemeth.modules.testing.schemas import (
     TestTypeUpdate,
     TimingSummary,
 )
+from nemeth.modules.watches import service as watches
+from nemeth.modules.watches.models import Watch
 
 TIMEGRAPHER = "TIMEGRAPHER"
 
@@ -123,6 +125,7 @@ BUILTIN_TEST_TYPES: tuple[dict[str, object], ...] = (
 _RUN_OPTS = (
     selectinload(TestRun.test_type),
     selectinload(TestRun.prototype),
+    selectinload(TestRun.watch),
     selectinload(TestRun.part_instance),
     selectinload(TestRun.revision).selectinload(ComponentRevision.component),
     selectinload(TestRun.experiment),
@@ -222,6 +225,7 @@ def list_test_runs(
     part_instance_id: uuid.UUID | None = None,
     experiment_id: uuid.UUID | None = None,
     revision_id: uuid.UUID | None = None,
+    watch_id: uuid.UUID | None = None,
 ) -> tuple[list[TestRun], int]:
     stmt = select(TestRun)
     if test_type_code:
@@ -234,6 +238,8 @@ def list_test_runs(
         stmt = stmt.where(TestRun.experiment_id == experiment_id)
     if revision_id is not None:
         stmt = stmt.where(TestRun.component_revision_id == revision_id)
+    if watch_id is not None:
+        stmt = stmt.where(TestRun.watch_id == watch_id)
     total = session.execute(select(func.count()).select_from(stmt.subquery())).scalar_one()
     stmt = (
         stmt.options(*_RUN_OPTS)
@@ -293,10 +299,13 @@ def create_test_run(session: Session, actor: Actor, data: TestRunCreate) -> Test
         )
 
     prototype: Prototype | None = None
+    watch: Watch | None = None
     instance: PartInstance | None = None
     revision: ComponentRevision | None = None
     if data.prototype_ref:
         prototype = prototypes.get_prototype(session, data.prototype_ref)
+    if data.watch_ref:
+        watch = watches.get_watch(session, data.watch_ref)
     if data.part_instance_ref:
         instance = prototypes.get_part_instance(session, data.part_instance_ref)
     if data.component_revision_id:
@@ -311,6 +320,7 @@ def create_test_run(session: Session, actor: Actor, data: TestRunCreate) -> Test
         test_type_id=test_type.id,
         title=data.title.strip() if data.title else None,
         prototype_id=prototype.id if prototype else None,
+        watch_id=watch.id if watch else None,
         part_instance_id=instance.id if instance else None,
         component_revision_id=revision.id if revision else None,
         experiment_id=experiment.id if experiment else None,
@@ -398,7 +408,7 @@ def timing_summary(run: TestRun) -> TimingSummary | None:
 
 
 def latest_timegrapher_run(
-    session: Session, prototype_id: uuid.UUID | None = None
+    session: Session, prototype_id: uuid.UUID | None = None, watch_id: uuid.UUID | None = None
 ) -> TestRun | None:
     stmt = (
         select(TestRun)
@@ -410,6 +420,8 @@ def latest_timegrapher_run(
     )
     if prototype_id is not None:
         stmt = stmt.where(TestRun.prototype_id == prototype_id)
+    if watch_id is not None:
+        stmt = stmt.where(TestRun.watch_id == watch_id)
     return session.execute(stmt).scalars().unique().first()
 
 

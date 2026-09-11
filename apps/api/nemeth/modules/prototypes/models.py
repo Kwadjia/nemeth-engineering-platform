@@ -3,9 +3,11 @@ from __future__ import annotations
 import uuid
 from datetime import date
 from enum import StrEnum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
+    CheckConstraint,
     Date,
     Enum,
     ForeignKey,
@@ -20,6 +22,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from nemeth.core.db import AuditMixin, Base, UUIDPrimaryKeyMixin
 from nemeth.modules.components.models import Component, ComponentRevision
 from nemeth.modules.products.models import Caliber, ProductModel
+
+if TYPE_CHECKING:
+    from nemeth.modules.watches.models import Watch
 
 
 class PrototypeStatus(StrEnum):
@@ -93,6 +98,7 @@ class Prototype(UUIDPrimaryKeyMixin, AuditMixin, Base):
     )
     build_records: Mapped[list[BuildRecord]] = relationship(
         back_populates="prototype",
+        foreign_keys="BuildRecord.prototype_id",
         order_by="(BuildRecord.performed_on, BuildRecord.created_at)",
         cascade="all",
     )
@@ -113,6 +119,12 @@ class PartInstance(UUIDPrimaryKeyMixin, AuditMixin, Base):
     """One physical part, made or bought to an exact frozen revision."""
 
     __tablename__ = "part_instances"
+    __table_args__ = (
+        CheckConstraint(
+            "NOT (current_prototype_id IS NOT NULL AND current_watch_id IS NOT NULL)",
+            name="single_location",
+        ),
+    )
 
     identifier: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, index=True)
     component_revision_id: Mapped[uuid.UUID] = mapped_column(
@@ -137,10 +149,16 @@ class PartInstance(UUIDPrimaryKeyMixin, AuditMixin, Base):
     current_prototype_id: Mapped[uuid.UUID | None] = mapped_column(
         Uuid, ForeignKey("prototypes.id", ondelete="SET NULL"), index=True
     )
+    current_watch_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("watches.id", ondelete="SET NULL"), index=True
+    )
 
     revision: Mapped[ComponentRevision] = relationship(foreign_keys=[component_revision_id])
     current_prototype: Mapped[Prototype | None] = relationship(
         back_populates="current_instances", foreign_keys=[current_prototype_id]
+    )
+    current_watch: Mapped[Watch | None] = relationship(
+        back_populates="current_instances", foreign_keys=[current_watch_id]
     )
 
     @property
@@ -155,10 +173,20 @@ class BuildRecord(UUIDPrimaryKeyMixin, AuditMixin, Base):
     """An append-only assembly event on a prototype (watches join in slice 10)."""
 
     __tablename__ = "build_records"
+    __table_args__ = (
+        CheckConstraint(
+            "(CASE WHEN prototype_id IS NULL THEN 0 ELSE 1 END)"
+            " + (CASE WHEN watch_id IS NULL THEN 0 ELSE 1 END) = 1",
+            name="single_unit",
+        ),
+    )
 
     identifier: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, index=True)
-    prototype_id: Mapped[uuid.UUID] = mapped_column(
-        Uuid, ForeignKey("prototypes.id", ondelete="RESTRICT"), nullable=False, index=True
+    prototype_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("prototypes.id", ondelete="RESTRICT"), index=True
+    )
+    watch_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid, ForeignKey("watches.id", ondelete="RESTRICT"), index=True
     )
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     performed_on: Mapped[date] = mapped_column(Date, nullable=False)
@@ -166,7 +194,19 @@ class BuildRecord(UUIDPrimaryKeyMixin, AuditMixin, Base):
     procedure: Mapped[str | None] = mapped_column(Text)
     notes: Mapped[str | None] = mapped_column(Text)
 
-    prototype: Mapped[Prototype] = relationship(back_populates="build_records")
+    prototype: Mapped[Prototype | None] = relationship(
+        back_populates="build_records", foreign_keys=[prototype_id]
+    )
+    watch: Mapped[Watch | None] = relationship(
+        back_populates="build_records", foreign_keys=[watch_id]
+    )
+
+    @property
+    def unit_identifier(self) -> str:
+        if self.watch is not None:
+            return self.watch.identifier
+        return self.prototype.identifier if self.prototype is not None else ""
+
     entries: Mapped[list[BuildEntry]] = relationship(
         back_populates="build_record",
         order_by="BuildEntry.sequence",
