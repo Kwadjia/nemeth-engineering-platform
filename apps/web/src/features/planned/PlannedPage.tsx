@@ -3,21 +3,9 @@ import { Construction } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, PageHeader } from "@/components/ui/layout";
 
-type Area =
-  "prototypes" | "experiments" | "testing" | "watches" | "suppliers" | "documents" | "changes";
+type Area = "experiments" | "testing" | "watches" | "suppliers" | "documents" | "changes";
 
 const AREAS: Record<Area, { title: string; slice: number; summary: string; contents: string[] }> = {
-  prototypes: {
-    title: "Prototypes",
-    slice: 7,
-    summary:
-      "Physical development builds such as N1-P001, with build records that reference exact component revisions.",
-    contents: [
-      "Prototype register with status and purpose",
-      "Build records and installed part instances",
-      "Links to experiments and test runs",
-    ],
-  },
   experiments: {
     title: "Experiments",
     slice: 8,

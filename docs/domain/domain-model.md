@@ -15,14 +15,14 @@ path through the model.
 
 | Question | Path through the model |
 |---|---|
-| What exact revision of every component is inside N1-017? | `Watch` → `BuildRecord` → installed `PartInstance` → `ComponentRevision` *(slice 10)*; design intent via `ProductModel` → root assembly → resolved BOM tree *(slice 4, done)* |
-| Who manufactured the escape wheel? | `PartInstance.supplier` / `ManufacturingOrder` *(slices 10, 12)*; design-level default via `ComponentRevision.supplier_id` |
-| What material and heat treatment was used? | `ComponentRevision.material`, `.heat_treatment`, `.finish` *(done)*; actual lot on `PartInstance` *(slice 10)* |
+| What exact revision of every component is inside N1-017? | Prototype/`Watch` → `BuildRecord` entries → installed `PartInstance` → `ComponentRevision` *(prototypes done; watches slice 10)*; design intent via `ProductModel` → root assembly → resolved BOM tree *(done)* |
+| Who manufactured the escape wheel? | `PartInstance.source` + `supplier_note` *(done)*; `Supplier` / `ManufacturingOrder` *(slice 12)*; design-level default via `ComponentRevision.supplier_note` |
+| What material and heat treatment was used? | `ComponentRevision.material`, `.heat_treatment`, `.finish` *(done)*; actual `material_lot` / `heat_treatment_lot` on `PartInstance` *(done)* |
 | What CAD file generated the part? | `ComponentRevision` → `Attachment(kind=CAD)` with SHA-256 *(slice 11)* |
 | What inspection measurements were recorded? | `PartInstance` → `TestRun(type=DIMENSIONAL_INSPECTION)` → `Measurement` *(slice 9)* |
 | What experiments caused us to change from Rev B to Rev C? | `EngineeringChange.evidence` → `Experiment`; `EngineeringChange.affected_revision`, `.proposed_revision` *(slices 8, 12)* |
 | What was the timing performance before and after? | `Experiment` → `TestRun` (before/after) → `Measurement` *(slices 8, 9)* |
-| What watches contain this revision? | `ComponentRevision` ← `PartInstance` ← `BuildRecord` ← `Watch` *(slice 10)*; design-level via where-used *(slice 4, done)* |
+| What watches contain this revision? | `ComponentRevision` ← `PartInstance.current_prototype` *(prototypes done; watches slice 10)*; design-level via where-used *(done)* |
 | What parts failed inspection? | `TestRun.outcome = FAIL` → `Nonconformance` *(slices 9, 12)* |
 | What torque / lubrication / assembly procedure was used? | `AssemblyStep` on a `BuildRecord` → `WorkInstruction` revision *(slice 10+)* |
 
@@ -201,14 +201,41 @@ configuration of a physical prototype or watch is recorded separately as
 revisions. That is where "what exact revision is inside N1-017" is answered
 definitively; the design BOM answers "what should be inside an N1.01".
 
-## Development (planned)
+## Physical genealogy (implemented, ADR-008)
 
-### Prototype — slice 7
-A physical development build. `N1-P001`. Fields: identifier, product model
-or caliber under test, purpose, status (`PLANNED`, `BUILDING`, `ACTIVE`,
-`RETIRED`), build records, notes. A prototype *is* a physical unit; it will
-share the `BuildRecord` / `PartInstance` structure with serialized watches
-so that the same genealogy code serves both.
+### Prototype
+A physical development build. `N1-P001`. Fields: identifier, name, purpose,
+status (`PLANNED` → `BUILDING` → `ACTIVE` → `RETIRED`, forward only), product
+model and/or caliber under test, started/retired dates, notes. Recording the
+first build with entries moves a planned prototype to `BUILDING`.
+
+### PartInstance
+One physical part. `PI-00042`. Always references an exact **frozen**
+`ComponentRevision`; recording a part against an editable revision is
+rejected. Fields: serial number, lot, source (`IN_HOUSE`, `PURCHASED`,
+`SALVAGED`, `OTHER`), material lot, heat-treatment lot, supplier note,
+status (`AVAILABLE`, `INSTALLED`, `REMOVED`, `SCRAPPED`), and
+`current_prototype_id` (where it is now). A `quantity` on creation records
+several identical parts as separate instances.
+
+### BuildRecord and BuildEntry
+An append-only assembly event on a prototype. `BR-00007`: title, performed
+on/by, procedure (steps, lubrication, torque, sequence as performed), notes,
+and ordered entries, each `INSTALL` or `REMOVE` of one part instance at an
+optional position. Rules: a part cannot be installed while it is installed
+elsewhere; it can only be removed from the unit it is in; the same part
+appears at most once per record; retired prototypes accept no records; only
+a record's notes can be edited afterwards.
+
+**Configuration is derived**, never stored: the parts whose latest entry on
+the unit is an `INSTALL`, each with its exact revision, position and the
+record that installed it. Physical where-used answers "which prototypes
+contain a part made to this revision".
+
+Serialized watches (slice 10) add `Watch` and a `watch_id` on `BuildRecord`
+with a check that exactly one unit is set; the genealogy code is shared.
+
+## Development (planned)
 
 ### Experiment — slice 8
 Iterative development treated like software. `EXP-014`. Fields: identifier,

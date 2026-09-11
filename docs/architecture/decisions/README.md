@@ -14,6 +14,7 @@ ask "why on earth did they do that?".
 | [005](ADR-005-uuid-and-human-identifiers.md) | UUID primary keys and separate human identifiers | Accepted |
 | [006](ADR-006-bom-lines-on-assembly-revisions.md) | BOM lines belong to an assembly revision, with optional pins | Accepted |
 | [007](ADR-007-sync-sqlalchemy-and-tooling.md) | Synchronous SQLAlchemy, npm workspaces, and pip | Accepted |
+| [008](ADR-008-physical-units-part-instances-build-records.md) | Physical genealogy: part instances and build records shared by prototypes and watches | Accepted |
 
 ## Template
 

@@ -2,7 +2,9 @@ import { LIFECYCLE_STATES } from "@nemeth/domain-types";
 import { Activity, FlaskConical, GitBranch, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import type { PrototypeSummary } from "@nemeth/domain-types";
 import { Identifier, LifecycleBadge, PlaceholderBadge } from "@/components/domain/badges";
+import { PrototypeStatusBadge } from "@/components/domain/prototypeBadges";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { EmptyState, ErrorNotice, LoadingRows, PageHeader, Stat } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -155,14 +157,39 @@ export function DashboardPage() {
 
         <div className="grid gap-4">
           <Card>
-            <CardHeader eyebrow="Development" title="Active prototype" />
+            <CardHeader
+              eyebrow="Development"
+              title="Active prototype"
+              actions={
+                <Link
+                  to="/prototypes"
+                  className="text-xs text-fg-muted hover:text-fg hover:underline"
+                >
+                  All prototypes
+                </Link>
+              }
+            />
             <CardContent>
-              <EmptyState
-                icon={Layers}
-                title="No prototype tracking yet"
-                description="Prototypes arrive in slice 7."
-                className="py-6"
-              />
+              {dashboard.isLoading ? (
+                <LoadingRows rows={2} />
+              ) : dashboard.data?.active_prototype ? (
+                <ActivePrototype prototype={dashboard.data.active_prototype} />
+              ) : (
+                <EmptyState
+                  icon={Layers}
+                  title={
+                    dashboard.data && dashboard.data.prototype_count > 0
+                      ? "No prototype is being built"
+                      : "No prototypes yet"
+                  }
+                  description={
+                    dashboard.data && dashboard.data.prototype_count > 0
+                      ? `${dashboard.data.prototype_count} planned or retired. Record a build to activate one.`
+                      : "Create a prototype to start a build log."
+                  }
+                  className="py-6"
+                />
+              )}
             </CardContent>
           </Card>
           <Card>
@@ -227,5 +254,26 @@ function StateBars({ counts, total }: { counts: Record<string, number>; total: n
         );
       })}
     </ul>
+  );
+}
+
+function ActivePrototype({ prototype }: { prototype: PrototypeSummary }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-3">
+        <span className="flex items-center gap-2">
+          <Identifier value={prototype.identifier} to={`/prototypes/${prototype.identifier}`} />
+          <span className="text-sm text-fg">{prototype.name}</span>
+          <PlaceholderBadge show={prototype.is_placeholder} />
+        </span>
+        <PrototypeStatusBadge status={prototype.status} />
+      </div>
+      <Link
+        to={`/prototypes/${prototype.identifier}`}
+        className="text-xs text-fg-muted hover:text-fg hover:underline"
+      >
+        Open configuration and build log
+      </Link>
+    </div>
   );
 }

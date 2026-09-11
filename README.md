@@ -87,8 +87,9 @@ pinned revision, resolved at query time as *latest* or *released*
 Implemented in v0.1 so far: repository and architecture, Docker Compose,
 PostgreSQL schema and migrations, FastAPI application, React shell,
 Products / Models / Calibers, Components with immutable revisions,
-recursive BOMs with pinned or floating resolution and where-used, N1 seed
-data, tests. Planned next: Prototypes, Experiments, Measurements,
-serialized Watches, Documents, Suppliers, Engineering Changes.
+recursive BOMs with pinned or floating resolution and where-used, Prototypes
+with part instances and append-only build records (derived as-built
+configuration), N1 seed data, tests. Planned next: Experiments,
+Measurements, serialized Watches, Documents, Suppliers, Engineering Changes.
 
 All seed data is marked **placeholder** in the database and in the UI.

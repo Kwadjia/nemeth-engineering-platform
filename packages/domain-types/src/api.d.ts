@@ -23,6 +23,24 @@ export interface paths {
     patch: operations["update_bom_line_api_v1_bom_lines__line_id__patch"];
     trace?: never;
   };
+  "/api/v1/builds/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Build */
+    get: operations["get_build_api_v1_builds__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Build */
+    patch: operations["update_build_api_v1_builds__ref__patch"];
+    trace?: never;
+  };
   "/api/v1/calibers": {
     parameters: {
       query?: never;
@@ -124,6 +142,23 @@ export interface paths {
      * @description BOM of the component's latest revision.
      */
     get: operations["get_component_bom_api_v1_components__ref__bom_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/components/{ref}/part-instances": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Component Part Instances */
+    get: operations["component_part_instances_api_v1_components__ref__part_instances_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -270,6 +305,42 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/part-instances": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Part Instances */
+    get: operations["list_part_instances_api_v1_part_instances_get"];
+    put?: never;
+    /** Create Part Instances */
+    post: operations["create_part_instances_api_v1_part_instances_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/part-instances/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Part Instance */
+    get: operations["get_part_instance_api_v1_part_instances__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Part Instance */
+    patch: operations["update_part_instance_api_v1_part_instances__ref__patch"];
+    trace?: never;
+  };
   "/api/v1/products": {
     parameters: {
       query?: never;
@@ -318,6 +389,77 @@ export interface paths {
     put?: never;
     /** Create Product Model */
     post: operations["create_product_model_api_v1_products__ref__models_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/prototypes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Prototypes */
+    get: operations["list_prototypes_api_v1_prototypes_get"];
+    put?: never;
+    /** Create Prototype */
+    post: operations["create_prototype_api_v1_prototypes_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/prototypes/{ref}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Prototype */
+    get: operations["get_prototype_api_v1_prototypes__ref__get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /** Update Prototype */
+    patch: operations["update_prototype_api_v1_prototypes__ref__patch"];
+    trace?: never;
+  };
+  "/api/v1/prototypes/{ref}/builds": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List Builds */
+    get: operations["list_builds_api_v1_prototypes__ref__builds_get"];
+    put?: never;
+    /** Create Build */
+    post: operations["create_build_api_v1_prototypes__ref__builds_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/prototypes/{ref}/configuration": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Get Configuration */
+    get: operations["get_configuration_api_v1_prototypes__ref__configuration_get"];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -385,6 +527,26 @@ export interface paths {
     };
     /** Get Bom Flat */
     get: operations["get_bom_flat_api_v1_revisions__revision_id__bom_flat_get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/revisions/{revision_id}/prototypes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Revision Prototypes
+     * @description Prototypes that currently contain a part made to this exact revision.
+     */
+    get: operations["revision_prototypes_api_v1_revisions__revision_id__prototypes_get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -587,6 +749,130 @@ export interface components {
       root_revision: components["schemas"]["RevisionSummary"];
       /** Unresolved Count */
       unresolved_count: number;
+    };
+    /**
+     * BuildAction
+     * @enum {string}
+     */
+    BuildAction: "INSTALL" | "REMOVE";
+    /** BuildEntryCreate */
+    BuildEntryCreate: {
+      /** @default INSTALL */
+      action?: components["schemas"]["BuildAction"];
+      /** Notes */
+      notes?: string | null;
+      /** Part Instance Id */
+      part_instance_id?: string | null;
+      /** Part Instance Identifier */
+      part_instance_identifier?: string | null;
+      /** Position */
+      position?: string | null;
+    };
+    /** BuildEntryRead */
+    BuildEntryRead: {
+      action: components["schemas"]["BuildAction"];
+      component: components["schemas"]["ComponentSummary"];
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Notes */
+      notes: string | null;
+      part_instance: components["schemas"]["PartInstanceSummary"];
+      /** Position */
+      position: string | null;
+      revision: components["schemas"]["RevisionSummary"];
+      /** Sequence */
+      sequence: number;
+    };
+    /** BuildRecordCreate */
+    BuildRecordCreate: {
+      /** Entries */
+      entries?: components["schemas"]["BuildEntryCreate"][];
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Performed By
+       * @description Defaults to the current actor.
+       */
+      performed_by?: string | null;
+      /**
+       * Performed On
+       * Format: date
+       */
+      performed_on: string;
+      /**
+       * Procedure
+       * @description Steps, lubrication, torque and sequence as performed.
+       */
+      procedure?: string | null;
+      /** Title */
+      title: string;
+    };
+    /** BuildRecordRead */
+    BuildRecordRead: {
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /** Entries */
+      entries: components["schemas"]["BuildEntryRead"][];
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Notes */
+      notes: string | null;
+      /** Performed By */
+      performed_by: string;
+      /**
+       * Performed On
+       * Format: date
+       */
+      performed_on: string;
+      /** Procedure */
+      procedure: string | null;
+      prototype: components["schemas"]["PrototypeSummary"];
+      /** Title */
+      title: string;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /** BuildRecordSummary */
+    BuildRecordSummary: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Performed By */
+      performed_by: string;
+      /**
+       * Performed On
+       * Format: date
+       */
+      performed_on: string;
+      /** Title */
+      title: string;
+    };
+    /** BuildRecordUpdate */
+    BuildRecordUpdate: {
+      /** Notes */
+      notes?: string | null;
     };
     /** CaliberCreate */
     CaliberCreate: {
@@ -885,8 +1171,18 @@ export interface components {
       /** Name */
       name?: string | null;
     };
+    /** ConfigurationRow */
+    ConfigurationRow: {
+      component: components["schemas"]["ComponentSummary"];
+      installed_by: components["schemas"]["BuildRecordSummary"] | null;
+      part_instance: components["schemas"]["PartInstanceSummary"];
+      /** Position */
+      position: string | null;
+      revision: components["schemas"]["RevisionSummary"];
+    };
     /** DashboardSummary */
     DashboardSummary: {
+      active_prototype: components["schemas"]["PrototypeSummary"] | null;
       /** Assembly Count */
       assembly_count: number;
       /** Calibers */
@@ -899,6 +1195,10 @@ export interface components {
       };
       /** Products */
       products: components["schemas"]["ProductSummary"][];
+      /** Prototype Count */
+      prototype_count: number;
+      /** Prototypes */
+      prototypes: components["schemas"]["PrototypeSummary"][];
       /** Recent Revisions */
       recent_revisions: components["schemas"]["RecentRevision"][];
     };
@@ -945,6 +1245,17 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** Page[PartInstanceRead] */
+    Page_PartInstanceRead_: {
+      /** Items */
+      items: components["schemas"]["PartInstanceRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
     /** Page[ProductRead] */
     Page_ProductRead_: {
       /** Items */
@@ -956,6 +1267,137 @@ export interface components {
       /** Total */
       total: number;
     };
+    /** Page[PrototypeRead] */
+    Page_PrototypeRead_: {
+      /** Items */
+      items: components["schemas"]["PrototypeRead"][];
+      /** Limit */
+      limit: number;
+      /** Offset */
+      offset: number;
+      /** Total */
+      total: number;
+    };
+    /** PartInstanceCreate */
+    PartInstanceCreate: {
+      /**
+       * Component Revision Id
+       * Format: uuid
+       */
+      component_revision_id: string;
+      /** Heat Treatment Lot */
+      heat_treatment_lot?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** Lot */
+      lot?: string | null;
+      /** Material Lot */
+      material_lot?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Quantity
+       * @description Create this many instances.
+       * @default 1
+       */
+      quantity?: number;
+      /** Serial Number */
+      serial_number?: string | null;
+      /** @default IN_HOUSE */
+      source?: components["schemas"]["PartSource"];
+      /** Supplier Note */
+      supplier_note?: string | null;
+    };
+    /** PartInstanceRead */
+    PartInstanceRead: {
+      component: components["schemas"]["ComponentSummary"];
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      current_prototype: components["schemas"]["PrototypeSummary"] | null;
+      /** Heat Treatment Lot */
+      heat_treatment_lot: string | null;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Lot */
+      lot: string | null;
+      /** Material Lot */
+      material_lot: string | null;
+      /** Notes */
+      notes: string | null;
+      revision: components["schemas"]["RevisionSummary"];
+      /** Serial Number */
+      serial_number: string | null;
+      source: components["schemas"]["PartSource"];
+      status: components["schemas"]["PartInstanceStatus"];
+      /** Supplier Note */
+      supplier_note: string | null;
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /**
+     * PartInstanceStatus
+     * @enum {string}
+     */
+    PartInstanceStatus: "AVAILABLE" | "INSTALLED" | "REMOVED" | "SCRAPPED";
+    /** PartInstanceSummary */
+    PartInstanceSummary: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Serial Number */
+      serial_number: string | null;
+      source: components["schemas"]["PartSource"];
+      status: components["schemas"]["PartInstanceStatus"];
+    };
+    /** PartInstanceUpdate */
+    PartInstanceUpdate: {
+      /** Heat Treatment Lot */
+      heat_treatment_lot?: string | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      /** Lot */
+      lot?: string | null;
+      /** Material Lot */
+      material_lot?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Serial Number */
+      serial_number?: string | null;
+      source?: components["schemas"]["PartSource"] | null;
+      /** Supplier Note */
+      supplier_note?: string | null;
+    };
+    /**
+     * PartSource
+     * @enum {string}
+     */
+    PartSource: "IN_HOUSE" | "PURCHASED" | "SALVAGED" | "OTHER";
     /** ProductCreate */
     ProductCreate: {
       /** Description */
@@ -1124,6 +1566,129 @@ export interface components {
       name?: string | null;
       /** Notes */
       notes?: string | null;
+    };
+    /** PrototypeConfiguration */
+    PrototypeConfiguration: {
+      /** Count */
+      count: number;
+      prototype: components["schemas"]["PrototypeSummary"];
+      /** Rows */
+      rows: components["schemas"]["ConfigurationRow"][];
+    };
+    /** PrototypeCreate */
+    PrototypeCreate: {
+      /** Caliber Id */
+      caliber_id?: string | null;
+      /**
+       * Identifier
+       * @description Explicit identifier such as N1-P003; generated when omitted.
+       */
+      identifier?: string | null;
+      /**
+       * Is Placeholder
+       * @default false
+       */
+      is_placeholder?: boolean;
+      /** Name */
+      name: string;
+      /** Notes */
+      notes?: string | null;
+      /**
+       * Product Code
+       * @description Used to generate {CODE}-P{NNN}.
+       */
+      product_code?: string | null;
+      /** Product Model Id */
+      product_model_id?: string | null;
+      /** Purpose */
+      purpose?: string | null;
+      /** Started On */
+      started_on?: string | null;
+      /** @default PLANNED */
+      status?: components["schemas"]["PrototypeStatus"];
+    };
+    /** PrototypeRead */
+    PrototypeRead: {
+      /** Build Count */
+      build_count: number;
+      caliber: components["schemas"]["CaliberSummary"] | null;
+      /**
+       * Created At
+       * Format: date-time
+       */
+      created_at: string;
+      /** Created By */
+      created_by: string;
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Installed Count */
+      installed_count: number;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Name */
+      name: string;
+      /** Notes */
+      notes: string | null;
+      product_model: components["schemas"]["ProductModelSummary"] | null;
+      /** Purpose */
+      purpose: string | null;
+      /** Retired On */
+      retired_on: string | null;
+      /** Started On */
+      started_on: string | null;
+      status: components["schemas"]["PrototypeStatus"];
+      /**
+       * Updated At
+       * Format: date-time
+       */
+      updated_at: string;
+      /** Updated By */
+      updated_by: string;
+    };
+    /**
+     * PrototypeStatus
+     * @enum {string}
+     */
+    PrototypeStatus: "PLANNED" | "BUILDING" | "ACTIVE" | "RETIRED";
+    /** PrototypeSummary */
+    PrototypeSummary: {
+      /**
+       * Id
+       * Format: uuid
+       */
+      id: string;
+      /** Identifier */
+      identifier: string;
+      /** Is Placeholder */
+      is_placeholder: boolean;
+      /** Name */
+      name: string;
+      status: components["schemas"]["PrototypeStatus"];
+    };
+    /** PrototypeUpdate */
+    PrototypeUpdate: {
+      /** Caliber Id */
+      caliber_id?: string | null;
+      /** Is Placeholder */
+      is_placeholder?: boolean | null;
+      /** Name */
+      name?: string | null;
+      /** Notes */
+      notes?: string | null;
+      /** Product Model Id */
+      product_model_id?: string | null;
+      /** Purpose */
+      purpose?: string | null;
+      /** Retired On */
+      retired_on?: string | null;
+      /** Started On */
+      started_on?: string | null;
+      status?: components["schemas"]["PrototypeStatus"] | null;
     };
     /** RecentRevision */
     RecentRevision: {
@@ -1454,6 +2019,72 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["BomLineRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_build_api_v1_builds__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BuildRecordRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_build_api_v1_builds__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BuildRecordUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BuildRecordRead"];
         };
       };
       /** @description Validation Error */
@@ -1802,6 +2433,37 @@ export interface operations {
       };
     };
   };
+  component_part_instances_api_v1_components__ref__part_instances_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PartInstanceRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   list_revisions_api_v1_components__ref__revisions_get: {
     parameters: {
       query?: never;
@@ -2090,6 +2752,142 @@ export interface operations {
       };
     };
   };
+  list_part_instances_api_v1_part_instances_get: {
+    parameters: {
+      query?: {
+        /** @description Search instance, serial, component */
+        q?: string | null;
+        status?: components["schemas"]["PartInstanceStatus"] | null;
+        component_id?: string | null;
+        prototype_id?: string | null;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_PartInstanceRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_part_instances_api_v1_part_instances_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PartInstanceCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PartInstanceRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_part_instance_api_v1_part_instances__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PartInstanceRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_part_instance_api_v1_part_instances__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PartInstanceUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PartInstanceRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   list_products_api_v1_products_get: {
     parameters: {
       query?: {
@@ -2287,6 +3085,235 @@ export interface operations {
       };
     };
   };
+  list_prototypes_api_v1_prototypes_get: {
+    parameters: {
+      query?: {
+        status?: components["schemas"]["PrototypeStatus"] | null;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Page_PrototypeRead_"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_prototype_api_v1_prototypes_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PrototypeCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PrototypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_prototype_api_v1_prototypes__ref__get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PrototypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  update_prototype_api_v1_prototypes__ref__patch: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PrototypeUpdate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PrototypeRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  list_builds_api_v1_prototypes__ref__builds_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BuildRecordRead"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  create_build_api_v1_prototypes__ref__builds_post: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BuildRecordCreate"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BuildRecordRead"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  get_configuration_api_v1_prototypes__ref__configuration_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ref: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PrototypeConfiguration"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   get_revision_api_v1_revisions__revision_id__get: {
     parameters: {
       query?: never;
@@ -2441,6 +3468,37 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["BomFlat"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  revision_prototypes_api_v1_revisions__revision_id__prototypes_get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        revision_id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PrototypeSummary"][];
         };
       };
       /** @description Validation Error */

@@ -13,6 +13,9 @@ import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { PlannedPage } from "@/features/planned/PlannedPage";
 import { ProductDetailPage } from "@/features/products/ProductDetailPage";
 import { ProductsPage } from "@/features/products/ProductsPage";
+import { PartInstancesPage } from "@/features/prototypes/PartInstancesPage";
+import { PrototypeDetailPage } from "@/features/prototypes/PrototypeDetailPage";
+import { PrototypesPage } from "@/features/prototypes/PrototypesPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 
 export const router = createBrowserRouter([
@@ -32,7 +35,9 @@ export const router = createBrowserRouter([
       { path: "components/:ref/revisions/:label", element: <ComponentDetailPage /> },
       { path: "boms", element: <BomsPage /> },
       { path: "boms/:ref", element: <BomExplorerPage /> },
-      { path: "prototypes", element: <PlannedPage area="prototypes" /> },
+      { path: "prototypes", element: <PrototypesPage /> },
+      { path: "prototypes/:ref", element: <PrototypeDetailPage /> },
+      { path: "part-instances", element: <PartInstancesPage /> },
       { path: "experiments", element: <PlannedPage area="experiments" /> },
       { path: "testing", element: <PlannedPage area="testing" /> },
       { path: "watches", element: <PlannedPage area="watches" /> },

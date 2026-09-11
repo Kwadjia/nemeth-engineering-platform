@@ -1,12 +1,14 @@
 """NEMETH N1 placeholder seed.
 
-Creates the N1 product, the N1.01 reference, Caliber N1, and a sample component tree
-with a nested BOM. Every record is flagged ``is_placeholder`` and its notes say so;
-replace values as real engineering data arrives. Running the seed twice is a no-op.
+Creates the N1 product, the N1.01 reference, Caliber N1, prototype N1-P001 and a sample
+component tree with a nested BOM. Every record is flagged ``is_placeholder`` and its
+notes say so; replace values as real engineering data arrives.
 
-Prototype N1-P001 and experiments EXP-001…EXP-003 (ST36 disassembly, reassembly and
-baseline timing) are seeded by the prototype and experiment slices once those tables
-exist.
+The seed is idempotent per record: each entity is created only if its identifier is
+missing, so a database seeded by an earlier slice gains the new records on re-run.
+
+Experiments EXP-001…EXP-003 (ST36 disassembly, reassembly and baseline timing) are
+seeded by the experiment slice once those tables exist.
 """
 
 from __future__ import annotations
@@ -27,8 +29,11 @@ from nemeth.modules.components import service as components
 from nemeth.modules.components.models import Component, ComponentFamily, ComponentKind
 from nemeth.modules.components.schemas import ComponentCreate, RevisionContent
 from nemeth.modules.products import service as products
-from nemeth.modules.products.models import Product
+from nemeth.modules.products.models import Caliber, Product, ProductModel
 from nemeth.modules.products.schemas import CaliberCreate, ProductCreate, ProductModelCreate
+from nemeth.modules.prototypes import service as prototypes
+from nemeth.modules.prototypes.models import Prototype, PrototypeStatus
+from nemeth.modules.prototypes.schemas import PrototypeCreate
 
 SEED_ACTOR = Actor(id="seed", display_name="Seed script")
 PLACEHOLDER = "PLACEHOLDER — sample data from the N1 seed. Replace with real engineering data."
@@ -36,18 +41,25 @@ PLACEHOLDER = "PLACEHOLDER — sample data from the N1 seed. Replace with real e
 
 @dataclass
 class SeedResult:
-    created: bool
     components: int = 0
     bom_lines: int = 0
-    messages: list[str] = field(default_factory=list)
+    records: list[str] = field(default_factory=list)
+
+    @property
+    def created(self) -> bool:
+        return bool(self.components or self.bom_lines or self.records)
 
     def summary(self) -> str:
         if not self.created:
             return "N1 seed already present; nothing to do."
-        return (
-            f"Seeded NEMETH N1: product, model N1.01, Caliber N1, "
-            f"{self.components} components, {self.bom_lines} BOM lines."
-        )
+        parts = []
+        if self.records:
+            parts.append(", ".join(self.records))
+        if self.components:
+            parts.append(f"{self.components} components")
+        if self.bom_lines:
+            parts.append(f"{self.bom_lines} BOM lines")
+        return "Seeded NEMETH N1: " + "; ".join(parts) + "."
 
 
 @dataclass(frozen=True)
@@ -287,6 +299,14 @@ BOM: tuple[tuple[str, str, int], ...] = (
     ("N1-MVT-012", "N1-MVT-013", 1),
 )
 
+SeedModel = type[Product] | type[ProductModel] | type[Caliber] | type[Component] | type[Prototype]
+
+
+def _exists(session: Session, model: SeedModel, identifier: str) -> bool:
+    return (
+        session.execute(select(model.id).where(model.identifier == identifier)).first() is not None
+    )
+
 
 def _sync_counters(session: Session) -> None:
     """Advance identifier counters past the hand-assigned seed identifiers."""
@@ -298,17 +318,16 @@ def _sync_counters(session: Session) -> None:
             highest[prefix] = max(highest.get(prefix, 0), number)
     for prefix, value in highest.items():
         ensure_counter_at_least(session, prefix, value)
+    ensure_counter_at_least(session, "N1-P", 1)
 
 
-def seed_n1(session: Session) -> SeedResult:
-    if session.execute(select(Product.id).where(Product.identifier == "N1")).first():
-        return SeedResult(created=False)
-
-    result = SeedResult(created=True)
-
+def _seed_components(session: Session, result: SeedResult) -> dict[str, Component]:
     created: dict[str, Component] = {}
     for spec in COMPONENTS:
-        component = components.create_component(
+        if _exists(session, Component, spec.identifier):
+            created[spec.identifier] = components.get_component(session, spec.identifier)
+            continue
+        created[spec.identifier] = components.create_component(
             session,
             SEED_ACTOR,
             ComponentCreate(
@@ -327,12 +346,19 @@ def seed_n1(session: Session) -> SeedResult:
                 ),
             ),
         )
-        created[spec.identifier] = component
         result.components += 1
+    return created
 
+
+def _seed_bom(session: Session, created: dict[str, Component], result: SeedResult) -> None:
     for parent_id, child_id, quantity in BOM:
         parent = created[parent_id]
-        revision = components.get_revision(session, parent.latest_revision.id)  # type: ignore[union-attr]
+        assert parent.latest_revision is not None
+        revision = components.get_revision(session, parent.latest_revision.id)
+        if any(line.child_component_id == created[child_id].id for line in revision.bom_lines):
+            continue
+        if revision.is_frozen:
+            continue  # the seed assembly has been advanced by hand; leave its history alone
         bom.add_line(
             session,
             SEED_ACTOR,
@@ -341,52 +367,92 @@ def seed_n1(session: Session) -> SeedResult:
         )
         result.bom_lines += 1
 
+
+def seed_n1(session: Session) -> SeedResult:
+    result = SeedResult()
+    created = _seed_components(session, result)
+    _seed_bom(session, created, result)
     _sync_counters(session)
 
-    product = products.create_product(
-        session,
-        SEED_ACTOR,
-        ProductCreate(
-            identifier="N1",
-            name="NEMETH N1",
-            description="The flagship mechanical watch from NEMETH Detroit.",
-            lifecycle_state=LifecycleState.CONCEPT,
-            notes=PLACEHOLDER,
-            is_placeholder=True,
-        ),
-    )
-    caliber = products.create_caliber(
-        session,
-        SEED_ACTOR,
-        CaliberCreate(
-            identifier="CAL-N1",
-            name="Caliber N1",
-            description="First in-house manual-wind caliber for the N1.",
-            lifecycle_state=LifecycleState.CONCEPT,
-            root_component_id=created["N1-MVT-001"].id,
-            architecture="Manual wind, single barrel, Swiss lever escapement (to be confirmed)",
-            specification={
-                "_placeholder": True,
-                "note": "Specification to be defined during the concept phase.",
-            },
-            notes=PLACEHOLDER,
-            is_placeholder=True,
-        ),
-    )
-    products.create_model(
-        session,
-        SEED_ACTOR,
-        product,
-        ProductModelCreate(
-            identifier="N1.01",
-            name="N1 Reference 01",
-            description="First reference of the NEMETH N1.",
-            lifecycle_state=LifecycleState.CONCEPT,
-            caliber_id=caliber.id,
-            root_component_id=created["N1-WATCH-001"].id,
-            notes=PLACEHOLDER,
-            is_placeholder=True,
-        ),
-    )
+    if _exists(session, Product, "N1"):
+        product = products.get_product(session, "N1")
+    else:
+        product = products.create_product(
+            session,
+            SEED_ACTOR,
+            ProductCreate(
+                identifier="N1",
+                name="NEMETH N1",
+                description="The flagship mechanical watch from NEMETH Detroit.",
+                lifecycle_state=LifecycleState.CONCEPT,
+                notes=PLACEHOLDER,
+                is_placeholder=True,
+            ),
+        )
+        result.records.append("product N1")
+
+    if _exists(session, Caliber, "CAL-N1"):
+        caliber = products.get_caliber(session, "CAL-N1")
+    else:
+        caliber = products.create_caliber(
+            session,
+            SEED_ACTOR,
+            CaliberCreate(
+                identifier="CAL-N1",
+                name="Caliber N1",
+                description="First in-house manual-wind caliber for the N1.",
+                lifecycle_state=LifecycleState.CONCEPT,
+                root_component_id=created["N1-MVT-001"].id,
+                architecture="Manual wind, single barrel, Swiss lever escapement (to be confirmed)",
+                specification={
+                    "_placeholder": True,
+                    "note": "Specification to be defined during the concept phase.",
+                },
+                notes=PLACEHOLDER,
+                is_placeholder=True,
+            ),
+        )
+        result.records.append("caliber CAL-N1")
+
+    if _exists(session, ProductModel, "N1.01"):
+        model = products.get_model(session, "N1.01")
+    else:
+        model = products.create_model(
+            session,
+            SEED_ACTOR,
+            product,
+            ProductModelCreate(
+                identifier="N1.01",
+                name="N1 Reference 01",
+                description="First reference of the NEMETH N1.",
+                lifecycle_state=LifecycleState.CONCEPT,
+                caliber_id=caliber.id,
+                root_component_id=created["N1-WATCH-001"].id,
+                notes=PLACEHOLDER,
+                is_placeholder=True,
+            ),
+        )
+        result.records.append("model N1.01")
+
+    if not _exists(session, Prototype, "N1-P001"):
+        prototypes.create_prototype(
+            session,
+            SEED_ACTOR,
+            PrototypeCreate(
+                identifier="N1-P001",
+                name="N1 first prototype",
+                purpose=(
+                    "First physical N1 build: validate case, dial and hand fit around the "
+                    "Caliber N1 concept and establish the assembly procedure."
+                ),
+                status=PrototypeStatus.PLANNED,
+                product_model_id=model.id,
+                caliber_id=caliber.id,
+                notes=PLACEHOLDER,
+                is_placeholder=True,
+            ),
+        )
+        result.records.append("prototype N1-P001")
+
     session.flush()
     return result

@@ -9,14 +9,19 @@ from nemeth.core.identifiers import IdentifierCounter
 from nemeth.modules.bom.models import BomLine
 from nemeth.modules.components.models import Component, ComponentRevision
 from nemeth.modules.products.models import Caliber, Product, ProductModel
+from nemeth.modules.prototypes.models import BuildEntry, BuildRecord, PartInstance, Prototype
 
 __all__ = [
     "Base",
     "BomLine",
+    "BuildEntry",
+    "BuildRecord",
     "Caliber",
     "Component",
     "ComponentRevision",
     "IdentifierCounter",
+    "PartInstance",
     "Product",
     "ProductModel",
+    "Prototype",
 ]

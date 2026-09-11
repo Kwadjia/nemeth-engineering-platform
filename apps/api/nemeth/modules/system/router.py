@@ -16,6 +16,8 @@ from nemeth.modules.components import service as components
 from nemeth.modules.components.schemas import ComponentSummary, RevisionSummary
 from nemeth.modules.products import service as products
 from nemeth.modules.products.schemas import CaliberSummary, ProductSummary
+from nemeth.modules.prototypes import service as prototypes
+from nemeth.modules.prototypes.schemas import PrototypeSummary
 
 log = logging.getLogger(__name__)
 router = APIRouter(tags=["system"])
@@ -50,6 +52,9 @@ class DashboardSummary(BaseModel):
     assembly_count: int
     components_by_state: dict[str, int]
     recent_revisions: list[RecentRevision]
+    prototype_count: int
+    active_prototype: PrototypeSummary | None
+    prototypes: list[PrototypeSummary]
 
 
 @router.get("/health", response_model=Health)
@@ -94,6 +99,8 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
     caliber_items, _ = products.list_calibers(session, PageParams(limit=20, offset=0))
     by_state = components.count_by_state(session)
     recent = components.recent_revisions(session, limit=8)
+    active = prototypes.active_prototype(session)
+    proto_items, proto_total = prototypes.list_prototypes(session, PageParams(limit=6, offset=0))
     return DashboardSummary(
         products=[ProductSummary.model_validate(p) for p in product_items],
         calibers=[CaliberSummary.model_validate(c) for c in caliber_items],
@@ -107,4 +114,7 @@ def dashboard_summary(session: Session = Depends(get_session)) -> DashboardSumma
             )
             for r in recent
         ],
+        prototype_count=proto_total,
+        active_prototype=PrototypeSummary.model_validate(active) if active else None,
+        prototypes=[PrototypeSummary.model_validate(p) for p in proto_items],
     )

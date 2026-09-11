@@ -46,6 +46,45 @@ export type DashboardSummary = Schemas["DashboardSummary"];
 export type SystemInfo = Schemas["SystemInfo"];
 export type Health = Schemas["Health"];
 
+export type PrototypeStatus = Schemas["PrototypeStatus"];
+export type PartInstanceStatus = Schemas["PartInstanceStatus"];
+export type PartSource = Schemas["PartSource"];
+export type BuildAction = Schemas["BuildAction"];
+export type PrototypeSummary = Schemas["PrototypeSummary"];
+export type PrototypeRead = Schemas["PrototypeRead"];
+export type PrototypeCreate = Schemas["PrototypeCreate"];
+export type PrototypeUpdate = Schemas["PrototypeUpdate"];
+export type PrototypeConfiguration = Schemas["PrototypeConfiguration"];
+export type ConfigurationRow = Schemas["ConfigurationRow"];
+export type PartInstanceSummary = Schemas["PartInstanceSummary"];
+export type PartInstanceRead = Schemas["PartInstanceRead"];
+export type PartInstanceCreate = Schemas["PartInstanceCreate"];
+export type BuildRecordRead = Schemas["BuildRecordRead"];
+export type BuildRecordCreate = Schemas["BuildRecordCreate"];
+export type BuildEntryCreate = Schemas["BuildEntryCreate"];
+export type BuildEntryRead = Schemas["BuildEntryRead"];
+
+export const PROTOTYPE_STATUSES: readonly PrototypeStatus[] = [
+  "PLANNED",
+  "BUILDING",
+  "ACTIVE",
+  "RETIRED",
+] as const;
+
+export const PART_SOURCES: readonly PartSource[] = [
+  "IN_HOUSE",
+  "PURCHASED",
+  "SALVAGED",
+  "OTHER",
+] as const;
+
+export const PART_INSTANCE_STATUSES: readonly PartInstanceStatus[] = [
+  "AVAILABLE",
+  "INSTALLED",
+  "REMOVED",
+  "SCRAPPED",
+] as const;
+
 /** RFC 9457 problem details as emitted by the API. */
 export interface ProblemDetails {
   type: string;

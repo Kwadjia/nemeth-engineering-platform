@@ -496,6 +496,338 @@
         "title": "BomTree",
         "type": "object"
       },
+      "BuildAction": {
+        "enum": [
+          "INSTALL",
+          "REMOVE"
+        ],
+        "title": "BuildAction",
+        "type": "string"
+      },
+      "BuildEntryCreate": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/BuildAction",
+            "default": "INSTALL"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "part_instance_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part Instance Id"
+          },
+          "part_instance_identifier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part Instance Identifier"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          }
+        },
+        "title": "BuildEntryCreate",
+        "type": "object"
+      },
+      "BuildEntryRead": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/BuildAction"
+          },
+          "component": {
+            "$ref": "#/components/schemas/ComponentSummary"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "part_instance": {
+            "$ref": "#/components/schemas/PartInstanceSummary"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/RevisionSummary"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "action",
+          "position",
+          "notes",
+          "part_instance",
+          "component",
+          "revision"
+        ],
+        "title": "BuildEntryRead",
+        "type": "object"
+      },
+      "BuildRecordCreate": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/BuildEntryCreate"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "performed_by": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Defaults to the current actor.",
+            "title": "Performed By"
+          },
+          "performed_on": {
+            "format": "date",
+            "title": "Performed On",
+            "type": "string"
+          },
+          "procedure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Steps, lubrication, torque and sequence as performed.",
+            "title": "Procedure"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "performed_on"
+        ],
+        "title": "BuildRecordCreate",
+        "type": "object"
+      },
+      "BuildRecordRead": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/BuildEntryRead"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "performed_by": {
+            "title": "Performed By",
+            "type": "string"
+          },
+          "performed_on": {
+            "format": "date",
+            "title": "Performed On",
+            "type": "string"
+          },
+          "procedure": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Procedure"
+          },
+          "prototype": {
+            "$ref": "#/components/schemas/PrototypeSummary"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "title": "Updated By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by",
+          "id",
+          "identifier",
+          "title",
+          "performed_on",
+          "performed_by",
+          "prototype",
+          "procedure",
+          "notes",
+          "entries"
+        ],
+        "title": "BuildRecordRead",
+        "type": "object"
+      },
+      "BuildRecordSummary": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "performed_by": {
+            "title": "Performed By",
+            "type": "string"
+          },
+          "performed_on": {
+            "format": "date",
+            "title": "Performed On",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "identifier",
+          "title",
+          "performed_on",
+          "performed_by"
+        ],
+        "title": "BuildRecordSummary",
+        "type": "object"
+      },
+      "BuildRecordUpdate": {
+        "properties": {
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "title": "BuildRecordUpdate",
+        "type": "object"
+      },
       "CaliberCreate": {
         "properties": {
           "architecture": {
@@ -1549,8 +1881,61 @@
         "title": "ComponentUpdate",
         "type": "object"
       },
+      "ConfigurationRow": {
+        "properties": {
+          "component": {
+            "$ref": "#/components/schemas/ComponentSummary"
+          },
+          "installed_by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BuildRecordSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "part_instance": {
+            "$ref": "#/components/schemas/PartInstanceSummary"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/RevisionSummary"
+          }
+        },
+        "required": [
+          "part_instance",
+          "component",
+          "revision",
+          "position",
+          "installed_by"
+        ],
+        "title": "ConfigurationRow",
+        "type": "object"
+      },
       "DashboardSummary": {
         "properties": {
+          "active_prototype": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "assembly_count": {
             "title": "Assembly Count",
             "type": "integer"
@@ -1580,6 +1965,17 @@
             "title": "Products",
             "type": "array"
           },
+          "prototype_count": {
+            "title": "Prototype Count",
+            "type": "integer"
+          },
+          "prototypes": {
+            "items": {
+              "$ref": "#/components/schemas/PrototypeSummary"
+            },
+            "title": "Prototypes",
+            "type": "array"
+          },
           "recent_revisions": {
             "items": {
               "$ref": "#/components/schemas/RecentRevision"
@@ -1594,7 +1990,10 @@
           "component_count",
           "assembly_count",
           "components_by_state",
-          "recent_revisions"
+          "recent_revisions",
+          "prototype_count",
+          "active_prototype",
+          "prototypes"
         ],
         "title": "DashboardSummary",
         "type": "object"
@@ -1714,6 +2113,37 @@
         "title": "Page[ComponentRead]",
         "type": "object"
       },
+      "Page_PartInstanceRead_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PartInstanceRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[PartInstanceRead]",
+        "type": "object"
+      },
       "Page_ProductRead_": {
         "properties": {
           "items": {
@@ -1744,6 +2174,446 @@
         ],
         "title": "Page[ProductRead]",
         "type": "object"
+      },
+      "Page_PrototypeRead_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PrototypeRead"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[PrototypeRead]",
+        "type": "object"
+      },
+      "PartInstanceCreate": {
+        "properties": {
+          "component_revision_id": {
+            "format": "uuid",
+            "title": "Component Revision Id",
+            "type": "string"
+          },
+          "heat_treatment_lot": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heat Treatment Lot"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "lot": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lot"
+          },
+          "material_lot": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Material Lot"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "quantity": {
+            "default": 1,
+            "description": "Create this many instances.",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serial Number"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PartSource",
+            "default": "IN_HOUSE"
+          },
+          "supplier_note": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier Note"
+          }
+        },
+        "required": [
+          "component_revision_id"
+        ],
+        "title": "PartInstanceCreate",
+        "type": "object"
+      },
+      "PartInstanceRead": {
+        "properties": {
+          "component": {
+            "$ref": "#/components/schemas/ComponentSummary"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "current_prototype": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "heat_treatment_lot": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heat Treatment Lot"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "lot": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lot"
+          },
+          "material_lot": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Material Lot"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/RevisionSummary"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serial Number"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PartSource"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PartInstanceStatus"
+          },
+          "supplier_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier Note"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "title": "Updated By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by",
+          "id",
+          "identifier",
+          "serial_number",
+          "status",
+          "source",
+          "is_placeholder",
+          "component",
+          "revision",
+          "lot",
+          "material_lot",
+          "heat_treatment_lot",
+          "supplier_note",
+          "notes",
+          "current_prototype"
+        ],
+        "title": "PartInstanceRead",
+        "type": "object"
+      },
+      "PartInstanceStatus": {
+        "enum": [
+          "AVAILABLE",
+          "INSTALLED",
+          "REMOVED",
+          "SCRAPPED"
+        ],
+        "title": "PartInstanceStatus",
+        "type": "string"
+      },
+      "PartInstanceSummary": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serial Number"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PartSource"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PartInstanceStatus"
+          }
+        },
+        "required": [
+          "id",
+          "identifier",
+          "serial_number",
+          "status",
+          "source",
+          "is_placeholder"
+        ],
+        "title": "PartInstanceSummary",
+        "type": "object"
+      },
+      "PartInstanceUpdate": {
+        "properties": {
+          "heat_treatment_lot": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heat Treatment Lot"
+          },
+          "is_placeholder": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Placeholder"
+          },
+          "lot": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lot"
+          },
+          "material_lot": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Material Lot"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "serial_number": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serial Number"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PartSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "supplier_note": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier Note"
+          }
+        },
+        "title": "PartInstanceUpdate",
+        "type": "object"
+      },
+      "PartSource": {
+        "enum": [
+          "IN_HOUSE",
+          "PURCHASED",
+          "SALVAGED",
+          "OTHER"
+        ],
+        "title": "PartSource",
+        "type": "string"
       },
       "ProductCreate": {
         "properties": {
@@ -2279,6 +3149,427 @@
           }
         },
         "title": "ProductUpdate",
+        "type": "object"
+      },
+      "PrototypeConfiguration": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "prototype": {
+            "$ref": "#/components/schemas/PrototypeSummary"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          }
+        },
+        "required": [
+          "prototype",
+          "count",
+          "rows"
+        ],
+        "title": "PrototypeConfiguration",
+        "type": "object"
+      },
+      "PrototypeCreate": {
+        "properties": {
+          "caliber_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Caliber Id"
+          },
+          "identifier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Explicit identifier such as N1-P003; generated when omitted.",
+            "title": "Identifier"
+          },
+          "is_placeholder": {
+            "default": false,
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "product_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Used to generate {CODE}-P{NNN}.",
+            "title": "Product Code"
+          },
+          "product_model_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Model Id"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "started_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started On"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PrototypeStatus",
+            "default": "PLANNED"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "PrototypeCreate",
+        "type": "object"
+      },
+      "PrototypeRead": {
+        "properties": {
+          "build_count": {
+            "title": "Build Count",
+            "type": "integer"
+          },
+          "caliber": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CaliberSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "installed_count": {
+            "title": "Installed Count",
+            "type": "integer"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "product_model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductModelSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "retired_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retired On"
+          },
+          "started_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started On"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PrototypeStatus"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "title": "Updated By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "created_by",
+          "updated_at",
+          "updated_by",
+          "id",
+          "identifier",
+          "name",
+          "status",
+          "is_placeholder",
+          "purpose",
+          "product_model",
+          "caliber",
+          "started_on",
+          "retired_on",
+          "notes",
+          "installed_count",
+          "build_count"
+        ],
+        "title": "PrototypeRead",
+        "type": "object"
+      },
+      "PrototypeStatus": {
+        "enum": [
+          "PLANNED",
+          "BUILDING",
+          "ACTIVE",
+          "RETIRED"
+        ],
+        "title": "PrototypeStatus",
+        "type": "string"
+      },
+      "PrototypeSummary": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "identifier": {
+            "title": "Identifier",
+            "type": "string"
+          },
+          "is_placeholder": {
+            "title": "Is Placeholder",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PrototypeStatus"
+          }
+        },
+        "required": [
+          "id",
+          "identifier",
+          "name",
+          "status",
+          "is_placeholder"
+        ],
+        "title": "PrototypeSummary",
+        "type": "object"
+      },
+      "PrototypeUpdate": {
+        "properties": {
+          "caliber_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Caliber Id"
+          },
+          "is_placeholder": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Placeholder"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "product_model_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Model Id"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "retired_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retired On"
+          },
+          "started_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started On"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PrototypeStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "PrototypeUpdate",
         "type": "object"
       },
       "RecentRevision": {
@@ -3245,6 +4536,98 @@
         ]
       }
     },
+    "/api/v1/builds/{ref}": {
+      "get": {
+        "operationId": "get_build_api_v1_builds__ref__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildRecordRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Build",
+        "tags": [
+          "prototypes"
+        ]
+      },
+      "patch": {
+        "operationId": "update_build_api_v1_builds__ref__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildRecordUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildRecordRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Build",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
     "/api/v1/calibers": {
       "get": {
         "operationId": "list_calibers_api_v1_calibers_get",
@@ -3816,6 +5199,52 @@
         ]
       }
     },
+    "/api/v1/components/{ref}/part-instances": {
+      "get": {
+        "operationId": "component_part_instances_api_v1_components__ref__part_instances_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PartInstanceRead"
+                  },
+                  "title": "Response Component Part Instances Api V1 Components  Ref  Part Instances Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Component Part Instances",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
     "/api/v1/components/{ref}/revisions": {
       "get": {
         "operationId": "list_revisions_api_v1_components__ref__revisions_get",
@@ -4224,6 +5653,265 @@
         ]
       }
     },
+    "/api/v1/part-instances": {
+      "get": {
+        "operationId": "list_part_instances_api_v1_part_instances_get",
+        "parameters": [
+          {
+            "description": "Search instance, serial, component",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search instance, serial, component",
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PartInstanceStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "component_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Component Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "prototype_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Prototype Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PartInstanceRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Part Instances",
+        "tags": [
+          "prototypes"
+        ]
+      },
+      "post": {
+        "operationId": "create_part_instances_api_v1_part_instances_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartInstanceCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PartInstanceRead"
+                  },
+                  "title": "Response Create Part Instances Api V1 Part Instances Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Part Instances",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
+    "/api/v1/part-instances/{ref}": {
+      "get": {
+        "operationId": "get_part_instance_api_v1_part_instances__ref__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartInstanceRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Part Instance",
+        "tags": [
+          "prototypes"
+        ]
+      },
+      "patch": {
+        "operationId": "update_part_instance_api_v1_part_instances__ref__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartInstanceUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartInstanceRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Part Instance",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
     "/api/v1/products": {
       "get": {
         "operationId": "list_products_api_v1_products_get",
@@ -4507,6 +6195,347 @@
         ]
       }
     },
+    "/api/v1/prototypes": {
+      "get": {
+        "operationId": "list_prototypes_api_v1_prototypes_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PrototypeStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PrototypeRead_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Prototypes",
+        "tags": [
+          "prototypes"
+        ]
+      },
+      "post": {
+        "operationId": "create_prototype_api_v1_prototypes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrototypeCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrototypeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Prototype",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
+    "/api/v1/prototypes/{ref}": {
+      "get": {
+        "operationId": "get_prototype_api_v1_prototypes__ref__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrototypeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Prototype",
+        "tags": [
+          "prototypes"
+        ]
+      },
+      "patch": {
+        "operationId": "update_prototype_api_v1_prototypes__ref__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrototypeUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrototypeRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Prototype",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
+    "/api/v1/prototypes/{ref}/builds": {
+      "get": {
+        "operationId": "list_builds_api_v1_prototypes__ref__builds_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BuildRecordRead"
+                  },
+                  "title": "Response List Builds Api V1 Prototypes  Ref  Builds Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Builds",
+        "tags": [
+          "prototypes"
+        ]
+      },
+      "post": {
+        "operationId": "create_build_api_v1_prototypes__ref__builds_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuildRecordCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildRecordRead"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Build",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
+    "/api/v1/prototypes/{ref}/configuration": {
+      "get": {
+        "operationId": "get_configuration_api_v1_prototypes__ref__configuration_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ref",
+            "required": true,
+            "schema": {
+              "title": "Ref",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrototypeConfiguration"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Configuration",
+        "tags": [
+          "prototypes"
+        ]
+      }
+    },
     "/api/v1/revisions/{revision_id}": {
       "get": {
         "operationId": "get_revision_api_v1_revisions__revision_id__get",
@@ -4765,6 +6794,54 @@
         "summary": "Get Bom Flat",
         "tags": [
           "bom"
+        ]
+      }
+    },
+    "/api/v1/revisions/{revision_id}/prototypes": {
+      "get": {
+        "description": "Prototypes that currently contain a part made to this exact revision.",
+        "operationId": "revision_prototypes_api_v1_revisions__revision_id__prototypes_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "revision_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Revision Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PrototypeSummary"
+                  },
+                  "title": "Response Revision Prototypes Api V1 Revisions  Revision Id  Prototypes Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revision Prototypes",
+        "tags": [
+          "prototypes"
         ]
       }
     },

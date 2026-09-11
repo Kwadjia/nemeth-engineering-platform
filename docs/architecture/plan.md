@@ -41,8 +41,8 @@ is **Caliber N1**.
 | 4 | Recursive BOMs (design BOM, pinned/floating resolution, where-used) | ✅ done |
 | 5 | N1 seed data (clearly marked placeholder) | ✅ done (product/caliber/components; prototype + experiment seeds arrive with their slices) |
 | 6 | Tests: revision immutability, recursive BOM | ✅ done |
-| 7 | Prototypes | ⬜ next |
-| 8 | Experiments | ⬜ |
+| 7 | Prototypes, part instances, build records (physical genealogy, ADR-008) | ✅ done |
+| 8 | Experiments | ⬜ next |
 | 9 | Measurements / test records (timegrapher first, extensible) | ⬜ |
 | 10 | Serialized watches / build genealogy | ⬜ |
 | 11 | Documents / attachments (SHA-256, local storage backend) | ⬜ |
@@ -124,6 +124,19 @@ flow, and [`decisions/`](decisions/) for the ADRs.
 - [x] Tree and flat (indented, level, path, extended qty) views
 - [x] Where-used for a component / a revision
 - [x] UI: BOM explorer (tree + flat), pin indicator
+
+### Domain — Prototypes (slice 7)
+- [x] `Prototype` register with forward-only status (PLANNED → BUILDING → ACTIVE → RETIRED)
+- [x] `PartInstance`: one physical part against an exact **frozen** revision; serial, lot,
+      source, material/heat-treatment lots; `PI-NNNNN`
+- [x] `BuildRecord` (append-only, `BR-NNNNN`) with ordered INSTALL/REMOVE entries
+- [x] Derived current configuration; physical where-used (revision → prototypes)
+- [x] REST: prototypes, configuration, builds, part-instances, component instances
+- [x] UI: Prototypes list/detail (configuration, build log, new build), Part instances,
+      component detail instances panel, dashboard active prototype
+- [x] Seed: N1-P001 (planned, placeholder); seed is idempotent per record
+- [x] Tests: identifiers, frozen-revision rule, install/remove/salvage history,
+      configuration derivation, retired prototypes, API flow
 
 ### Seed & tests & docs
 - [x] `python -m nemeth seed` — idempotent N1 seed, marked as placeholder

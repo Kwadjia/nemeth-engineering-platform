@@ -1,6 +1,7 @@
 import {
   Activity,
   Box,
+  Boxes,
   Cog,
   FileText,
   FlaskConical,
@@ -45,7 +46,8 @@ export const NAV: NavGroup[] = [
   {
     label: "Development",
     items: [
-      { label: "Prototypes", to: "/prototypes", icon: Layers, plannedSlice: 7 },
+      { label: "Prototypes", to: "/prototypes", icon: Layers },
+      { label: "Part instances", to: "/part-instances", icon: Boxes },
       { label: "Experiments", to: "/experiments", icon: FlaskConical, plannedSlice: 8 },
       { label: "Testing", to: "/testing", icon: Activity, plannedSlice: 9 },
       { label: "Watches", to: "/watches", icon: Watch, plannedSlice: 10 },

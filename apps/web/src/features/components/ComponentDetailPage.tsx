@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, FormError, Input, Textarea } from "@/components/ui/form";
 import { EmptyState, ErrorNotice, KV, LoadingRows, PageHeader } from "@/components/ui/layout";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
+import { PartInstancesPanel } from "@/features/components/PartInstancesPanel";
 import { describeError } from "@/lib/api";
 import { displayValue, formText, formatDateTime, formatNumber, titleCase } from "@/lib/format";
 import {
@@ -114,6 +115,7 @@ export function ComponentDetailPage() {
             <BomPanel revision={selected} componentRef={c.identifier} />
           ) : null}
           <WhereUsedPanel componentRef={c.identifier} />
+          <PartInstancesPanel componentRef={c.identifier} />
         </div>
       </div>
     </div>
