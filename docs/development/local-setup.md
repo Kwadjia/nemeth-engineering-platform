@@ -122,4 +122,8 @@ compiles it to `packages/domain-types/src/api.d.ts`. Commit both.
   or create it manually: `docker compose exec db psql -U nemeth -c 'CREATE DATABASE nemeth_test'`.
   The test fixture also creates it when it can.
 * **Port 5173 in use** — Vite is configured with `strictPort`; stop the other process.
+* **Edits not showing up in the Docker web container** — bind mounts on Windows and
+  macOS do not deliver file-change events, so Compose sets `VITE_USE_POLLING=1`
+  and Vite polls. If you started the container before that setting existed, run
+  `docker compose up -d web` once to recreate it.
 * **Types out of date** — `npm run api:types`.

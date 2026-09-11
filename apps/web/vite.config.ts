@@ -15,6 +15,9 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    // Bind mounts on Windows/macOS do not deliver file-change events into a container;
+    // Compose sets VITE_USE_POLLING=1 so edits on the host are picked up.
+    watch: process.env.VITE_USE_POLLING ? { usePolling: true, interval: 500 } : undefined,
     proxy: {
       "/api": {
         target: apiProxyTarget,
